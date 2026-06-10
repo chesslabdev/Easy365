@@ -9,15 +9,14 @@
  */
 {
   "sections": {
-    "cinematic_hero_JKwrXN": {
+    "cinematic_hero_NqRfpQ": {
       "type": "cinematic-hero",
       "blocks": {
-        "slide_DMawa4": {
+        "cinematic_slide_pFFcVz": {
           "type": "_cinematic-slide",
           "name": "Slide 1",
           "settings": {
             "media_type_1": "video",
-            "video_1": "shopify://files/videos/hero.mp4",
             "content_direction": "column",
             "vertical_on_mobile": true,
             "horizontal_alignment": "flex-start",
@@ -34,16 +33,16 @@
             "gradient_direction": "to top",
             "padding-block-start": 48,
             "padding-block-end": 48,
-            "padding-inline-start": 100,
-            "padding-inline-end": 80,
+            "padding-inline-start": 48,
+            "padding-inline-end": 48,
             "custom_mobile_padding": true,
-            "padding-block-start-mobile": 28,
-            "padding-block-end-mobile": 28,
+            "padding-block-start-mobile": 24,
+            "padding-block-end-mobile": 24,
             "padding-inline-start-mobile": 20,
             "padding-inline-end-mobile": 20
           },
           "blocks": {
-            "group_X3KfPf": {
+            "group_j4egUA": {
               "type": "group",
               "name": "Conteúdo",
               "settings": {
@@ -56,7 +55,7 @@
                 "vertical_alignment_flex_direction_column": "center",
                 "gap": 24,
                 "width": "custom",
-                "custom_width": 40,
+                "custom_width": 46,
                 "width_mobile": "fill",
                 "custom_width_mobile": 100,
                 "height": "fit",
@@ -83,7 +82,7 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "text_h8DYUG": {
+                "text_Mngxke": {
                   "type": "text",
                   "name": "Sobretítulo",
                   "settings": {
@@ -109,7 +108,7 @@
                   },
                   "blocks": {}
                 },
-                "blend_text_67bKcx": {
+                "blend_text_9XUx4T": {
                   "type": "blend-text",
                   "settings": {
                     "text": "Seu ritual de descanso em um squeeze.",
@@ -121,15 +120,20 @@
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
-                    "padding-inline-end": 0
+                    "padding-inline-end": 0,
+                    "custom_mobile_padding": false,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
                   },
                   "blocks": {}
                 },
-                "text_EUtQrV": {
+                "text_VnWdzg": {
                   "type": "text",
                   "name": "Subtítulo",
                   "settings": {
-                    "text": "<p>Magnésio Bisglicinato<br/>+ Frutas Amarelas</p>",
+                    "text": "<p>Magnésio Bisglicinato<br>+ Frutas Amarelas</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -151,7 +155,7 @@
                   },
                   "blocks": {}
                 },
-                "group_rhHAr6": {
+                "group_d4NtfK": {
                   "type": "group",
                   "name": "Prova social",
                   "settings": {
@@ -191,7 +195,7 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {
-                    "avatar_group_8tQ9dM": {
+                    "avatar_group_WpQqLi": {
                       "type": "avatar-group",
                       "settings": {
                         "size": 32,
@@ -199,31 +203,36 @@
                         "padding-block-start": 0,
                         "padding-block-end": 0,
                         "padding-inline-start": 0,
-                        "padding-inline-end": 0
+                        "padding-inline-end": 0,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 0,
+                        "padding-block-end-mobile": 0,
+                        "padding-inline-start-mobile": 0,
+                        "padding-inline-end-mobile": 0
                       },
                       "blocks": {
-                        "avatar_YMLBck": {
+                        "avatar_mKPPAf": {
                           "type": "_avatar",
                           "settings": {
                             "alt": ""
                           },
                           "blocks": {}
                         },
-                        "avatar_k3PnPm": {
+                        "avatar_4XeCxe": {
                           "type": "_avatar",
                           "settings": {
                             "alt": ""
                           },
                           "blocks": {}
                         },
-                        "avatar_mDAVae": {
+                        "avatar_tQa3Qd": {
                           "type": "_avatar",
                           "settings": {
                             "alt": ""
                           },
                           "blocks": {}
                         },
-                        "avatar_iVJgzN": {
+                        "avatar_brgDpW": {
                           "type": "_avatar",
                           "settings": {
                             "alt": ""
@@ -232,13 +241,13 @@
                         }
                       },
                       "block_order": [
-                        "avatar_YMLBck",
-                        "avatar_k3PnPm",
-                        "avatar_mDAVae",
-                        "avatar_iVJgzN"
+                        "avatar_mKPPAf",
+                        "avatar_4XeCxe",
+                        "avatar_tQa3Qd",
+                        "avatar_brgDpW"
                       ]
                     },
-                    "text_cnpAX4": {
+                    "text_JxM6r7": {
                       "type": "text",
                       "settings": {
                         "text": "<p>+500 atletas já mudaram seu ritual de descanso.</p>",
@@ -265,11 +274,11 @@
                     }
                   },
                   "block_order": [
-                    "avatar_group_8tQ9dM",
-                    "text_cnpAX4"
+                    "avatar_group_WpQqLi",
+                    "text_JxM6r7"
                   ]
                 },
-                "group_BaE4RJ": {
+                "group_w74N3w": {
                   "type": "group",
                   "name": "Botões",
                   "settings": {
@@ -309,7 +318,7 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {
-                    "button_qX8jkC": {
+                    "button_cr3Hrb": {
                       "type": "button",
                       "settings": {
                         "label": "Quero meu Eazy",
@@ -323,7 +332,7 @@
                       },
                       "blocks": {}
                     },
-                    "button_CqJdtW": {
+                    "button_FmHybm": {
                       "type": "button",
                       "settings": {
                         "label": "Ver Fórmula",
@@ -339,20 +348,20 @@
                     }
                   },
                   "block_order": [
-                    "button_qX8jkC",
-                    "button_CqJdtW"
+                    "button_cr3Hrb",
+                    "button_FmHybm"
                   ]
                 }
               },
               "block_order": [
-                "text_h8DYUG",
-                "blend_text_67bKcx",
-                "text_EUtQrV",
-                "group_rhHAr6",
-                "group_BaE4RJ"
+                "text_Mngxke",
+                "blend_text_9XUx4T",
+                "text_VnWdzg",
+                "group_d4NtfK",
+                "group_w74N3w"
               ]
             },
-            "badge_row_4DwcGW": {
+            "badge_row_9BJBhn": {
               "type": "badge-row",
               "settings": {
                 "gap": 14,
@@ -366,10 +375,15 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "custom_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {
-                "badge_cmFRY9": {
+                "badge_XfpjiW": {
                   "type": "_badge",
                   "settings": {
                     "label": "Magnésio Bisglicinato",
@@ -380,11 +394,16 @@
                     "padding-block-start": 8,
                     "padding-block-end": 8,
                     "padding-inline-start": 12,
-                    "padding-inline-end": 12
+                    "padding-inline-end": 12,
+                    "custom_mobile_padding": false,
+                    "padding-block-start-mobile": 8,
+                    "padding-block-end-mobile": 8,
+                    "padding-inline-start-mobile": 12,
+                    "padding-inline-end-mobile": 12
                   },
                   "blocks": {}
                 },
-                "badge_TUYQBb": {
+                "badge_k4Ww7F": {
                   "type": "_badge",
                   "settings": {
                     "label": "Stevia · 0% Açúcar",
@@ -395,11 +414,16 @@
                     "padding-block-start": 8,
                     "padding-block-end": 8,
                     "padding-inline-start": 12,
-                    "padding-inline-end": 12
+                    "padding-inline-end": 12,
+                    "custom_mobile_padding": false,
+                    "padding-block-start-mobile": 8,
+                    "padding-block-end-mobile": 8,
+                    "padding-inline-start-mobile": 12,
+                    "padding-inline-end-mobile": 12
                   },
                   "blocks": {}
                 },
-                "badge_cc3RUC": {
+                "badge_NxMLVY": {
                   "type": "_badge",
                   "settings": {
                     "label": "25 doses",
@@ -410,26 +434,31 @@
                     "padding-block-start": 8,
                     "padding-block-end": 8,
                     "padding-inline-start": 12,
-                    "padding-inline-end": 12
+                    "padding-inline-end": 12,
+                    "custom_mobile_padding": false,
+                    "padding-block-start-mobile": 8,
+                    "padding-block-end-mobile": 8,
+                    "padding-inline-start-mobile": 12,
+                    "padding-inline-end-mobile": 12
                   },
                   "blocks": {}
                 }
               },
               "block_order": [
-                "badge_cmFRY9",
-                "badge_TUYQBb",
-                "badge_cc3RUC"
+                "badge_XfpjiW",
+                "badge_k4Ww7F",
+                "badge_NxMLVY"
               ]
             }
           },
           "block_order": [
-            "group_X3KfPf",
-            "badge_row_4DwcGW"
+            "group_j4egUA",
+            "badge_row_9BJBhn"
           ]
         }
       },
       "block_order": [
-        "slide_DMawa4"
+        "cinematic_slide_pFFcVz"
       ],
       "name": "Cinematic hero",
       "settings": {
@@ -443,7 +472,10 @@
         "autoplay": false,
         "autoplay_speed": 5,
         "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding-block-end": 0,
+        "custom_mobile_padding": false,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "product_list_fa6P9H": {
@@ -642,7 +674,7 @@
     }
   },
   "order": [
-    "cinematic_hero_JKwrXN",
+    "cinematic_hero_NqRfpQ",
     "product_list_fa6P9H"
   ]
 }
