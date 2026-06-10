@@ -198,6 +198,17 @@ icons-with-text…) are **just presets of this base** — they have no `.liquid`
 3. **Never** edit native `section.liquid` to add a preset, and never re-implement section
    chrome by hand.
 
+**Slideshows are their own engine.** When a section needs slides/carousel, reuse the native
+slideshow engine instead of the base section: render `{% render 'slideshow', slides: slides,
+slide_count: ..., controls: ..., autoplay: ... %}` (`snippets/slideshow.liquid` → the
+`slideshow-component` with scroller, `slideshow-arrows`, `slideshow-controls`, autoplay,
+infinite) and accept the native **`_slide`** block as the slide chain. Each `_slide` already
+provides per-slide background **image or video** (poster + LCP-aware `loading`/`fetchpriority`
+on the first slide), overlay, color scheme, layout/alignment and padding, and accepts
+`@theme` content blocks — so your global blocks compose inside every slide. Don't reinvent
+slide markup, autoplay, or arrows. (Corner-radius stays customizable via the slideshow's
+`corner_radius`.)
+
 Page composition: `templates/*.json` reference sections + block order/settings; order
 sections above-the-fold first; shared chrome via section groups. Validate referenced block
 types exist and `presets` are present.
