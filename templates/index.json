@@ -13,7 +13,7 @@
       "type": "cinematic-hero",
       "blocks": {
         "slide_DMawa4": {
-          "type": "_slide",
+          "type": "_cinematic-slide",
           "name": "Slide 1",
           "settings": {
             "media_type_1": "video",
@@ -35,7 +35,12 @@
             "padding-block-start": 48,
             "padding-block-end": 48,
             "padding-inline-start": 100,
-            "padding-inline-end": 80
+            "padding-inline-end": 80,
+            "custom_mobile_padding": true,
+            "padding-block-start-mobile": 28,
+            "padding-block-end-mobile": 28,
+            "padding-inline-start-mobile": 20,
+            "padding-inline-end-mobile": 20
           },
           "blocks": {
             "group_X3KfPf": {

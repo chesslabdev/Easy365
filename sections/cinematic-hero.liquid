@@ -84,7 +84,7 @@
 {
   "name": "Cinematic hero",
   "class": "container-background-image",
-  "blocks": [{ "type": "_slide" }],
+  "blocks": [{ "type": "_cinematic-slide" }],
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
     { "type": "header", "content": "t:content.layout" },
@@ -173,7 +173,7 @@
       },
       "blocks": {
         "slide_1": {
-          "type": "_slide",
+          "type": "_cinematic-slide",
           "name": "Slide 1",
           "settings": {
             "media_type_1": "video",
@@ -190,7 +190,12 @@
             "padding-inline-start": 48,
             "padding-inline-end": 48,
             "padding-block-start": 48,
-            "padding-block-end": 48
+            "padding-block-end": 48,
+            "custom_mobile_padding": true,
+            "padding-block-start-mobile": 24,
+            "padding-block-end-mobile": 24,
+            "padding-inline-start-mobile": 20,
+            "padding-inline-end-mobile": 20
           },
           "blocks": {
             "content": {
@@ -317,7 +322,7 @@
           "block_order": ["content", "badges"]
         },
         "slide_2": {
-          "type": "_slide",
+          "type": "_cinematic-slide",
           "name": "Slide 2",
           "settings": {
             "media_type_1": "video",
@@ -334,7 +339,12 @@
             "padding-inline-start": 48,
             "padding-inline-end": 48,
             "padding-block-start": 48,
-            "padding-block-end": 48
+            "padding-block-end": 48,
+            "custom_mobile_padding": true,
+            "padding-block-start-mobile": 24,
+            "padding-block-end-mobile": 24,
+            "padding-inline-start-mobile": 20,
+            "padding-inline-end-mobile": 20
           },
           "blocks": {
             "content": {
