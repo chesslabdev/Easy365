@@ -172,6 +172,9 @@ padding, width/height and alignment. Headings/paragraphs = native `text` blocks 
   range. Never invent parallel spacing/color systems.
 - Ship a `{% schema %}` with `settings`, accepted `blocks`, and **`presets`**.
 - Localize labels with `t:` keys where the store uses them.
+- **`range` settings: `(max − min) / step` must be ≤ 101.** The server rejects more
+  ("As configurações do intervalo podem ter no máximo 101 etapas") and `shopify theme check`
+  does NOT catch it — increase `step` or lower `max` (e.g. `0–120 step 1` → `step 2`).
 
 ### 4a. Global, brand-neutral naming
 
