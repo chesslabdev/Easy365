@@ -9,56 +9,463 @@
  */
 {
   "sections": {
-    "eazy_hero_c3TPJy": {
-      "type": "eazy-hero",
+    "cinematic_hero_hCrALK": {
+      "type": "cinematic-hero",
       "blocks": {
-        "eazy_hero_pill_md9nqy": {
-          "type": "_eazy-hero-pill",
+        "group_Gx8WdV": {
+          "type": "group",
+          "name": "Conteúdo",
           "settings": {
-            "label": "Magnésio Bisglicinato"
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 24,
+            "width": "custom",
+            "custom_width": 46,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
-          "blocks": {}
+          "blocks": {
+            "text_wE6kbA": {
+              "type": "text",
+              "name": "Sobretítulo",
+              "settings": {
+                "text": "<p>O primeiro squeeze funcional do Brasil</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "blend_text_8jMTAg": {
+              "type": "blend-text",
+              "settings": {
+                "text": "Seu ritual de descanso em um squeeze.",
+                "tag": "h1",
+                "type_preset": "h1",
+                "text_align": "left",
+                "blend_mode": "difference",
+                "custom_color": "#b16801",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_rjeyK8": {
+              "type": "text",
+              "name": "Subtítulo",
+              "settings": {
+                "text": "<p>Magnésio Bisglicinato<br/>+ Frutas Amarelas</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "group_7pWUJf": {
+              "type": "group",
+              "name": "Prova social",
+              "settings": {
+                "content_direction": "row",
+                "vertical_on_mobile": false,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 8,
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "avatar_group_mQfTer": {
+                  "type": "avatar-group",
+                  "settings": {
+                    "size": 32,
+                    "overlap": 8,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "avatar_ptaVac": {
+                      "type": "_avatar",
+                      "settings": {
+                        "alt": ""
+                      },
+                      "blocks": {}
+                    },
+                    "avatar_VDdNHM": {
+                      "type": "_avatar",
+                      "settings": {
+                        "alt": ""
+                      },
+                      "blocks": {}
+                    },
+                    "avatar_wyR3Ke": {
+                      "type": "_avatar",
+                      "settings": {
+                        "alt": ""
+                      },
+                      "blocks": {}
+                    },
+                    "avatar_YbKHzY": {
+                      "type": "_avatar",
+                      "settings": {
+                        "alt": ""
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "avatar_ptaVac",
+                    "avatar_VDdNHM",
+                    "avatar_wyR3Ke",
+                    "avatar_YbKHzY"
+                  ]
+                },
+                "text_JFKejn": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>+500 atletas já mudaram seu ritual de descanso.</p>",
+                    "width": "fit-content",
+                    "max_width": "narrow",
+                    "alignment": "left",
+                    "type_preset": "paragraph",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "avatar_group_mQfTer",
+                "text_JFKejn"
+              ]
+            },
+            "group_8YNDD6": {
+              "type": "group",
+              "name": "Botões",
+              "settings": {
+                "content_direction": "row",
+                "vertical_on_mobile": false,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 12,
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "button_jhqjbM": {
+                  "type": "button",
+                  "settings": {
+                    "label": "Quero meu Eazy",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style_class": "button",
+                    "width": "fit-content",
+                    "custom_width": 100,
+                    "width_mobile": "fit-content",
+                    "custom_width_mobile": 100
+                  },
+                  "blocks": {}
+                },
+                "button_4LHMgi": {
+                  "type": "button",
+                  "settings": {
+                    "label": "Ver Fórmula",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style_class": "button-secondary",
+                    "width": "fit-content",
+                    "custom_width": 100,
+                    "width_mobile": "fit-content",
+                    "custom_width_mobile": 100
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "button_jhqjbM",
+                "button_4LHMgi"
+              ]
+            }
+          },
+          "block_order": [
+            "text_wE6kbA",
+            "blend_text_8jMTAg",
+            "text_rjeyK8",
+            "group_7pWUJf",
+            "group_8YNDD6"
+          ]
         },
-        "eazy_hero_pill_r9RNKJ": {
-          "type": "_eazy-hero-pill",
+        "group_c6dbXy": {
+          "type": "group",
+          "name": "t:names.group",
           "settings": {
-            "label": "Stevia · 0% Açúcar"
+            "content_direction": "row",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "center",
+            "vertical_alignment": "flex-end",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
-          "blocks": {}
-        },
-        "eazy_hero_pill_pf9jWA": {
-          "type": "_eazy-hero-pill",
-          "settings": {
-            "label": "25 doses"
+          "blocks": {
+            "badge_row_y9EC4N": {
+              "type": "badge-row",
+              "settings": {
+                "gap": 14,
+                "alignment": "center",
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "badge_U8KeNC": {
+                  "type": "_badge",
+                  "settings": {
+                    "label": "Magnésio Bisglicinato",
+                    "background_color": "#2f2f30b8",
+                    "text_color": "#fefffc",
+                    "border_color": "#00010099",
+                    "backdrop_blur": 4,
+                    "padding-block-start": 8,
+                    "padding-block-end": 8,
+                    "padding-inline-start": 12,
+                    "padding-inline-end": 12
+                  },
+                  "blocks": {}
+                },
+                "badge_ibHCHc": {
+                  "type": "_badge",
+                  "settings": {
+                    "label": "Stevia · 0% Açúcar",
+                    "background_color": "#2f2f30b8",
+                    "text_color": "#fefffc",
+                    "border_color": "#00010099",
+                    "backdrop_blur": 4,
+                    "padding-block-start": 8,
+                    "padding-block-end": 8,
+                    "padding-inline-start": 12,
+                    "padding-inline-end": 12
+                  },
+                  "blocks": {}
+                },
+                "badge_iJNVff": {
+                  "type": "_badge",
+                  "settings": {
+                    "label": "25 doses",
+                    "background_color": "#2f2f30b8",
+                    "text_color": "#fefffc",
+                    "border_color": "#00010099",
+                    "backdrop_blur": 4,
+                    "padding-block-start": 8,
+                    "padding-block-end": 8,
+                    "padding-inline-start": 12,
+                    "padding-inline-end": 12
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "badge_U8KeNC",
+                "badge_ibHCHc",
+                "badge_iJNVff"
+              ]
+            }
           },
-          "blocks": {}
+          "block_order": [
+            "badge_row_y9EC4N"
+          ]
         }
       },
       "block_order": [
-        "eazy_hero_pill_md9nqy",
-        "eazy_hero_pill_r9RNKJ",
-        "eazy_hero_pill_pf9jWA"
+        "group_Gx8WdV",
+        "group_c6dbXy"
       ],
-      "name": "Eazy365 — Herói",
+      "name": "Cinematic hero",
       "settings": {
-        "media_type": "video",
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 24,
+        "section_width": "page-width",
+        "section_height": "custom",
+        "section_height_custom": 88,
+        "color_scheme": "scheme-1",
+        "background_media": "video",
         "video": "shopify://files/videos/hero.mp4",
-        "toggle_overlay": false,
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": true,
         "overlay_color": "#0a0f1acc",
         "overlay_style": "gradient",
         "gradient_direction": "to top",
-        "eyebrow": "O primeiro squeeze funcional do Brasil",
-        "heading": "Seu ritual de descanso em um squeeze.",
-        "heading_tag": "h1",
-        "subtitle": "<p>Magnésio Bisglicinato<br/>+ Frutas Amarelas</p>",
-        "social_proof": "+500 atletas já mudaram seu ritual de descanso.",
-        "primary_label": "Quero meu Eazy",
-        "primary_link": "shopify://pages/contact",
-        "secondary_label": "Ver Fórmula",
-        "secondary_link": "",
-        "color_scheme": "scheme-1",
-        "accent_color": "#ff4c24",
-        "min_height": 100,
         "padding-block-start": 0,
         "padding-block-end": 0
       }
@@ -340,7 +747,7 @@
     }
   },
   "order": [
-    "eazy_hero_c3TPJy",
+    "cinematic_hero_hCrALK",
     "hero_jVaWmY",
     "product_list_fa6P9H"
   ]
