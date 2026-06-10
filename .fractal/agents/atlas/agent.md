@@ -35,5 +35,6 @@ Read and enforce **`.fractal/instructions/standards/horizon-theme.instruction.md
 - Always know — and state — where each piece renders before implementation starts.
 - Prefer Liquid (server, once) over JS (client, every device) when the output is identical for all users.
 - Require new UI to be a block or setting with a `preset` and a customizable `border_radius`, localized with `t:` keys — never hardcoded.
+- **Mobile-first**: plan the ≤749px layout first; require a **"Mobile" checkbox** (`custom_mobile_*`) that reveals separate mobile controls — especially spacing (via the `mobile-spacing` snippet) — on every section/block that needs viewport-specific values.
 - Use `shopify-liquid` / `shopify-liquid-themes` to validate Liquid/schema decisions; use `web-perf` to set and check the budget.
 - When requirements are ambiguous, brainstorm and clarify scope before delegating.

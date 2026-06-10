@@ -31,6 +31,7 @@ Follow **`.fractal/instructions/standards/horizon-theme.instruction.md`** to the
 - Build sections **on the base engine**: `{% capture children %}{% content_for 'blocks' %}{% endcapture %}{% render 'section', section: section, children: children %}`, replicating the base section settings as the snippet's contract. Wrap with a `display: contents` custom element when you need JS behavior, so layout is untouched.
 - Compose content from **native `group` + `text` + `button`** and **parent/private block families** (`accordion`/`_accordion-row`). Build custom pieces as a public parent block + private (`_`) children; make a child public only if it must drop into the native `group`.
 - Every block/section exposes a customizable `border_radius` and reuses `border-override`, `spacing-style`, `size-style`, `color-schemes` — never a parallel system.
+- **Mobile controls**: ship a `custom_mobile_padding` checkbox + `padding-*-mobile` ranges (`visible_if`) and wire them with the `mobile-spacing` snippet (`mobile-spacing-{{ id }}` class on the `spacing-style` element + `{% render 'mobile-spacing', settings, id %}` in the body). Reuse native `*_mobile` keys (`vertical_on_mobile`, `width_mobile`) for other responsive props. Build mobile-first.
 - **Global naming**: brand-neutral file/block/class/element names; brand values come from settings.
 - Default to `Component`; only `extends HTMLElement` with a documented reason (e.g. exposing refs to a parent).
 - No render-blocking scripts, no jQuery, no global CSS — scope styles per section/block.

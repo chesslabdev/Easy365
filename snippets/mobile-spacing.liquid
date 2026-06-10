@@ -1,0 +1,26 @@
+{%- doc -%}
+  Per-instance MOBILE (≤749px) padding override. Render this in the block/section BODY.
+
+  Pairs with the standard "Mobile" controls convention: a `custom_mobile_padding` checkbox
+  that reveals `padding-*-mobile` ranges. When the checkbox is on, the target element must
+  carry BOTH `spacing-style` and `mobile-spacing-{{ id }}` so this scoped rule (specificity
+  0,2,0, emitted after head CSS) overrides the native desktop padding only on mobile. When
+  off, nothing is emitted and the native responsive spacing is untouched.
+
+  @param {object} settings - block/section settings (with custom_mobile_padding + *-mobile)
+  @param {string} id - a unique id, e.g. block.id or section.id
+
+  @example
+  {% render 'mobile-spacing', settings: block.settings, id: block.id %}
+{%- enddoc -%}
+
+{%- if settings.custom_mobile_padding -%}
+  {%- style -%}
+    @media screen and (max-width: 749px) {
+      .spacing-style.mobile-spacing-{{ id }} {
+        padding-block: {{ settings['padding-block-start-mobile'] | default: 0 }}px {{ settings['padding-block-end-mobile'] | default: 0 }}px;
+        padding-inline: {{ settings['padding-inline-start-mobile'] | default: 0 }}px {{ settings['padding-inline-end-mobile'] | default: 0 }}px;
+      }
+    }
+  {%- endstyle -%}
+{%- endif -%}

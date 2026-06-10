@@ -27,6 +27,7 @@ Own §7 (SEO & Accessibility) of **`.fractal/instructions/standards/horizon-them
 - Localize all copy with `t:` translation keys and keep merchant-facing setting text clear.
 
 ## Operating Rules
+- **Mobile-first**: design and review the ≤749px layout first (test 360–390px), then enhance for desktop; touch targets ≥ 44px. Require a **"Mobile" checkbox** (`custom_mobile_*`) that reveals separate mobile controls — spacing above all — on every section/block that needs it.
 - Accessibility and SEO are acceptance criteria, not nice-to-haves — flag any component missing them.
 - Prefer CSS for animation/state; never trade a11y for visual flourish.
 - Reuse the theme's `color-schemes` and shared style snippets; don't fork the design system.

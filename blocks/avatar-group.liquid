@@ -7,7 +7,7 @@
 {%- assign bs = block.settings -%}
 
 <div
-  class="avatar-group spacing-style"
+  class="avatar-group spacing-style{% if bs.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}"
   style="
     --avatar-size: {{ bs.size }}px;
     --avatar-overlap: {{ bs.overlap }}px;
@@ -17,6 +17,8 @@
 >
   {% content_for 'blocks' %}
 </div>
+
+{% render 'mobile-spacing', settings: bs, id: block.id %}
 
 {% stylesheet %}
   .avatar-group {
@@ -55,7 +57,13 @@
     { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
     { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
     { "type": "range", "id": "padding-inline-start", "label": "Esquerda", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
-    { "type": "range", "id": "padding-inline-end", "label": "Direita", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+    { "type": "range", "id": "padding-inline-end", "label": "Direita", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile", "label": "Direita (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" }
   ],
   "presets": [
     {

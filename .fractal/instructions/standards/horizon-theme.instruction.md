@@ -28,6 +28,10 @@
 6. **Name globally.** Components are reusable across stores — never bake a store or brand
    name into a file, block type, class, or custom element (§4a).
 7. **SEO and accessibility are non-negotiable** on every component (see §7).
+8. **Mobile-first.** Most traffic is mobile and it's the slowest device — design, build and
+   test mobile first. Every section/block that exposes spacing (or any layout that should
+   differ by viewport) ships a **"Mobile" checkbox** that reveals separate mobile controls
+   (§5a). Reflow for small screens; never hide content to "fix" it.
 
 ---
 
@@ -221,6 +225,33 @@ types exist and `presets` are present.
 
 ---
 
+## 5a. Mobile-first & per-mobile controls
+
+The native breakpoint is **mobile ≤ 749px / desktop ≥ 750px**. Build and verify the mobile
+layout first (test at 360–390px), then enhance for desktop. Keep touch targets ≥ 44px.
+
+**The "Mobile" controls convention** (native idiom — see `spacer.liquid`): when a value
+should be able to differ on mobile, expose a **checkbox `custom_mobile_*`** that *reveals*
+the mobile-only settings (`visible_if`), and apply them under `@media (max-width: 749px)`.
+Mirror native keys for other responsive props: `vertical_on_mobile`, `width_mobile` /
+`custom_width_mobile`, `mobile_columns`.
+
+**Mobile spacing — the reusable primitive.** Every section/block with padding ships a
+`custom_mobile_padding` checkbox + `padding-*-mobile` ranges, wired with the
+**`mobile-spacing`** snippet:
+```liquid
+{%- comment -%} 1) on the element that already has `spacing-style`: {%- endcomment -%}
+class="… spacing-style{% if settings.custom_mobile_padding %} mobile-spacing-{{ id }}{% endif %}"
+{%- comment -%} 2) once in the body: {%- endcomment -%}
+{% render 'mobile-spacing', settings: settings, id: block.id %}  {%- comment -%} or section.id {%- endcomment -%}
+```
+The snippet emits a scoped `@media (max-width: 749px)` rule (selector `.spacing-style
+.mobile-spacing-{{ id }}`, specificity 0,2,0) that overrides the native desktop padding on
+mobile only — and emits nothing when the checkbox is off, leaving native responsive spacing
+intact. Schema settings use `visible_if: "{{ … .custom_mobile_padding }}"`.
+
+---
+
 ## 6. Performance budget & techniques
 
 **Above the fold (LCP critical):**
@@ -285,6 +316,7 @@ A change ships only when ALL are true:
 - [ ] Content composed from `group` + `text` + `button` / parent-private block families — not bespoke markup.
 - [ ] Names are brand-neutral & functional (no store name in files, types, classes, or custom elements).
 - [ ] Border-radius, padding, color scheme & spacing are all merchant-customizable.
+- [ ] Mobile verified first (≤749px); a "Mobile" checkbox exposes separate mobile spacing (via `mobile-spacing`).
 - [ ] New JS extends `Component`, registered/loaded as a module (section-scoped where it only runs there).
 - [ ] New UI is a block/section setting and appears + works in the Theme Editor with a preset.
 - [ ] LCP element is eager + prioritized; everything offscreen is lazy; CLS reserved.
