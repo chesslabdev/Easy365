@@ -362,6 +362,21 @@ p:empty {
   --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
 }
 
+/* Extra wide: near full-bleed — only the page margin is left on each side
+   (2px on mobile, 4px on desktop). The content width is effectively unbounded
+   so the small margin is always the only constraint. */
+.page-width-extra-wide {
+  --page-margin: 2px;
+  --page-content-width: var(--extra-wide-page-width);
+  --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+}
+
+@media screen and (min-width: 750px) {
+  .page-width-extra-wide {
+    --page-margin: 4px;
+  }
+}
+
 /* Section width full vs. page
    The reason we use a grid to contain the section is to allow for the section to have a
    full-width background image even if the section content is constrained by the page width. Do not try

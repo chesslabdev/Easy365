@@ -1376,6 +1376,10 @@
           {
             "value": "wide",
             "label": "t:options.wide"
+          },
+          {
+            "value": "extra-wide",
+            "label": "t:options.extra_wide"
           }
         ],
         "default": "narrow"
