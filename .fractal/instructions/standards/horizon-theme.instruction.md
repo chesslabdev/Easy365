@@ -14,10 +14,11 @@
    that lowers PageSpeed / Core Web Vitals is a regression, even if it "works".
 2. **Never edit native Horizon files in place.** Wrap, decorate, or compose around them.
    Editing native code creates merge conflicts on theme updates and silent bugs.
-3. **Build on the base section.** Every section must reuse the base section engine
-   (`{% render 'section' %}`, see §5) so color scheme, width/height, background media,
-   overlay, **border-radius**, padding, gap and alignment come for free and stay
-   consistent. Do not hand-roll section chrome.
+3. **Reuse a native section engine.** A static section reuses the base section engine
+   (`{% render 'section' %}`); a slideshow/carousel reuses the slideshow engine
+   (`{% render 'slideshow' %}` + `_slide` blocks). Either way color scheme, width/height,
+   background media, overlay, **border-radius**, padding and alignment come for free (§5).
+   Do not hand-roll section chrome.
 4. **Everything must be editable in the Theme Editor.** New UI = a block or a section
    setting, not a hardcoded value. Border-radius, padding, color and spacing are ALWAYS
    customizable. The merchant should never need code.
@@ -70,13 +71,18 @@ have a documented reason** (e.g. you need to expose refs to a parent, like
   `@theme/utilities`. Use `AbortController` + `{ signal }` for any manual listeners so
   they auto-clean on disconnect.
 
-### Registration (mandatory)
-Every new module must be added to the import map in **`snippets/scripts.liquid`**:
-```liquid
-"@theme/my-feature": "{{ 'my-feature.js' | asset_url }}",
-```
-Then import with the bare specifier: `import { Component } from '@theme/component';`.
-Use `type="module"` — it is deferred by default. **Never** add render-blocking scripts.
+### Registration / loading
+Two valid ways to load a module — pick by reach:
+- **Shared module** (used across many pages): add it to the import map in
+  **`snippets/scripts.liquid`** (`"@theme/my-feature": "{{ 'my-feature.js' | asset_url }}"`)
+  so it resolves by bare specifier everywhere.
+- **Section-only module** (runs only where one section appears): load it **section-scoped**
+  from inside the section file — `<script src="{{ 'x.js' | asset_url }}" type="module" fetchpriority="low"></script>` —
+  so it never downloads on pages that don't use it. This is the more performant default for
+  bespoke section behavior.
+
+Either way, import shared deps by bare specifier (`import { Component } from '@theme/component';`),
+use `type="module"` (deferred), and **never** add render-blocking scripts.
 
 ### Skeleton
 ```js
@@ -264,7 +270,7 @@ types exist and `presets` are present.
 - **`shopify-custom-data`** — Metafields & Metaobjects for any custom/structured data.
 - **`web-perf`** — measure CWV (LCP/INP/CLS) with Chrome DevTools MCP; use to prove a
   change helped, not just to "look right".
-- **`frontend-design`** — for distinctive, production-grade UI.
+- **`frontend-design`** — for distinctive, production-grade UI (framework-agnostic).
 - **Figma MCP + `figma-use` / `figma-generate-design` / `figma-code-connect`** — for
   design → Horizon component translation.
 - **`shopify-dev`** — fallback for any other Shopify API question.
@@ -275,7 +281,7 @@ types exist and `presets` are present.
 
 A change ships only when ALL are true:
 - [ ] No native Horizon file edited in place (decorated/composed instead).
-- [ ] Section renders through the base `section` engine (`{% render 'section' %}`); chrome not hand-rolled.
+- [ ] Section reuses a native engine — base `section`, or the slideshow engine (`_slide`) for slides — chrome not hand-rolled.
 - [ ] Content composed from `group` + `text` + `button` / parent-private block families — not bespoke markup.
 - [ ] Names are brand-neutral & functional (no store name in files, types, classes, or custom elements).
 - [ ] Border-radius, padding, color scheme & spacing are all merchant-customizable.

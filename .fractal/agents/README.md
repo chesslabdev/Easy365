@@ -18,9 +18,15 @@ All of them obey one shared playbook:
 ## Core principles (every agent)
 1. Performance first — a CWV regression is a regression.
 2. Never edit native Horizon files in place — decorate/compose around them.
-3. Everything editable from the Theme Editor (blocks + settings + presets).
-4. Web components extend `@theme/component`; register modules in `snippets/scripts.liquid`.
-5. SEO + accessibility on every component, no exceptions.
+3. Reuse a native section engine — base `section` for static sections, the slideshow
+   engine (`_slide`) for slides; compose content from `group` + `text` + `button` and
+   parent/private block families.
+4. Everything editable from the Theme Editor (blocks + settings + presets); border-radius
+   always customizable.
+5. Global, brand-neutral naming — no store name in files, block types, classes, or elements.
+6. Web components extend `@theme/component`; load shared modules via the import map or
+   section-scoped `<script type="module">`.
+7. SEO + accessibility on every component, no exceptions.
 
-> The legacy SaaS-boilerplate agents (Neo, Clara, Aurora, Elara, Lia, Veda) are unrelated
-> to this Shopify theme and are kept only for reference.
+This repo is a Shopify **Horizon** theme only — the prior SaaS-boilerplate agents, skills,
+and instructions have been removed.
