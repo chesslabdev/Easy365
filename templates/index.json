@@ -6,8 +6,63 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
+    "eazy_hero_c3TPJy": {
+      "type": "eazy-hero",
+      "blocks": {
+        "eazy_hero_pill_md9nqy": {
+          "type": "_eazy-hero-pill",
+          "settings": {
+            "label": "Magnésio Bisglicinato"
+          },
+          "blocks": {}
+        },
+        "eazy_hero_pill_r9RNKJ": {
+          "type": "_eazy-hero-pill",
+          "settings": {
+            "label": "Stevia · 0% Açúcar"
+          },
+          "blocks": {}
+        },
+        "eazy_hero_pill_pf9jWA": {
+          "type": "_eazy-hero-pill",
+          "settings": {
+            "label": "25 doses"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "eazy_hero_pill_md9nqy",
+        "eazy_hero_pill_r9RNKJ",
+        "eazy_hero_pill_pf9jWA"
+      ],
+      "name": "Eazy365 — Herói",
+      "settings": {
+        "media_type": "video",
+        "video": "shopify://files/videos/hero.mp4",
+        "toggle_overlay": false,
+        "overlay_color": "#0a0f1acc",
+        "overlay_style": "gradient",
+        "gradient_direction": "to top",
+        "eyebrow": "O primeiro squeeze funcional do Brasil",
+        "heading": "Seu ritual de descanso em um squeeze.",
+        "heading_tag": "h1",
+        "subtitle": "<p>Magnésio Bisglicinato<br/>+ Frutas Amarelas</p>",
+        "social_proof": "+500 atletas já mudaram seu ritual de descanso.",
+        "primary_label": "Quero meu Eazy",
+        "primary_link": "shopify://pages/contact",
+        "secondary_label": "Ver Fórmula",
+        "secondary_link": "",
+        "color_scheme": "scheme-1",
+        "accent_color": "#ff4c24",
+        "min_height": 100,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "hero_jVaWmY": {
       "type": "hero",
       "blocks": {
@@ -65,6 +120,7 @@
         "custom_mobile_media": false,
         "media_type_1_mobile": "image",
         "media_type_2_mobile": "image",
+        "link": "",
         "open_in_new_tab": false,
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -284,6 +340,7 @@
     }
   },
   "order": [
+    "eazy_hero_c3TPJy",
     "hero_jVaWmY",
     "product_list_fa6P9H"
   ]
