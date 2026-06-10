@@ -1,0 +1,461 @@
+{%- comment -%}
+  Eazy365 — cinematic product hero (pilot section).
+
+  PATTERNS DEMONSTRATED (see .fractal/instructions/standards/horizon-theme.instruction.md):
+  - Decorator (snippet reuse): reuses native `background-media` (lazy `<video-background-component>`,
+    responsive poster) and native `overlay` — without editing either file.
+  - Decorator (capture): the headline is captured once, then emitted as two blend-mode
+    layers, reproducing the Figma mix-blend duplicate.
+  - Block chain: feature pills are repeatable `_eazy-hero-pill` blocks (editor add/remove/reorder).
+  - Web component: enhanced by `<eazy-hero>` (assets/eazy-hero.js) for idle reveal + offscreen
+    video pause. Fully functional without JS.
+  - Performance: bg video lazy-loads via the native component; poster is the LCP; the section
+    script is loaded section-scoped (only on pages using this section).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+
+  # Resolve the active background media type (image vs video) from settings.
+  assign background_media = 'none'
+  if s.media_type == 'video' and s.video != blank
+    assign background_media = 'video'
+  elsif s.media_type == 'image' and s.image != blank
+    assign background_media = 'image'
+  endif
+
+  assign heading_tag = s.heading_tag | default: 'h1'
+
+  # Pick a legible text color for the accent button based on its perceived brightness.
+  assign accent_contrast = '#ffffff'
+  assign accent_brightness = s.accent_color | color_brightness
+  if accent_brightness > 140
+    assign accent_contrast = '#1a1a1a'
+  endif
+-%}
+
+{%- comment -%} Decorator via capture: buffer the headline once, reuse it across blend layers. {%- endcomment -%}
+{%- capture heading_text -%}{{ s.heading | escape }}{%- endcapture -%}
+
+<eazy-hero
+  class="eazy-hero color-{{ s.color_scheme }}"
+  style="
+    --eazy-hero-min-height: {{ s.min_height }}svh;
+    --eazy-hero-accent: {{ s.accent_color }};
+    --eazy-hero-accent-contrast: {{ accent_contrast }};
+  "
+  {% if request.visual_preview_mode %}data-shopify-visual-preview{% endif %}
+>
+  <div class="eazy-hero__media">
+    {%- comment -%} DECORATOR #1: reuse the native media engine (lazy video + responsive image). {%- endcomment -%}
+    {% render 'background-media',
+      background_media: background_media,
+      background_video: s.video,
+      background_video_position: 'cover',
+      background_image: s.image,
+      background_image_position: 'cover',
+      placeholder: 'hero-apparel-2',
+      section: section
+    %}
+
+    {%- if s.toggle_overlay -%}
+      {%- comment -%} DECORATOR: reuse the native overlay snippet. {%- endcomment -%}
+      {% render 'overlay', settings: s %}
+    {%- endif -%}
+  </div>
+
+  <div class="eazy-hero__inner page-width">
+    <div class="eazy-hero__content" ref="content">
+      {%- if s.eyebrow != blank -%}
+        <p class="eazy-hero__eyebrow">
+          {%- if s.eyebrow_icon != blank -%}
+            {{
+              s.eyebrow_icon
+              | image_url: width: 80
+              | image_tag:
+                loading: 'lazy',
+                decoding: 'async',
+                width: s.eyebrow_icon.width,
+                height: s.eyebrow_icon.height,
+                alt: '',
+                class: 'eazy-hero__eyebrow-icon'
+            }}
+          {%- endif -%}
+          <span>{{ s.eyebrow | escape }}</span>
+        </p>
+      {%- endif -%}
+
+      {%- if heading_text != blank -%}
+        <{{ heading_tag }} class="eazy-hero__heading">
+          {%- comment -%} Visible accessible copy: read once by assistive tech. {%- endcomment -%}
+          <span class="eazy-hero__heading-layer eazy-hero__heading-layer--difference">{{ heading_text }}</span>
+          {%- comment -%} Decorative blend twin: hidden from assistive tech. {%- endcomment -%}
+          <span class="eazy-hero__heading-layer eazy-hero__heading-layer--overlay" aria-hidden="true">{{ heading_text }}</span>
+        </{{ heading_tag }}>
+      {%- endif -%}
+
+      {%- if s.subtitle != blank -%}
+        <div class="eazy-hero__subtitle">{{ s.subtitle }}</div>
+      {%- endif -%}
+
+      {%- capture avatars -%}
+        {%- if s.avatar_1 != blank %}{% render 'eazy-hero-avatar', image: s.avatar_1 %}{% endif -%}
+        {%- if s.avatar_2 != blank %}{% render 'eazy-hero-avatar', image: s.avatar_2 %}{% endif -%}
+        {%- if s.avatar_3 != blank %}{% render 'eazy-hero-avatar', image: s.avatar_3 %}{% endif -%}
+        {%- if s.avatar_4 != blank %}{% render 'eazy-hero-avatar', image: s.avatar_4 %}{% endif -%}
+      {%- endcapture -%}
+      {%- if avatars != blank or s.social_proof != blank -%}
+        <div class="eazy-hero__social">
+          {%- if avatars != blank -%}
+            <span class="eazy-hero__avatars" aria-hidden="true">{{ avatars }}</span>
+          {%- endif -%}
+          {%- if s.social_proof != blank -%}
+            <span class="eazy-hero__social-text">{{ s.social_proof | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if s.primary_label != blank or s.secondary_label != blank -%}
+        <div class="eazy-hero__actions">
+          {%- if s.primary_label != blank -%}
+            <a
+              class="eazy-hero__cta eazy-hero__cta--primary"
+              {% if s.primary_link != blank %}href="{{ s.primary_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+            >
+              {{- s.primary_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if s.secondary_label != blank -%}
+            <a
+              class="eazy-hero__cta eazy-hero__cta--ghost"
+              {% if s.secondary_link != blank %}href="{{ s.secondary_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+            >
+              {{- s.secondary_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="eazy-hero__pills">
+      {%- comment -%} BLOCK CHAIN: `_eazy-hero-pill` blocks render here. {%- endcomment -%}
+      {% content_for 'blocks' %}
+    </div>
+  {%- endif -%}
+</eazy-hero>
+
+{%- comment -%} Section-scoped: the enhancement script loads only on pages using this section. {%- endcomment -%}
+<script src="{{ 'eazy-hero.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% stylesheet %}
+  .eazy-hero {
+    position: relative;
+    display: block;
+    min-height: var(--eazy-hero-min-height, 88svh);
+    overflow: clip;
+    border-radius: var(--eazy-hero-radius, 14px);
+    isolation: isolate;
+  }
+
+  .eazy-hero__media,
+  .eazy-hero__media :is(img, svg, video, video-background-component) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .eazy-hero__media :is(img, video) {
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .eazy-hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    min-height: inherit;
+    padding-block: var(--padding-block-start, 0) var(--padding-block-end, 0);
+  }
+
+  .eazy-hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xl, 2rem);
+    max-width: 30rem;
+    color: rgb(var(--color-foreground));
+
+    /* Idle entrance reveal — final state is applied instantly under reduced motion. */
+    opacity: 0;
+    translate: 0 1.5rem;
+    transition: opacity 0.6s ease, translate 0.6s ease;
+  }
+
+  .eazy-hero[data-ready='true'] .eazy-hero__content {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .eazy-hero[data-ready='instant'] .eazy-hero__content {
+    opacity: 1;
+    translate: 0 0;
+    transition: none;
+  }
+
+  .eazy-hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-family: var(--font-accent--family, inherit);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .eazy-hero__eyebrow-icon {
+    width: auto;
+    height: 1rem;
+  }
+
+  .eazy-hero__heading {
+    position: relative;
+    margin: 0;
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  /* Decorator: two stacked copies of the same captured text, blended like the Figma. */
+  .eazy-hero__heading-layer {
+    display: block;
+  }
+
+  .eazy-hero__heading-layer--overlay {
+    position: absolute;
+    inset: 0;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  .eazy-hero__heading-layer--difference {
+    mix-blend-mode: difference;
+  }
+
+  .eazy-hero__subtitle {
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .eazy-hero__subtitle > :first-child { margin-block-start: 0; }
+  .eazy-hero__subtitle > :last-child { margin-block-end: 0; }
+
+  .eazy-hero__social {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .eazy-hero__avatars {
+    display: inline-flex;
+  }
+
+  .eazy-hero__avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgb(var(--color-background));
+    margin-inline-end: -0.5rem;
+  }
+
+  .eazy-hero__social-text {
+    font-family: var(--font-accent--family, inherit);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    max-width: 12rem;
+  }
+
+  .eazy-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 0.5rem;
+  }
+
+  .eazy-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 1.625rem;
+    border-radius: 999px;
+    font-size: 1.1875rem;
+    line-height: 1.45;
+    text-decoration: none;
+    transition: filter 0.2s ease, background-color 0.2s ease;
+  }
+
+  .eazy-hero__cta--primary {
+    background-color: var(--eazy-hero-accent, rgb(var(--color-primary)));
+    color: var(--eazy-hero-accent-contrast, #fff);
+  }
+
+  .eazy-hero__cta--primary:hover { filter: brightness(1.08); }
+
+  .eazy-hero__cta--ghost {
+    background-color: rgb(244 242 238 / 0.04);
+    color: rgb(var(--color-foreground));
+    border: 1px solid rgb(var(--color-foreground) / 0.35);
+    backdrop-filter: blur(4px);
+  }
+
+  .eazy-hero__cta--ghost:hover { background-color: rgb(244 242 238 / 0.12); }
+
+  .eazy-hero__cta[aria-disabled='true'] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .eazy-hero__pills {
+    position: absolute;
+    z-index: 1;
+    inset-block-end: 2rem;
+    inset-inline: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.875rem;
+    padding-inline: 1rem;
+  }
+
+  .eazy-hero__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border-radius: 999px;
+    background-color: rgb(47 47 48 / 0.72);
+    border: 1px solid rgb(0 0 0 / 0.6);
+    backdrop-filter: blur(4px);
+    color: #fefffc;
+    font-family: var(--font-accent--family, inherit);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 749px) {
+    .eazy-hero__content { max-width: none; }
+    .eazy-hero__pills { position: static; margin-block: 1.5rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Eazy365 — Herói",
+  "tag": "section",
+  "class": "eazy-hero-wrapper section-wrapper",
+  "blocks": [{ "type": "_eazy-hero-pill" }],
+  "settings": [
+    { "type": "header", "content": "Mídia de fundo" },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Tipo de mídia",
+      "options": [
+        { "value": "video", "label": "Vídeo" },
+        { "value": "image", "label": "Imagem" }
+      ],
+      "default": "video"
+    },
+    { "type": "video", "id": "video", "label": "Vídeo de fundo", "visible_if": "{{ section.settings.media_type == 'video' }}" },
+    { "type": "image_picker", "id": "image", "label": "Imagem de fundo", "visible_if": "{{ section.settings.media_type == 'image' }}" },
+
+    { "type": "header", "content": "Sobreposição" },
+    { "type": "checkbox", "id": "toggle_overlay", "label": "Ativar sobreposição", "default": true },
+    { "type": "color", "id": "overlay_color", "label": "Cor da sobreposição", "alpha": true, "default": "#0a0f1acc", "visible_if": "{{ section.settings.toggle_overlay }}" },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Estilo",
+      "options": [
+        { "value": "solid", "label": "Sólido" },
+        { "value": "gradient", "label": "Gradiente" }
+      ],
+      "default": "gradient",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Direção do gradiente",
+      "options": [
+        { "value": "to top", "label": "Para cima" },
+        { "value": "to bottom", "label": "Para baixo" }
+      ],
+      "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    },
+
+    { "type": "header", "content": "Conteúdo" },
+    { "type": "image_picker", "id": "eyebrow_icon", "label": "Ícone do sobretítulo" },
+    { "type": "text", "id": "eyebrow", "label": "Sobretítulo", "default": "O primeiro squeeze funcional do Brasil" },
+    { "type": "text", "id": "heading", "label": "Título", "default": "Seu ritual de descanso em um squeeze." },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Nível do título (SEO)",
+      "info": "Use H1 apenas uma vez por página.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h1"
+    },
+    { "type": "richtext", "id": "subtitle", "label": "Subtítulo", "default": "<p>Magnésio Bisglicinato<br>+ Frutas Amarelas</p>" },
+
+    { "type": "header", "content": "Prova social" },
+    { "type": "image_picker", "id": "avatar_1", "label": "Avatar 1" },
+    { "type": "image_picker", "id": "avatar_2", "label": "Avatar 2" },
+    { "type": "image_picker", "id": "avatar_3", "label": "Avatar 3" },
+    { "type": "image_picker", "id": "avatar_4", "label": "Avatar 4" },
+    { "type": "text", "id": "social_proof", "label": "Texto de prova social", "default": "+500 atletas já mudaram seu ritual de descanso." },
+
+    { "type": "header", "content": "Botões" },
+    { "type": "text", "id": "primary_label", "label": "Botão primário", "default": "Quero meu Eazy" },
+    { "type": "url", "id": "primary_link", "label": "Link do botão primário" },
+    { "type": "text", "id": "secondary_label", "label": "Botão secundário", "default": "Ver Fórmula" },
+    { "type": "url", "id": "secondary_link", "label": "Link do botão secundário" },
+
+    { "type": "header", "content": "Aparência" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de cores", "default": "scheme-1" },
+    { "type": "color", "id": "accent_color", "label": "Cor de destaque", "default": "#ff4c24" },
+    { "type": "range", "id": "min_height", "label": "Altura mínima", "min": 40, "max": 100, "step": 1, "unit": "svh", "default": 88 },
+
+    { "type": "header", "content": "Espaçamento" },
+    { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "Eazy365 — Herói",
+      "category": "Banners",
+      "blocks": {
+        "pill_1": { "type": "_eazy-hero-pill", "settings": { "label": "Magnésio Bisglicinato" } },
+        "pill_2": { "type": "_eazy-hero-pill", "settings": { "label": "Stevia · 0% Açúcar" } },
+        "pill_3": { "type": "_eazy-hero-pill", "settings": { "label": "25 doses" } }
+      },
+      "block_order": ["pill_1", "pill_2", "pill_3"]
+    }
+  ]
+}
+{% endschema %}

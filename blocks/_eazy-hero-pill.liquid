@@ -1,0 +1,30 @@
+{%- doc -%}
+  Private block: a single glassmorphism "feature pill" for the Eazy365 hero bottom bar.
+  Repeatable via the block chain — merchants add/remove/reorder pills in the Theme Editor.
+
+  @example
+  {% content_for 'blocks' %}  {%- comment -%} renders these inside sections/eazy-hero.liquid {%- endcomment -%}
+{%- enddoc -%}
+
+<span class="eazy-hero__pill" {{ block.shopify_attributes }}>
+  {{- block.settings.label | escape -}}
+</span>
+
+{% schema %}
+{
+  "name": "Pílula de destaque",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Texto",
+      "default": "Magnésio Bisglicinato"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pílula de destaque"
+    }
+  ]
+}
+{% endschema %}
