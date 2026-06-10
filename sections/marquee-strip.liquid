@@ -1,0 +1,218 @@
+{%- comment -%}
+  Marquee strip — a global, brand-neutral scrolling "ticker" bar (the Figma "régua fio").
+
+  ARCHITECTURE (see .fractal/instructions/standards/horizon-theme.instruction.md):
+  - Reuses the native MARQUEE engine: it renders the exact `<marquee-component>` DOM contract
+    that `assets/marquee.js` requires (refs wrapper/content/marqueeItems + data-speed-factor),
+    so the infinite scroll, speed calc, hover-pause and reduced-motion handling all come from
+    the native JS. We only restyle the host as a rounded accent bar and add settings.
+  - The marquee layout CSS is duplicated here on purpose: the native `sections/marquee.liquid`
+    stylesheet is only present when THAT section is on the page, so a standalone strip needs it.
+  - Blocks: native `text` / `image` / `icon` / `logo` / `_divider` compose the ticker.
+  - Mobile-first: ships the "Mobile" spacing controls via the `mobile-spacing` snippet.
+{%- endcomment -%}
+
+<script src="{{ 'marquee.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+<div class="marquee-strip-section{% if s.section_width == 'page-width' %} page-width{% endif %}">
+  <marquee-component
+    class="marquee-strip spacing-style{% if s.custom_mobile_padding %} mobile-spacing-{{ section.id }}{% endif %}"
+    style="
+      {%- render 'spacing-style', settings: s %}
+      {% render 'gap-style', value: s.gap_between_elements, name: 'marquee-gap' %}
+      --marquee-direction: {{ s.movement_direction }};
+      --marquee-strip-bg: {{ s.background_color }};
+      --marquee-strip-fg: {{ s.text_color }};
+      --marquee-strip-radius: {{ s.border_radius }}px;
+      --marquee-strip-min-height: {{ s.min_height }}px;
+    "
+    data-speed-factor="{{ s.speed_factor }}"
+    data-movement-direction="{{ s.movement_direction }}"
+  >
+    <div class="marquee__wrapper" ref="wrapper">
+      <div class="marquee__content" ref="content">
+        <div class="marquee__repeated-items" ref="marqueeItems[]">
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+    </div>
+  </marquee-component>
+</div>
+
+{% render 'mobile-spacing', settings: s, id: section.id %}
+
+{% stylesheet %}
+  .marquee-strip-section {
+    width: 100%;
+  }
+
+  /* Strip host (the marquee-component) — the rounded accent bar. */
+  .marquee-strip {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+    background: var(--marquee-strip-bg, #ff4c24);
+    color: var(--marquee-strip-fg, #fff);
+    border-radius: var(--marquee-strip-radius, 14px);
+    min-height: var(--marquee-strip-min-height, 20px);
+  }
+
+  /* Force legible ticker text/marks over the accent bar, regardless of block color settings. */
+  .marquee-strip :is(p, span, a, h1, h2, h3, h4, h5, h6),
+  .marquee-strip :is(svg, .icon) {
+    color: var(--marquee-strip-fg, #fff);
+  }
+
+  /* Native marquee layout (mirrored from sections/marquee.liquid so the strip works standalone). */
+  .marquee__wrapper {
+    display: flex;
+    gap: var(--marquee-gap);
+    width: fit-content;
+    white-space: nowrap;
+  }
+
+  .marquee__content {
+    min-width: max-content;
+    display: flex;
+    gap: var(--marquee-gap);
+  }
+
+  .marquee__content :is(p, h1, h2, h3, h4, h5, h6) {
+    white-space: nowrap;
+  }
+
+  .marquee__content .marquee__repeated-items * {
+    max-width: none;
+  }
+
+  .marquee__repeated-items {
+    min-width: max-content;
+    display: flex;
+    gap: var(--marquee-gap);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .marquee__repeated-items > * {
+    align-content: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .marquee-strip:not([data-disabled]) .marquee__wrapper {
+      animation: marquee-motion var(--marquee-speed) linear infinite var(--marquee-direction);
+    }
+  }
+
+  @keyframes marquee-motion {
+    to {
+      transform: translate3d(calc(-50% - (var(--marquee-gap) / 2)), 0, 0);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Marquee strip",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "blocks": [
+    { "type": "text" },
+    { "type": "image" },
+    { "type": "icon" },
+    { "type": "logo" },
+    { "type": "_divider" }
+  ],
+  "settings": [
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        { "value": "page-width", "label": "t:options.page" },
+        { "value": "full-width", "label": "t:options.full" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "select",
+      "id": "movement_direction",
+      "label": "t:settings.motion_direction",
+      "options": [
+        { "value": "reverse", "label": "t:options.forward" },
+        { "value": "normal", "label": "t:options.reverse" }
+      ],
+      "default": "normal"
+    },
+    { "type": "range", "id": "speed_factor", "label": "t:settings.speed", "min": 5, "max": 60, "step": 1, "default": 25 },
+    { "type": "range", "id": "gap_between_elements", "label": "t:settings.gap", "min": 0, "max": 120, "step": 1, "unit": "px", "default": 48 },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color", "id": "background_color", "label": "Cor de fundo", "alpha": true, "default": "#ff4c24" },
+    { "type": "color", "id": "text_color", "label": "Cor do texto", "default": "#ffffff" },
+    { "type": "range", "id": "border_radius", "label": "t:settings.border_radius", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 14 },
+    { "type": "range", "id": "min_height", "label": "Altura mínima", "min": 12, "max": 120, "step": 1, "unit": "px", "default": 20 },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "t:settings.left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "t:settings.right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ section.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ section.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ section.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile", "label": "Direita (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ section.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    {
+      "name": "Marquee strip",
+      "category": "t:categories.text",
+      "settings": {
+        "section_width": "page-width",
+        "movement_direction": "normal",
+        "speed_factor": 25,
+        "gap_between_elements": 48,
+        "background_color": "#ff4c24",
+        "text_color": "#ffffff",
+        "border_radius": 14,
+        "min_height": 20
+      },
+      "blocks": {
+        "text_1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Zero açúcar. Adoçado naturalmente com Stevia.</p>",
+            "type_preset": "custom",
+            "font": "var(--font-accent--family)",
+            "font_size": "0.75rem",
+            "line_height": "tight",
+            "letter_spacing": "tight",
+            "case": "none",
+            "wrap": "nowrap",
+            "width": "fit-content"
+          }
+        },
+        "text_2": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Praticidade para levar na mala ou mochila.</p>",
+            "type_preset": "custom",
+            "font": "var(--font-accent--family)",
+            "font_size": "0.75rem",
+            "line_height": "tight",
+            "letter_spacing": "tight",
+            "case": "none",
+            "wrap": "nowrap",
+            "width": "fit-content"
+          }
+        }
+      },
+      "block_order": ["text_1", "text_2"]
+    }
+  ]
+}
+{% endschema %}

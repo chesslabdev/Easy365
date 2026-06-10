@@ -219,6 +219,12 @@ on the first slide), overlay, color scheme, layout/alignment and padding, and ac
 slide markup, autoplay, or arrows. (Corner-radius stays customizable via the slideshow's
 `corner_radius`.)
 
+**Same rule for any native client engine.** To reuse a JS-driven primitive (e.g. the marquee:
+`marquee.js` ↔ the `<marquee-component>` DOM contract — refs `wrapper`/`content`/`marqueeItems`,
+`data-speed-factor`), replicate the exact host markup it requires and restyle/extend it; never
+rebuild the scroll/clone/observer logic. Mirror the native structural CSS into your section if
+the native section that owns it may not be on the page.
+
 Page composition: `templates/*.json` reference sections + block order/settings; order
 sections above-the-fold first; shared chrome via section groups. Validate referenced block
 types exist and `presets` are present.
