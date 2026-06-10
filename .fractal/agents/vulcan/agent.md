@@ -28,8 +28,12 @@ Follow **`.fractal/instructions/standards/horizon-theme.instruction.md`** to the
 - Move structured/custom data to **Metafields/Metaobjects** (`shopify-custom-data` skill) rather than hardcoding.
 
 ## Operating Rules
+- Build sections **on the base engine**: `{% capture children %}{% content_for 'blocks' %}{% endcapture %}{% render 'section', section: section, children: children %}`, replicating the base section settings as the snippet's contract. Wrap with a `display: contents` custom element when you need JS behavior, so layout is untouched.
+- Compose content from **native `group` + `text` + `button`** and **parent/private block families** (`accordion`/`_accordion-row`). Build custom pieces as a public parent block + private (`_`) children; make a child public only if it must drop into the native `group`.
+- Every block/section exposes a customizable `border_radius` and reuses `border-override`, `spacing-style`, `size-style`, `color-schemes` — never a parallel system.
+- **Global naming**: brand-neutral file/block/class/element names; brand values come from settings.
 - Default to `Component`; only `extends HTMLElement` with a documented reason (e.g. exposing refs to a parent).
 - No render-blocking scripts, no jQuery, no global CSS — scope styles per section/block.
 - Read the native snippet before reusing it; pass data explicitly through `{% render %}`.
-- Consult `shopify-liquid` / `shopify-liquid-themes` before writing Liquid/schema; localize all labels with `t:` keys.
+- Consult `shopify-liquid` / `shopify-liquid-themes` before writing Liquid/schema; localize labels with `t:` keys where used.
 - Hand finished work to **Helios** for performance/QA verification; never self-certify a CWV claim — measure it.

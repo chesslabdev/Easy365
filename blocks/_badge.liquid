@@ -1,0 +1,60 @@
+{%- doc -%}
+  Private child of `badge-row`: a single glassmorphism pill. Always pill-shaped; colors,
+  blur and padding are customizable. Label comes from settings (never hardcoded).
+{%- enddoc -%}
+
+{%- assign bs = block.settings -%}
+
+<span
+  class="badge spacing-style"
+  style="
+    --badge-bg: {{ bs.background_color }};
+    --badge-fg: {{ bs.text_color }};
+    --badge-border: {{ bs.border_color }};
+    --badge-blur: {{ bs.backdrop_blur }}px;
+    {% render 'spacing-style', settings: bs %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {{- bs.label | escape -}}
+</span>
+
+{% stylesheet %}
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 999px;
+    background: var(--badge-bg, rgb(47 47 48 / 0.72));
+    color: var(--badge-fg, #fefffc);
+    border: 1px solid var(--badge-border, rgb(0 0 0 / 0.6));
+    backdrop-filter: blur(var(--badge-blur, 4px));
+    font-family: var(--font-accent--family, inherit);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Badge",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "label", "label": "Texto", "default": "Recurso" },
+    { "type": "color", "id": "background_color", "label": "Cor de fundo", "alpha": true, "default": "#2f2f30b8" },
+    { "type": "color", "id": "text_color", "label": "Cor do texto", "default": "#fefffc" },
+    { "type": "color", "id": "border_color", "label": "Cor da borda", "alpha": true, "default": "#00010099" },
+    { "type": "range", "id": "backdrop_blur", "label": "Desfoque do fundo", "min": 0, "max": 20, "step": 1, "unit": "px", "default": 4 },
+    { "type": "header", "content": "Espaçamento" },
+    { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 8 },
+    { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 8 },
+    { "type": "range", "id": "padding-inline-start", "label": "Esquerda", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "padding-inline-end", "label": "Direita", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 12 }
+  ],
+  "presets": [
+    { "name": "Badge" }
+  ]
+}
+{% endschema %}

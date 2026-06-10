@@ -1,0 +1,89 @@
+{%- doc -%}
+  Global parent block: a horizontal, wrapping row of badges/pills. Accepts `_badge` private
+  children (parent + private-child family, like accordion + _accordion-row). Carries its own
+  layout/appearance controls (gap, justify, color scheme, border + radius, padding).
+{%- enddoc -%}
+
+{%- assign bs = block.settings -%}
+
+<div
+  class="
+    badge-row spacing-style border-style badge-row--{{ bs.alignment }}
+    {%- if bs.inherit_color_scheme == false %} color-{{ bs.color_scheme }}{% endif %}
+  "
+  style="
+    --badge-row-gap: {{ bs.gap }}px;
+    {% render 'spacing-style', settings: bs %}
+    {% render 'border-override', settings: bs %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--badge-row-gap, 14px);
+  }
+  .badge-row--start { justify-content: flex-start; }
+  .badge-row--center { justify-content: center; }
+  .badge-row--end { justify-content: flex-end; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Badge row",
+  "tag": null,
+  "blocks": [{ "type": "_badge" }],
+  "settings": [
+    { "type": "range", "id": "gap", "label": "Espaço entre", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 14 },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alinhamento",
+      "options": [
+        { "value": "start", "label": "Esquerda" },
+        { "value": "center", "label": "Centro" },
+        { "value": "end", "label": "Direita" }
+      ],
+      "default": "center"
+    },
+    { "type": "header", "content": "Aparência" },
+    { "type": "checkbox", "id": "inherit_color_scheme", "label": "Herdar esquema de cores", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de cores", "default": "scheme-1", "visible_if": "{{ block.settings.inherit_color_scheme == false }}" },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "Borda",
+      "options": [
+        { "value": "none", "label": "Nenhuma" },
+        { "value": "solid", "label": "Sólida" }
+      ],
+      "default": "none"
+    },
+    { "type": "range", "id": "border_width", "label": "Espessura", "min": 0, "max": 10, "step": 0.5, "unit": "px", "default": 1, "visible_if": "{{ block.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_opacity", "label": "Opacidade", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 100, "visible_if": "{{ block.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_radius", "label": "Raio da borda", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Espaçamento" },
+    { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "Esquerda", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "Direita", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "Badge row",
+      "category": "Texto",
+      "blocks": {
+        "badge_1": { "type": "_badge", "settings": { "label": "Recurso 1" } },
+        "badge_2": { "type": "_badge", "settings": { "label": "Recurso 2" } },
+        "badge_3": { "type": "_badge", "settings": { "label": "Recurso 3" } }
+      },
+      "block_order": ["badge_1", "badge_2", "badge_3"]
+    }
+  ]
+}
+{% endschema %}

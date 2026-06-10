@@ -1,0 +1,137 @@
+{%- doc -%}
+  Global block: a headline rendered as two overlaid layers with a CSS blend mode, reproducing
+  a "mix-blend" duplicate title. Decorator pattern — the text is captured once and emitted
+  twice; the decorative twin is hidden from assistive tech so the heading is read once.
+
+  Public block: usable inside any section or `group`.
+{%- enddoc -%}
+
+{%- liquid
+  assign bs = block.settings
+  assign tag = bs.tag | default: 'h2'
+  assign preset = bs.type_preset
+-%}
+{%- capture heading_text -%}{{ bs.text | escape }}{%- endcapture -%}
+
+<{{ tag }}
+  class="blend-text spacing-style blend-text--{{ bs.text_align }}"
+  style="
+    --blend-font-family: var(--font-{{ preset }}--family);
+    --blend-font-style: var(--font-{{ preset }}--style);
+    --blend-font-weight: var(--font-{{ preset }}--weight);
+    --blend-font-size: var(--font-{{ preset }}--size);
+    --blend-font-line-height: var(--font-{{ preset }}--line-height);
+    --blend-font-case: var(--font-{{ preset }}--case);
+    {% if bs.custom_color != blank %}--blend-color: {{ bs.custom_color }};{% endif %}
+    {% render 'spacing-style', settings: bs %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <span class="blend-text__layer blend-text__layer--base">{{ heading_text }}</span>
+  {%- if bs.blend_mode != 'none' -%}
+    <span
+      class="blend-text__layer blend-text__layer--twin"
+      style="mix-blend-mode: {{ bs.blend_mode }};"
+      aria-hidden="true"
+    >{{ heading_text }}</span>
+  {%- endif -%}
+</{{ tag }}>
+
+{% stylesheet %}
+  .blend-text {
+    position: relative;
+    margin: 0;
+    font-family: var(--blend-font-family);
+    font-style: var(--blend-font-style);
+    font-weight: var(--blend-font-weight);
+    font-size: var(--blend-font-size);
+    line-height: var(--blend-font-line-height);
+    text-transform: var(--blend-font-case);
+    color: var(--blend-color, inherit);
+  }
+
+  .blend-text--left { text-align: left; }
+  .blend-text--center { text-align: center; }
+  .blend-text--right { text-align: right; }
+
+  .blend-text__layer {
+    display: block;
+  }
+
+  .blend-text__layer--twin {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blend text",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "text", "label": "Texto", "default": "Título" },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "Tag (SEO)",
+      "info": "Use H1 apenas uma vez por página.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "Parágrafo" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "type_preset",
+      "label": "Estilo de fonte",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" },
+        { "value": "paragraph", "label": "Parágrafo" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Alinhamento",
+      "options": [
+        { "value": "left", "label": "Esquerda" },
+        { "value": "center", "label": "Centro" },
+        { "value": "right", "label": "Direita" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "blend_mode",
+      "label": "Mesclagem (camada dupla)",
+      "options": [
+        { "value": "none", "label": "Nenhuma (texto simples)" },
+        { "value": "overlay", "label": "Overlay" },
+        { "value": "difference", "label": "Difference" },
+        { "value": "screen", "label": "Screen" },
+        { "value": "multiply", "label": "Multiply" }
+      ],
+      "default": "difference"
+    },
+    { "type": "color", "id": "custom_color", "label": "Cor do texto", "alpha": true },
+    { "type": "header", "content": "Espaçamento" },
+    { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "Esquerda", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "Direita", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    { "name": "Blend text", "category": "Texto" }
+  ]
+}
+{% endschema %}

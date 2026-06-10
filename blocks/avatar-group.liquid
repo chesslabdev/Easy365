@@ -1,0 +1,74 @@
+{%- doc -%}
+  Global parent block: an overlapping stack of circular avatars (social proof). Accepts
+  `_avatar` private children. Avatar size and overlap are customizable and inherited by
+  the children via CSS variables.
+{%- enddoc -%}
+
+{%- assign bs = block.settings -%}
+
+<div
+  class="avatar-group spacing-style"
+  style="
+    --avatar-size: {{ bs.size }}px;
+    --avatar-overlap: {{ bs.overlap }}px;
+    {% render 'spacing-style', settings: bs %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .avatar-group {
+    display: inline-flex;
+    align-items: center;
+  }
+  .avatar-group .avatar-slot {
+    display: inline-flex;
+    margin-inline-end: calc(var(--avatar-overlap, 8px) * -1);
+  }
+  .avatar-group .avatar-slot:last-child {
+    margin-inline-end: 0;
+  }
+  .avatar-group .avatar {
+    display: block;
+    width: var(--avatar-size, 32px);
+    height: var(--avatar-size, 32px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgb(var(--color-background));
+  }
+  .avatar-group .avatar--placeholder {
+    background: rgb(var(--color-foreground) / 0.15);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Avatar group",
+  "tag": null,
+  "blocks": [{ "type": "_avatar" }],
+  "settings": [
+    { "type": "range", "id": "size", "label": "Tamanho", "min": 20, "max": 64, "step": 2, "unit": "px", "default": 32 },
+    { "type": "range", "id": "overlap", "label": "Sobreposição", "min": 0, "max": 24, "step": 1, "unit": "px", "default": 8 },
+    { "type": "header", "content": "Espaçamento" },
+    { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "Esquerda", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "Direita", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "Avatar group",
+      "category": "Texto",
+      "blocks": {
+        "avatar_1": { "type": "_avatar" },
+        "avatar_2": { "type": "_avatar" },
+        "avatar_3": { "type": "_avatar" },
+        "avatar_4": { "type": "_avatar" }
+      },
+      "block_order": ["avatar_1", "avatar_2", "avatar_3", "avatar_4"]
+    }
+  ]
+}
+{% endschema %}

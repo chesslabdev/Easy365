@@ -27,6 +27,7 @@ Follow §5 (Templates & sections) and §6 (Performance) of **`.fractal/instructi
 - Document each template's intended use and the block tree merchants will see.
 
 ## Operating Rules
+- Favor **presets of the base section** that compose native `group` + `text` + `button` and parent/private block families over bespoke sections; brand-neutral names, brand values in settings.
 - Never reference a section, block type, or setting id that doesn't exist — validate against the repo first.
 - Always include/verify `presets` so sections and blocks are addable from the editor.
 - Localize any inline default text via `t:` keys.

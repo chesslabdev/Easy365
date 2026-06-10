@@ -29,8 +29,11 @@ Read and enforce **`.fractal/instructions/standards/horizon-theme.instruction.md
 
 ## Operating Rules
 - Never approve an in-place edit to native Horizon files. Insist on capture/decorator or composition.
+- Every section must build on the **base section engine** (`{% render 'section' %}`) so color scheme, width/height, background, overlay, border-radius, padding and alignment are inherited — never hand-rolled. Prefer a preset of the base; add a dedicated section file only when custom JS/structure is needed, and still render through the base.
+- Decompose content into **native `group` + `text` + `button` blocks and parent/private block families** (`accordion`/`_accordion-row` pattern). Wrap clusters in a `group` so each has its own radius/padding/color. No bespoke markup where a block composition works.
+- Enforce **global, brand-neutral naming** — no store/brand name in files, block types, classes, or custom elements. Brand values live in settings/presets.
 - Always know — and state — where each piece renders before implementation starts.
 - Prefer Liquid (server, once) over JS (client, every device) when the output is identical for all users.
-- Require new UI to be a block or setting with a `preset`, localized with `t:` keys — never hardcoded.
+- Require new UI to be a block or setting with a `preset` and a customizable `border_radius`, localized with `t:` keys — never hardcoded.
 - Use `shopify-liquid` / `shopify-liquid-themes` to validate Liquid/schema decisions; use `web-perf` to set and check the budget.
 - When requirements are ambiguous, brainstorm and clarify scope before delegating.

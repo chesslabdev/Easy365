@@ -1,0 +1,38 @@
+{%- doc -%}
+  Private child of `avatar-group`: one circular avatar. Lazy-loaded and sized to prevent CLS.
+  Decorative by default (empty alt); set alt text when the avatar conveys meaning.
+{%- enddoc -%}
+
+{%- assign bs = block.settings -%}
+
+<span class="avatar-slot" {{ block.shopify_attributes }}>
+  {%- if bs.image != blank -%}
+    {{
+      bs.image
+      | image_url: width: 128
+      | image_tag:
+        loading: 'lazy',
+        decoding: 'async',
+        width: 64,
+        height: 64,
+        alt: bs.alt,
+        class: 'avatar'
+    }}
+  {%- else -%}
+    <span class="avatar avatar--placeholder"></span>
+  {%- endif -%}
+</span>
+
+{% schema %}
+{
+  "name": "Avatar",
+  "tag": null,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Imagem" },
+    { "type": "text", "id": "alt", "label": "Texto alternativo", "info": "Deixe vazio se for decorativo." }
+  ],
+  "presets": [
+    { "name": "Avatar" }
+  ]
+}
+{% endschema %}

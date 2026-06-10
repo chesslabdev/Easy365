@@ -14,11 +14,19 @@
    that lowers PageSpeed / Core Web Vitals is a regression, even if it "works".
 2. **Never edit native Horizon files in place.** Wrap, decorate, or compose around them.
    Editing native code creates merge conflicts on theme updates and silent bugs.
-3. **Everything must be editable in the Theme Editor.** New UI = a block or a section
-   setting, not a hardcoded value. The merchant should never need code.
-4. **Compose with blocks.** Build "block chains" so any layout is rearrangeable by drag
-   and drop in the editor.
-5. **SEO and accessibility are non-negotiable** on every component (see §7).
+3. **Build on the base section.** Every section must reuse the base section engine
+   (`{% render 'section' %}`, see §5) so color scheme, width/height, background media,
+   overlay, **border-radius**, padding, gap and alignment come for free and stay
+   consistent. Do not hand-roll section chrome.
+4. **Everything must be editable in the Theme Editor.** New UI = a block or a section
+   setting, not a hardcoded value. Border-radius, padding, color and spacing are ALWAYS
+   customizable. The merchant should never need code.
+5. **Compose with blocks, not markup.** Build content from native `group` + `text` +
+   `button` blocks and parent/private block families (§4) — not bespoke HTML. Wrap
+   content groups in a `group` block so every cluster has its own radius/padding/color.
+6. **Name globally.** Components are reusable across stores — never bake a store or brand
+   name into a file, block type, class, or custom element (§4a).
+7. **SEO and accessibility are non-negotiable** on every component (see §7).
 
 ---
 
@@ -120,30 +128,79 @@ Rules:
 
 ---
 
-## 4. Blocks & block chains — full editability
+## 4. Blocks & block chains — composition over markup
 
-- **Private blocks** are prefixed with `_` (e.g. `_card.liquid`) and are only available
-  as children of the sections/blocks that declare them. Use these for internal pieces.
-- **Public blocks** (no underscore) are merchant-selectable anywhere allowed.
-- Accept children with `{% content_for 'blocks' %}` so blocks nest into chains.
-- Always emit `{{ block.shopify_attributes }}` on the block root for editor selection.
-- Read settings from `block.settings`; never hardcode copy, colors, spacing, or links.
-- Provide a `{% schema %}` with sensible `settings`, `blocks` (accepted children), and
-  **`presets`** so the block appears in the editor's "Add block" menu with a good default.
-- Reuse the shared style snippets via settings: `spacing-style`, `size-style`,
-  `border-override`, `color-schemes` — do not invent parallel spacing/color systems.
-- Localize every label with translation keys (`"label": "t:..."`) — add keys to `locales/`.
+The theme is **block-first**. Build UI by composing blocks, mirroring the native patterns
+(`accordion.liquid` + `_accordion-row.liquid`, `group.liquid`). Reach for bespoke HTML only
+for pieces that have no native/composable equivalent.
+
+**Block kinds**
+- **Public blocks** (no underscore, e.g. `group.liquid`, `card.liquid`) are merchant-
+  selectable wherever `@theme` is accepted — including *inside* the native `group`. Make a
+  block public when it should be reusable across many parents.
+- **Private blocks** (`_` prefix, e.g. `_accordion-row.liquid`) are only available to the
+  parent that lists them in its schema `blocks`. Use for tightly-coupled children.
+
+**The parent + private-child family** (the pattern to copy for any custom component):
+- A **parent** public block (group-like) carries the layout/appearance controls and accepts
+  its children via `{% content_for 'blocks' %}` — e.g. `accordion` → `_accordion-row`.
+- Each **private child** renders one item and may itself accept `@theme` children, so text
+  lives in native `text` blocks. Everything stays orderable and editable.
+- A child that must also be insertable inside the native `group` (which only accepts
+  `@theme`/`@app`/`_divider`) **must be public** — private blocks can't be added to parents
+  that don't list them. Choose public vs private by where the block needs to go.
+
+**The `group` block is the content container.** Wrap text/CTA clusters in a `group` block
+(`group.liquid`) — it gives each cluster its own color scheme, background, border + radius,
+padding, width/height and alignment. Headings/paragraphs = native `text` blocks inside it.
+
+**Rules for every block**
+- Accept children with `{% content_for 'blocks' %}`; emit `{{ block.shopify_attributes }}`.
+- Read values from `block.settings` — never hardcode copy, colors, spacing, links.
+- Reuse shared style snippets via settings: `spacing-style`, `size-style`,
+  `border-override` (border + **radius**), `color-schemes`. Always expose a `border_radius`
+  range. Never invent parallel spacing/color systems.
+- Ship a `{% schema %}` with `settings`, accepted `blocks`, and **`presets`**.
+- Localize labels with `t:` keys where the store uses them.
+
+### 4a. Global, brand-neutral naming
+
+Components are skills reused across many stores. **Never** put a store/brand name in a file
+name, block `type`, CSS class, custom-element tag, or asset. Name by *function*:
+- ✅ `cinematic-hero.liquid`, `badge-row.liquid`, `_badge.liquid`, `<media-reveal>`, `.blend-text__layer`
+- ❌ `eazy-hero.liquid`, `_eazy-hero-pill.liquid`, `<eazy-hero>`, `.eazy-hero__pill`
+
+Brand-specific values (copy, colors, media) belong in **settings/presets**, not in names.
 
 ---
 
-## 5. Templates & sections — page composition
+## 5. Sections — always built on the base section engine
 
-- Pages are composed in `templates/*.json` (e.g. `product.json`, `collection.json`,
-  `index.json`) by referencing sections and their block order/settings.
-- Keep templates declarative: order sections for above-the-fold priority first.
-- For shared chrome use section groups (`header-group.json`, `footer-group.json`).
-- New page type → add a JSON template + the sections it needs; validate block types
-  referenced actually exist and `presets` are present.
+`sections/section.liquid` is the **base section**: a thin wrapper that captures its blocks
+and delegates to the `section` snippet, which renders ALL section chrome (background media,
+overlay, color scheme, width/height, border + **radius**, padding, layout panel /
+direction / alignment / gap). Most "sections" in Horizon (rich text, FAQ, multicolumn,
+icons-with-text…) are **just presets of this base** — they have no `.liquid` of their own.
+
+**Decision order for a new section:**
+1. **Preset first.** If the design is achievable by composing existing blocks, ship it as a
+   *preset*. Presets live in a section's schema, so to avoid editing native
+   `section.liquid`, put your preset in your **own** section file that reuses the base.
+2. **Section-on-base.** When you need custom JS/structure (e.g. a web-component wrapper),
+   create a global section file that still renders through the base engine:
+   ```liquid
+   {% capture children %}{% content_for 'blocks' %}{% endcapture %}
+   <media-reveal>{% render 'section', section: section, children: children %}</media-reveal>
+   {%- comment -%} replicate the base section settings in this schema — the snippet's contract {%- endcomment -%}
+   ```
+   Wrap with a custom element using `display: contents` so it adds behavior without changing
+   layout. This inherits every base control (including border-radius) for free.
+3. **Never** edit native `section.liquid` to add a preset, and never re-implement section
+   chrome by hand.
+
+Page composition: `templates/*.json` reference sections + block order/settings; order
+sections above-the-fold first; shared chrome via section groups. Validate referenced block
+types exist and `presets` are present.
 
 ---
 
@@ -207,10 +264,14 @@ Rules:
 
 A change ships only when ALL are true:
 - [ ] No native Horizon file edited in place (decorated/composed instead).
-- [ ] New JS extends `Component` and is registered in `snippets/scripts.liquid`.
+- [ ] Section renders through the base `section` engine (`{% render 'section' %}`); chrome not hand-rolled.
+- [ ] Content composed from `group` + `text` + `button` / parent-private block families — not bespoke markup.
+- [ ] Names are brand-neutral & functional (no store name in files, types, classes, or custom elements).
+- [ ] Border-radius, padding, color scheme & spacing are all merchant-customizable.
+- [ ] New JS extends `Component`, registered/loaded as a module (section-scoped where it only runs there).
 - [ ] New UI is a block/section setting and appears + works in the Theme Editor with a preset.
 - [ ] LCP element is eager + prioritized; everything offscreen is lazy; CLS reserved.
 - [ ] All images have correct `alt` + dimensions; headings/landmarks valid; JSON-LD where relevant.
-- [ ] Labels localized with `t:` keys; values come from settings, nothing hardcoded.
+- [ ] Labels localized with `t:` keys where used; values come from settings, nothing hardcoded.
 - [ ] `shopify theme check` passes; web-perf shows no CWV regression.
-- [ ] LiquidDoc (`{%- doc -%}`) headers on snippets; JSDoc on web components.
+- [ ] LiquidDoc (`{%- doc -%}`) headers on snippets/blocks; JSDoc on web components.
