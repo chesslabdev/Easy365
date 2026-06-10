@@ -1,0 +1,157 @@
+{%- comment -%}
+  Comparison section — a fixed header group at the top + body blocks below.
+
+  STRUCTURE (per request):
+  - A STATIC `group` header (`content_for 'block' … id: 'static-header'`) pinned at the top of
+    the section — the merchant edits its content (the heading) but can't remove/reorder it.
+  - Below, `{% content_for 'blocks' %}` renders the body: the `comparison-table` parent block
+    (with its `_comparison-row` private children) and any additional blocks (CTA, text…).
+  - Mixing a static block with the dynamic block list is the native pattern (see product-list,
+    collection-list). Mobile-first: ships the "Mobile" spacing controls via `mobile-spacing`.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+<div class="section-background color-{{ s.color_scheme }}"></div>
+<div
+  class="
+    section section--{{ s.section_width }} color-{{ s.color_scheme }}
+    comparison spacing-style
+    {%- if s.custom_mobile_padding %} mobile-spacing-{{ section.id }}{% endif %}
+  "
+  style="
+    --comparison-gap: {{ s.gap }}px;
+    {% render 'spacing-style', settings: s %}
+  "
+>
+  <div class="comparison__header">
+    {% content_for 'block', type: 'group', id: 'static-header' %}
+  </div>
+
+  <div class="comparison__body">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% render 'mobile-spacing', settings: s, id: section.id %}
+
+{% stylesheet %}
+  .comparison {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--comparison-gap, 48px);
+  }
+
+  .comparison__header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .comparison__body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--comparison-gap, 48px);
+  }
+
+  .comparison__body > * {
+    width: 100%;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Comparativo",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "blocks": [
+    { "type": "comparison-table" },
+    { "type": "group" },
+    { "type": "blend-text" },
+    { "type": "text" },
+    { "type": "button" }
+  ],
+  "settings": [
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        { "value": "page-width", "label": "t:options.page" },
+        { "value": "full-width", "label": "t:options.full" }
+      ],
+      "default": "page-width"
+    },
+    { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 48 },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 72 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 72 },
+    { "type": "range", "id": "padding-inline-start", "label": "t:settings.left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "t:settings.right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 40, "visible_if": "{{ section.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 40, "visible_if": "{{ section.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16, "visible_if": "{{ section.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile", "label": "Direita (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16, "visible_if": "{{ section.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    {
+      "name": "Comparativo",
+      "category": "t:categories.text",
+      "blocks": {
+        "static-header": {
+          "type": "group",
+          "static": true,
+          "name": "Cabeçalho fixo",
+          "settings": {
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "inherit_color_scheme": true,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "heading": {
+              "type": "blend-text",
+              "settings": {
+                "text": "Por que o Eazy é a escolha inteligente?",
+                "tag": "h2",
+                "type_preset": "h1",
+                "text_align": "center",
+                "blend_mode": "none"
+              }
+            }
+          },
+          "block_order": ["heading"]
+        },
+        "table": {
+          "type": "comparison-table",
+          "blocks": {
+            "row_1": { "type": "_comparison-row", "settings": { "label": "Doses", "value_a": "25", "value_b": "1" } },
+            "row_2": { "type": "_comparison-row", "settings": { "label": "Preço", "value_a": "R$16,90", "value_b": "R$7,12" } },
+            "row_3": { "type": "_comparison-row", "settings": { "label": "Custo por dose", "value_a": "~ R$ 0,82", "value_b": "R$7,12", "emphasize": true } }
+          },
+          "block_order": ["row_1", "row_2", "row_3"]
+        }
+      },
+      "block_order": ["table"]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,32 @@
+{%- doc -%}
+  Private child of `comparison-table`: one comparison row = a label + two values (column A is
+  the highlighted/own product, column B the alternative). Uses `display: contents` so its three
+  cells flow directly into the parent's CSS grid, keeping the highlighted column continuous.
+{%- enddoc -%}
+
+{%- assign bs = block.settings -%}
+
+<div
+  class="comparison-table__row{% if bs.emphasize %} comparison-table__row--emphasis{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <div class="comparison-table__cell comparison-table__cell--label">{{ bs.label | escape }}</div>
+  <div class="comparison-table__cell comparison-table__cell--a">{{ bs.value_a | escape }}</div>
+  <div class="comparison-table__cell comparison-table__cell--b">{{ bs.value_b | escape }}</div>
+</div>
+
+{% schema %}
+{
+  "name": "Linha de comparação",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "label", "label": "Rótulo", "default": "Doses" },
+    { "type": "text", "id": "value_a", "label": "Valor (coluna destacada)", "default": "25" },
+    { "type": "text", "id": "value_b", "label": "Valor (coluna alternativa)", "default": "1" },
+    { "type": "checkbox", "id": "emphasize", "label": "Destacar linha", "info": "Maior e em negrito (ex.: a linha final).", "default": false }
+  ],
+  "presets": [
+    { "name": "Linha de comparação" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,234 @@
+{%- doc -%}
+  Parent block: a 3-column comparison table (labels | highlighted product | alternative).
+  Renders the intro + the two column headers, then its `_comparison-row` private children
+  (parent + private-child family, like accordion + _accordion-row). The highlighted middle
+  column is continuous because each row's cells flow into this grid via `display: contents`.
+{%- enddoc -%}
+
+{%- assign bs = block.settings -%}
+
+<div
+  class="comparison-table spacing-style border-style{% if bs.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}"
+  style="
+    --cmp-highlight: {{ bs.highlight_color }};
+    --cmp-highlight-fg: {{ bs.highlight_text_color }};
+    --cmp-panel: {{ bs.panel_color }};
+    --cmp-label: {{ bs.label_color }};
+    --cmp-value-b: {{ bs.value_b_color }};
+    --cmp-border: {{ bs.border_color }};
+    --cmp-radius: {{ bs.border_radius }}px;
+    {% render 'spacing-style', settings: bs %}
+    {% render 'border-override', settings: bs %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="comparison-table__grid">
+    {%- comment -%} Header row {%- endcomment -%}
+    <div class="comparison-table__cell comparison-table__intro">
+      {%- if bs.intro_label != blank -%}
+        <span class="comparison-table__pill">{{ bs.intro_label | escape }}</span>
+      {%- endif -%}
+      {%- if bs.intro_text != blank -%}
+        <div class="comparison-table__intro-text">{{ bs.intro_text }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="comparison-table__cell comparison-table__head comparison-table__cell--a">
+      {%- if bs.column_a_image != blank -%}
+        {{
+          bs.column_a_image
+          | image_url: width: 480
+          | image_tag:
+            loading: 'lazy',
+            decoding: 'async',
+            widths: '120, 240, 360, 480',
+            sizes: '(min-width: 750px) 30vw, 50vw',
+            alt: bs.column_a_alt,
+            class: 'comparison-table__logo'
+        }}
+      {%- elsif bs.column_a_title != blank -%}
+        <span class="comparison-table__col-title">{{ bs.column_a_title | escape }}</span>
+      {%- endif -%}
+    </div>
+
+    <div class="comparison-table__cell comparison-table__head comparison-table__cell--b">
+      {%- if bs.column_b_title != blank -%}
+        <span class="comparison-table__col-title">{{ bs.column_b_title | escape }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Rows ( _comparison-row children, each flows 3 cells into the grid ) {%- endcomment -%}
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% render 'mobile-spacing', settings: bs, id: block.id %}
+
+{% stylesheet %}
+  .comparison-table {
+    width: 100%;
+    container-type: inline-size;
+  }
+
+  .comparison-table__grid {
+    display: grid;
+    grid-template-columns: var(--cmp-col-label, 1.1fr) 1fr 1fr;
+    border-radius: var(--cmp-radius, 22px);
+    overflow: hidden;
+    background: var(--cmp-panel, #fdf2ee);
+  }
+
+  /* Rows are display:contents so their cells participate in the grid above. */
+  .comparison-table__row {
+    display: contents;
+  }
+
+  .comparison-table__cell {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem 1.5rem;
+    min-height: 5.25rem;
+    font-size: clamp(0.95rem, 2.2cqi, 1.5rem);
+    line-height: 1.05;
+  }
+
+  /* Label column */
+  .comparison-table__cell--label {
+    color: var(--cmp-label, #ff4c24);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Highlighted (own product) column — continuous accent column */
+  .comparison-table__cell--a {
+    background: var(--cmp-highlight, #ff4c24);
+    color: var(--cmp-highlight-fg, #fff);
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Alternative column */
+  .comparison-table__cell--b {
+    color: var(--cmp-value-b, #000100);
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Header row */
+  .comparison-table__intro {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .comparison-table__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1.1rem;
+    border-radius: 999px;
+    background: var(--cmp-pill-bg, #0a1a4d);
+    color: var(--cmp-pill-fg, #fff);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  .comparison-table__intro-text {
+    font-size: 0.95rem;
+    line-height: 1.2;
+    opacity: 0.85;
+  }
+
+  .comparison-table__intro-text > :first-child { margin-block-start: 0; }
+  .comparison-table__intro-text > :last-child { margin-block-end: 0; }
+
+  .comparison-table__head {
+    min-height: 6.5rem;
+    font-weight: 700;
+  }
+
+  .comparison-table__col-title {
+    font-size: clamp(1.1rem, 2.6cqi, 2rem);
+    font-weight: 700;
+  }
+
+  .comparison-table__logo {
+    width: auto;
+    max-height: 3rem;
+    object-fit: contain;
+  }
+
+  /* Row separators */
+  .comparison-table__row .comparison-table__cell {
+    border-top: 1px solid var(--cmp-border, rgb(0 0 0 / 0.06));
+  }
+
+  .comparison-table__row .comparison-table__cell--a {
+    border-top-color: rgb(255 255 255 / 0.18);
+  }
+
+  /* Emphasized (final) row */
+  .comparison-table__row--emphasis .comparison-table__cell {
+    font-size: clamp(1.1rem, 3cqi, 2rem);
+    font-weight: 700;
+  }
+
+  @container (max-width: 600px) {
+    .comparison-table__cell {
+      padding: 0.9rem 0.75rem;
+      min-height: 3.5rem;
+    }
+    .comparison-table__head {
+      min-height: 4.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tabela comparativa",
+  "tag": null,
+  "blocks": [{ "type": "_comparison-row" }],
+  "settings": [
+    { "type": "header", "content": "Cabeçalho" },
+    { "type": "text", "id": "intro_label", "label": "Selo", "default": "A conta é simples." },
+    { "type": "richtext", "id": "intro_text", "label": "Texto de apoio", "default": "<p>Quando você divide doses por preço, a matemática começa a falar mais alto que a embalagem.</p>" },
+    { "type": "image_picker", "id": "column_a_image", "label": "Logo/imagem da coluna destacada" },
+    { "type": "text", "id": "column_a_alt", "label": "Texto alternativo da imagem" },
+    { "type": "text", "id": "column_a_title", "label": "Título da coluna destacada", "info": "Usado se nenhuma imagem for definida.", "default": "Eazy 365" },
+    { "type": "text", "id": "column_b_title", "label": "Título da coluna alternativa", "default": "Sachês tradicionais" },
+    { "type": "header", "content": "Cores" },
+    { "type": "color", "id": "highlight_color", "label": "Fundo da coluna destacada", "default": "#ff4c24" },
+    { "type": "color", "id": "highlight_text_color", "label": "Texto da coluna destacada", "default": "#ffffff" },
+    { "type": "color", "id": "panel_color", "label": "Fundo do painel", "default": "#fdf2ee" },
+    { "type": "color", "id": "label_color", "label": "Cor dos rótulos", "default": "#ff4c24" },
+    { "type": "color", "id": "value_b_color", "label": "Cor dos valores alternativos", "default": "#000100" },
+    { "type": "color", "id": "border_color", "label": "Cor das linhas", "alpha": true, "default": "#0000000f" },
+    { "type": "range", "id": "border_radius", "label": "Raio da borda", "min": 0, "max": 50, "step": 1, "unit": "px", "default": 22 },
+    { "type": "header", "content": "Espaçamento" },
+    { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "Esquerda", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "Direita", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile", "label": "Direita (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    {
+      "name": "Tabela comparativa",
+      "blocks": {
+        "row_1": { "type": "_comparison-row", "settings": { "label": "Doses", "value_a": "25", "value_b": "1" } },
+        "row_2": { "type": "_comparison-row", "settings": { "label": "Preço", "value_a": "R$16,90", "value_b": "R$7,12" } },
+        "row_3": { "type": "_comparison-row", "settings": { "label": "Custo por dose", "value_a": "~ R$ 0,82", "value_b": "R$7,12", "emphasize": true } }
+      },
+      "block_order": ["row_1", "row_2", "row_3"]
+    }
+  ]
+}
+{% endschema %}
