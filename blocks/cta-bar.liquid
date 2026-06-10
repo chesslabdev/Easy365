@@ -1,0 +1,166 @@
+{%- doc -%}
+  Global block: a horizontal call-to-action bar — a headline with an inline highlighted "pill"
+  word, plus a button (label + optional sub-label). Public & reusable in any section/group.
+{%- enddoc -%}
+
+{%- assign bs = block.settings -%}
+
+<div
+  class="cta-bar spacing-style{% if bs.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}"
+  style="
+    --cta-bar-bg: {{ bs.bar_color }};
+    --cta-bar-fg: {{ bs.text_color }};
+    --cta-pill-bg: {{ bs.pill_color }};
+    --cta-pill-fg: {{ bs.pill_text_color }};
+    --cta-btn-bg: {{ bs.button_color }};
+    --cta-btn-fg: {{ bs.button_text_color }};
+    --cta-radius: {{ bs.border_radius }}px;
+    {% render 'spacing-style', settings: bs %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="cta-bar__message">
+    {%- if bs.text != blank -%}
+      <span class="cta-bar__text">{{ bs.text }}</span>
+    {%- endif -%}
+    {%- if bs.pill_text != blank -%}
+      <span class="cta-bar__pill">{{ bs.pill_text | escape }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- if bs.button_label != blank -%}
+    <a
+      class="cta-bar__button"
+      {% if bs.button_link != blank %}href="{{ bs.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+    >
+      <span class="cta-bar__button-label">{{ bs.button_label | escape }}</span>
+      {%- if bs.button_sublabel != blank -%}
+        <span class="cta-bar__button-sub">{{ bs.button_sublabel | escape }}</span>
+      {%- endif -%}
+    </a>
+  {%- endif -%}
+</div>
+
+{% render 'mobile-spacing', settings: bs, id: block.id %}
+
+{% stylesheet %}
+  .cta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 100%;
+    background: var(--cta-bar-bg, #1a388d);
+    color: var(--cta-bar-fg, #fff);
+    border-radius: var(--cta-radius, 22px);
+  }
+
+  .cta-bar__message {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .cta-bar__text {
+    font-size: clamp(1.1rem, 2.4vw, 2rem);
+    font-weight: 700;
+    line-height: 1.04;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  .cta-bar__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4em 0.7em;
+    border-radius: 0.6rem;
+    background: var(--cta-pill-bg, #0a1a4d);
+    color: var(--cta-pill-fg, #fff);
+    font-size: clamp(1.1rem, 2.4vw, 2rem);
+    font-weight: 700;
+    line-height: 1.04;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .cta-bar__button {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    flex: 0 0 auto;
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    background: var(--cta-btn-bg, #ff4c24);
+    color: var(--cta-btn-fg, #fff);
+    text-decoration: none;
+    transition: filter 0.2s ease;
+  }
+
+  .cta-bar__button:hover { filter: brightness(1.08); }
+
+  .cta-bar__button[aria-disabled='true'] { opacity: 0.6; pointer-events: none; }
+
+  .cta-bar__button-label {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.15;
+  }
+
+  .cta-bar__button-sub {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cta-bar {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+    }
+    .cta-bar__button { width: 100%; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Barra de CTA",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "Conteúdo" },
+    { "type": "inline_richtext", "id": "text", "label": "Texto", "default": "+ Performance − Custo =" },
+    { "type": "text", "id": "pill_text", "label": "Destaque (pílula)", "default": "Zero desperdício" },
+    { "type": "text", "id": "button_label", "label": "Texto do botão", "default": "Quero meu Eazy" },
+    { "type": "text", "id": "button_sublabel", "label": "Subtexto do botão", "default": "Tropic Bloom" },
+    { "type": "url", "id": "button_link", "label": "Link do botão" },
+    { "type": "header", "content": "Cores" },
+    { "type": "color", "id": "bar_color", "label": "Fundo da barra", "default": "#1a388d" },
+    { "type": "color", "id": "text_color", "label": "Cor do texto", "default": "#ffffff" },
+    { "type": "color", "id": "pill_color", "label": "Fundo da pílula", "default": "#0a1a4d" },
+    { "type": "color", "id": "pill_text_color", "label": "Texto da pílula", "default": "#ffffff" },
+    { "type": "color", "id": "button_color", "label": "Fundo do botão", "default": "#ff4c24" },
+    { "type": "color", "id": "button_text_color", "label": "Texto do botão", "default": "#ffffff" },
+    { "type": "range", "id": "border_radius", "label": "Raio da borda", "min": 0, "max": 50, "step": 1, "unit": "px", "default": 22 },
+    { "type": "header", "content": "Espaçamento" },
+    { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "padding-inline-start", "label": "Esquerda", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+    { "type": "range", "id": "padding-inline-end", "label": "Direita", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 20, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 20, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile", "label": "Direita (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16, "visible_if": "{{ block.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    { "name": "Barra de CTA" }
+  ]
+}
+{% endschema %}

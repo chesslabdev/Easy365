@@ -73,6 +73,7 @@
   "disabled_on": { "groups": ["header", "footer"] },
   "blocks": [
     { "type": "comparison-table" },
+    { "type": "cta-bar" },
     { "type": "group" },
     { "type": "blend-text" },
     { "type": "text" },
@@ -130,11 +131,13 @@
             "heading": {
               "type": "blend-text",
               "settings": {
-                "text": "Por que o Eazy é a escolha inteligente?",
+                "text": "Por que o <strong>Eazy</strong> é a <strong>escolha inteligente</strong>?",
                 "tag": "h2",
                 "type_preset": "h1",
                 "text_align": "center",
-                "blend_mode": "none"
+                "blend_mode": "none",
+                "custom_color": "#000100",
+                "highlight_color": "#0a1a4d"
               }
             }
           },
@@ -148,9 +151,18 @@
             "row_3": { "type": "_comparison-row", "settings": { "label": "Custo por dose", "value_a": "~ R$ 0,82", "value_b": "R$7,12", "emphasize": true } }
           },
           "block_order": ["row_1", "row_2", "row_3"]
+        },
+        "cta": {
+          "type": "cta-bar",
+          "settings": {
+            "text": "+ Performance − Custo =",
+            "pill_text": "Zero desperdício",
+            "button_label": "Quero meu Eazy",
+            "button_sublabel": "Tropic Bloom"
+          }
         }
       },
-      "block_order": ["table"]
+      "block_order": ["table", "cta"]
     }
   ]
 }

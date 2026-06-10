@@ -11,7 +11,8 @@
   assign tag = bs.tag | default: 'h2'
   assign preset = bs.type_preset
 -%}
-{%- capture heading_text -%}{{ bs.text | escape }}{%- endcapture -%}
+{%- comment -%} inline_richtext is Shopify-sanitized; bolded words become the highlight color. {%- endcomment -%}
+{%- capture heading_text -%}{{ bs.text }}{%- endcapture -%}
 
 <{{ tag }}
   class="blend-text spacing-style blend-text--{{ bs.text_align }}{% if bs.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}"
@@ -23,6 +24,7 @@
     --blend-font-line-height: var(--font-{{ preset }}--line-height);
     --blend-font-case: var(--font-{{ preset }}--case);
     {% if bs.custom_color != blank %}--blend-color: {{ bs.custom_color }};{% endif %}
+    {% if bs.highlight_color != blank %}--blend-highlight: {{ bs.highlight_color }};{% endif %}
     {% render 'spacing-style', settings: bs %}
   "
   {{ block.shopify_attributes }}
@@ -60,6 +62,12 @@
     display: block;
   }
 
+  /* Bolded words take the highlight color (kept at the heading weight, not double-bold). */
+  .blend-text :is(strong, b) {
+    color: var(--blend-highlight, inherit);
+    font-weight: inherit;
+  }
+
   .blend-text__layer--twin {
     position: absolute;
     inset: 0;
@@ -72,7 +80,7 @@
   "name": "Blend text",
   "tag": null,
   "settings": [
-    { "type": "text", "id": "text", "label": "Texto", "default": "Título" },
+    { "type": "inline_richtext", "id": "text", "label": "Texto", "info": "Use negrito para destacar palavras com a cor de destaque.", "default": "Título" },
     {
       "type": "select",
       "id": "tag",
@@ -126,6 +134,7 @@
       "default": "difference"
     },
     { "type": "color", "id": "custom_color", "label": "Cor do texto", "alpha": true },
+    { "type": "color", "id": "highlight_color", "label": "Cor de destaque (negrito)", "alpha": true },
     { "type": "header", "content": "Espaçamento" },
     { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
     { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },

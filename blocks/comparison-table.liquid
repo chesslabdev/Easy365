@@ -73,9 +73,7 @@
   .comparison-table__grid {
     display: grid;
     grid-template-columns: var(--cmp-col-label, 1.1fr) 1fr 1fr;
-    border-radius: var(--cmp-radius, 22px);
-    overflow: hidden;
-    background: var(--cmp-panel, #fdf2ee);
+    align-items: stretch;
   }
 
   /* Rows are display:contents so their cells participate in the grid above. */
@@ -92,26 +90,48 @@
     line-height: 1.05;
   }
 
-  /* Label column */
+  /* Label column — cream panel on the data rows only (the intro header stays transparent). */
   .comparison-table__cell--label {
+    background: var(--cmp-panel, #fdf2ee);
     color: var(--cmp-label, #ff4c24);
     text-transform: uppercase;
     font-weight: 500;
   }
+  .comparison-table__row:first-child .comparison-table__cell--label {
+    border-start-start-radius: var(--cmp-radius, 22px);
+  }
+  .comparison-table__row:last-child .comparison-table__cell--label {
+    border-end-start-radius: var(--cmp-radius, 22px);
+  }
 
-  /* Highlighted (own product) column — continuous accent column */
+  /* Highlighted (own product) column — continuous accent column, raised with a rounded top. */
   .comparison-table__cell--a {
     background: var(--cmp-highlight, #ff4c24);
     color: var(--cmp-highlight-fg, #fff);
     justify-content: center;
     text-align: center;
   }
+  .comparison-table__head.comparison-table__cell--a {
+    border-start-start-radius: var(--cmp-radius, 22px);
+    border-start-end-radius: var(--cmp-radius, 22px);
+  }
+  .comparison-table__row:last-child .comparison-table__cell--a {
+    border-end-start-radius: var(--cmp-radius, 22px);
+    border-end-end-radius: var(--cmp-radius, 22px);
+  }
 
-  /* Alternative column */
+  /* Alternative column — cream panel, rounded on the outer (right) side. */
   .comparison-table__cell--b {
+    background: var(--cmp-panel, #fdf2ee);
     color: var(--cmp-value-b, #000100);
     justify-content: center;
     text-align: center;
+  }
+  .comparison-table__head.comparison-table__cell--b {
+    border-start-end-radius: var(--cmp-radius, 22px);
+  }
+  .comparison-table__row:last-child .comparison-table__cell--b {
+    border-end-end-radius: var(--cmp-radius, 22px);
   }
 
   /* Header row */
@@ -145,8 +165,14 @@
   .comparison-table__intro-text > :last-child { margin-block-end: 0; }
 
   .comparison-table__head {
-    min-height: 6.5rem;
+    min-height: 7rem;
     font-weight: 700;
+  }
+
+  /* Lift the highlighted column so it reads as a raised "tab", like the design. */
+  .comparison-table__head.comparison-table__cell--a {
+    margin-block-start: -0.75rem;
+    padding-block-start: 2.25rem;
   }
 
   .comparison-table__col-title {
