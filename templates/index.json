@@ -1585,8 +1585,8 @@
             "placeholder": "",
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 72,
-            "padding-inline-end": 72
+            "padding-inline-start": 100,
+            "padding-inline-end": 100
           },
           "blocks": {
             "group_yFiwkj": {
