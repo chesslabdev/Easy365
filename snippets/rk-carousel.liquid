@@ -1,0 +1,231 @@
+{%- doc -%}
+  Reusable Swiper carousel host. Swiper (CSS + JS) is loaded globally from the CDN in
+  `layout/theme.liquid`; this snippet renders the DOM contract (`.swiper > .swiper-wrapper`
+  + slides) and the `<rk-carousel>` web component (assets/rk-carousel.js) initializes it.
+
+  Pre-init CSS sizes the slides from the same item counts the JS uses, so the carousel
+  paints in its final layout before Swiper hydrates (CLS ≈ 0).
+
+  @param {string} content - captured `.swiper-slide` elements (each slide MUST carry the
+                            `swiper-slide` class; add `rk-carousel__slide` for base styles)
+  @param {string} id - unique id (block.id / section.id) for scoping
+  @param {string} [layout] - 'normal' (default) | 'centered' (active slide emphasized) | 'linear' (free flow, no snap)
+  @param {number} [desktop_items] - slides per view ≥990px (default 4)
+  @param {number} [tablet_items] - slides per view 750–989px (default 2)
+  @param {number} [mobile_items] - slides per view ≤749px (default 1.2)
+  @param {number} [gap] - space between slides in px (default 16)
+  @param {boolean} [show_arrows] - render prev/next arrows (default false)
+  @param {boolean} [show_dots] - render pagination dots (default false)
+  @param {boolean} [loop] - infinite loop (default false)
+  @param {number} [autoplay] - seconds between slides; 0 = off. With layout 'linear' it
+                               becomes a continuous marquee-like scroll (default 0)
+  @param {number} [speed] - transition speed in ms (default 600)
+  @param {number} [active_scale] - active-slide scale %, layout 'centered' only (default 110)
+
+  @example
+  {% capture carousel_slides %}
+    <div class="swiper-slide rk-carousel__slide">Slide 1</div>
+    <div class="swiper-slide rk-carousel__slide">Slide 2</div>
+  {% endcapture %}
+
+  {% render 'rk-carousel',
+    content: carousel_slides,
+    id: block.id,
+    show_arrows: true,
+    desktop_items: 4,
+    loop: true
+  %}
+{%- enddoc -%}
+
+{%- liquid
+  assign layout = layout | default: 'normal'
+  assign desktop_items = desktop_items | default: 4
+  assign tablet_items = tablet_items | default: 2
+  assign mobile_items = mobile_items | default: 1.2
+  assign gap = gap | default: 16
+  assign speed = speed | default: 600
+  assign autoplay = autoplay | default: 0
+  assign active_scale = active_scale | default: 110
+  assign scale_factor = active_scale | divided_by: 100.0
+-%}
+
+<rk-carousel
+  id="rk-carousel-{{ id }}"
+  class="rk-carousel rk-carousel--{{ layout }}"
+  data-layout="{{ layout }}"
+  data-desktop-items="{{ desktop_items }}"
+  data-tablet-items="{{ tablet_items }}"
+  data-mobile-items="{{ mobile_items }}"
+  data-gap="{{ gap }}"
+  data-speed="{{ speed }}"
+  data-autoplay="{{ autoplay }}"
+  {% if loop %}
+    data-loop
+  {% endif %}
+  style="
+    --rk-gap: {{ gap }}px;
+    --rk-items-desktop: {{ desktop_items }};
+    --rk-items-tablet: {{ tablet_items }};
+    --rk-items-mobile: {{ mobile_items }};
+    --rk-active-scale: {{ scale_factor }};
+  "
+>
+  <div class="swiper rk-carousel__viewport" ref="viewport">
+    <div class="swiper-wrapper rk-carousel__wrapper">
+      {{ content }}
+    </div>
+  </div>
+
+  {% if show_arrows %}
+    <button
+      type="button"
+      class="rk-carousel__arrow rk-carousel__arrow--prev"
+      ref="prevArrow"
+      aria-label="{{ 'accessibility.slideshow_previous' | t }}"
+      aria-controls="rk-carousel-{{ id }}"
+    >
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true" focusable="false">
+        <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button
+      type="button"
+      class="rk-carousel__arrow rk-carousel__arrow--next"
+      ref="nextArrow"
+      aria-label="{{ 'accessibility.slideshow_next' | t }}"
+      aria-controls="rk-carousel-{{ id }}"
+    >
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true" focusable="false">
+        <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  {% endif %}
+
+  {% if show_dots %}
+    <div class="swiper-pagination rk-carousel__dots" ref="dots"></div>
+  {% endif %}
+</rk-carousel>
+
+<script src="{{ 'rk-carousel.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% stylesheet %}
+  .rk-carousel {
+    --rk-items: var(--rk-items-mobile, 1.2);
+    position: relative;
+    display: block;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .rk-carousel {
+      --rk-items: var(--rk-items-tablet, 2);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .rk-carousel {
+      --rk-items: var(--rk-items-desktop, 4);
+    }
+  }
+
+  /* Pre-init layout: mirror Swiper's slidesPerView/spaceBetween math so the first paint
+     already matches the hydrated layout (no CLS, no FOUC while the CDN JS loads). */
+  .rk-carousel:not(.rk-carousel--ready) .swiper-wrapper {
+    display: flex;
+  }
+
+  .rk-carousel:not(.rk-carousel--ready) .swiper-slide {
+    flex-shrink: 0;
+    width: calc((100% - (var(--rk-items) - 1) * var(--rk-gap, 16px)) / var(--rk-items));
+    margin-right: var(--rk-gap, 16px);
+  }
+
+  .rk-carousel__viewport {
+    width: 100%;
+  }
+
+  .rk-carousel__slide {
+    box-sizing: border-box;
+    height: auto;
+  }
+
+  /* Centered layout: the active slide is emphasized, neighbors recede. */
+  .rk-carousel--centered .rk-carousel__slide {
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    transform: scale(0.92);
+    opacity: 0.65;
+  }
+
+  .rk-carousel--centered .swiper-slide-active.rk-carousel__slide {
+    transform: scale(var(--rk-active-scale, 1.1));
+    opacity: 1;
+    z-index: 1;
+  }
+
+  /* Linear layout: free flow; with continuous autoplay the wrapper must not ease. */
+  .rk-carousel--linear .swiper-wrapper {
+    transition-timing-function: linear;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rk-carousel--centered .rk-carousel__slide {
+      transition: none;
+    }
+  }
+
+  .rk-carousel__arrow {
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-background, #fff);
+    color: var(--color-foreground, #111);
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.12);
+    cursor: pointer;
+  }
+
+  .rk-carousel__arrow--prev {
+    inset-inline-start: 4px;
+  }
+
+  .rk-carousel__arrow--next {
+    inset-inline-end: 4px;
+  }
+
+  .rk-carousel__arrow[disabled] {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .rk-carousel__arrow:focus-visible {
+    outline: 2px solid var(--color-foreground, #111);
+    outline-offset: 2px;
+  }
+
+  .rk-carousel__dots {
+    position: static;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-block-start: 16px;
+  }
+
+  .rk-carousel__dots .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    opacity: 0.3;
+  }
+
+  .rk-carousel__dots .swiper-pagination-bullet-active {
+    opacity: 1;
+  }
+{% endstylesheet %}

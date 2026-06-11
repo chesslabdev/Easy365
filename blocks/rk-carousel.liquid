@@ -1,0 +1,175 @@
+{%- doc -%}
+  Parent block: Swiper carousel (parent + private-child family, like accordion → _accordion-row).
+  Carries every carousel control (layout mode, items per viewport, gap, arrows, dots, loop,
+  autoplay) and renders its `_rk-slide` private children through the reusable `rk-carousel`
+  snippet. Public so it can also be dropped inside the native `group` block.
+
+  Layout modes:
+  - "Padrão"             → normal multi-item carousel
+  - "Central em destaque" → centered slides, active card emphasized
+  - "Linear (livre)"      → free flow without snap; with autoplay it scrolls continuously
+{%- enddoc -%}
+
+{%- liquid
+  assign bs = block.settings
+
+  capture slides
+    content_for 'blocks'
+  endcapture
+
+  assign autoplay = 0
+  if bs.autoplay
+    assign autoplay = bs.autoplay_delay
+  endif
+-%}
+
+<div
+  class="
+    rk-carousel-block spacing-style
+    {%- if bs.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}
+  "
+  style="{% render 'spacing-style', settings: bs %}"
+  {{ block.shopify_attributes }}
+>
+  {% render 'rk-carousel',
+    content: slides,
+    id: block.id,
+    layout: bs.layout,
+    desktop_items: bs.desktop_items,
+    tablet_items: bs.tablet_items,
+    mobile_items: bs.mobile_items,
+    gap: bs.gap,
+    show_arrows: bs.show_arrows,
+    show_dots: bs.show_dots,
+    loop: bs.loop,
+    autoplay: autoplay,
+    speed: bs.speed,
+    active_scale: bs.active_scale
+  %}
+</div>
+
+{% render 'mobile-spacing', settings: bs, id: block.id %}
+
+{% stylesheet %}
+  .rk-carousel-block {
+    width: 100%;
+    box-sizing: border-box;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Carrossel",
+  "tag": null,
+  "blocks": [{ "type": "_rk-slide" }],
+  "settings": [
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Modo do carrossel",
+      "options": [
+        { "value": "normal", "label": "Padrão" },
+        { "value": "centered", "label": "Central em destaque" },
+        { "value": "linear", "label": "Linear (livre)" }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "range",
+      "id": "active_scale",
+      "label": "Escala do card central",
+      "min": 100,
+      "max": 130,
+      "step": 1,
+      "unit": "%",
+      "default": 110,
+      "visible_if": "{{ block.settings.layout == 'centered' }}"
+    },
+    { "type": "range", "id": "desktop_items", "label": "Itens no desktop", "min": 1, "max": 8, "step": 0.5, "default": 4 },
+    { "type": "range", "id": "tablet_items", "label": "Itens no tablet", "min": 1, "max": 6, "step": 0.5, "default": 2 },
+    { "type": "range", "id": "mobile_items", "label": "Itens no mobile", "min": 1, "max": 4, "step": 0.1, "default": 1.2 },
+    { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 16 },
+    { "type": "header", "content": "t:content.navigation" },
+    { "type": "checkbox", "id": "show_arrows", "label": "Mostrar setas", "default": true },
+    { "type": "checkbox", "id": "show_dots", "label": "Mostrar indicadores (dots)", "default": false },
+    { "type": "checkbox", "id": "loop", "label": "Loop infinito", "default": false },
+    { "type": "checkbox", "id": "autoplay", "label": "t:settings.auto_rotate_slides", "default": false },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "t:settings.speed",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5,
+      "info": "No modo Linear, vira a duração da rolagem contínua por slide.",
+      "visible_if": "{{ block.settings.autoplay }}"
+    },
+    { "type": "range", "id": "speed", "label": "Velocidade da transição", "min": 100, "max": 2000, "step": 50, "unit": "ms", "default": 600 },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "t:settings.left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "t:settings.right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile", "label": "Direita (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    {
+      "name": "Carrossel",
+      "category": "t:categories.layout",
+      "settings": {
+        "layout": "normal",
+        "desktop_items": 4,
+        "tablet_items": 2,
+        "mobile_items": 1.2,
+        "gap": 16,
+        "show_arrows": true,
+        "show_dots": false,
+        "loop": false
+      },
+      "blocks": {
+        "slide_1": {
+          "type": "_rk-slide",
+          "settings": { "border": "solid", "border_radius": 12 },
+          "blocks": {
+            "text": { "type": "text", "settings": { "text": "<p>Slide 1</p>", "width": "100%", "alignment": "center" } }
+          },
+          "block_order": ["text"]
+        },
+        "slide_2": {
+          "type": "_rk-slide",
+          "settings": { "border": "solid", "border_radius": 12 },
+          "blocks": {
+            "text": { "type": "text", "settings": { "text": "<p>Slide 2</p>", "width": "100%", "alignment": "center" } }
+          },
+          "block_order": ["text"]
+        },
+        "slide_3": {
+          "type": "_rk-slide",
+          "settings": { "border": "solid", "border_radius": 12 },
+          "blocks": {
+            "text": { "type": "text", "settings": { "text": "<p>Slide 3</p>", "width": "100%", "alignment": "center" } }
+          },
+          "block_order": ["text"]
+        },
+        "slide_4": {
+          "type": "_rk-slide",
+          "settings": { "border": "solid", "border_radius": 12 },
+          "blocks": {
+            "text": { "type": "text", "settings": { "text": "<p>Slide 4</p>", "width": "100%", "alignment": "center" } }
+          },
+          "block_order": ["text"]
+        }
+      },
+      "block_order": ["slide_1", "slide_2", "slide_3", "slide_4"]
+    }
+  ]
+}
+{% endschema %}

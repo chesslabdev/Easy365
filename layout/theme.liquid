@@ -36,6 +36,14 @@
       {%- render 'theme-editor' -%}
     {% endif %}
 
+    {% comment %} Swiper (engine do snippet rk-carousel) — script com defer para não bloquear o render {% endcomment %}
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
+    >
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js" defer></script>
+
     {{ content_for_header }}
     {% # theme-check-enable RemoteAsset %}
   </head>
