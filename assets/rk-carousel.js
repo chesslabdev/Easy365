@@ -69,8 +69,6 @@ class RkCarousel extends Component {
     const Swiper = await whenSwiperReady();
     if (!this.isConnected || this.#swiper) return;
 
-    if (this.#loopEnabled) this.#ensureLoopableSlides();
-
     this.#swiper = new Swiper(this.refs.viewport, this.#buildConfig());
     this.classList.add('rk-carousel--ready');
 
@@ -87,37 +85,9 @@ class RkCarousel extends Component {
    * elements in the DOM, which breaks the Theme Editor's block mapping — so it
    * stays storefront-only either way.
    */
-  get #loopEnabled() {
+  get #loopWanted() {
     const wanted = this.#layout === 'centered' || this.hasAttribute('data-loop');
     return wanted && !window.Shopify?.designMode;
-  }
-
-  get #maxItemsPerView() {
-    return Math.max(
-      Number(this.dataset.mobileItems) || 1.2,
-      Number(this.dataset.tabletItems) || 2,
-      Number(this.dataset.desktopItems) || 4
-    );
-  }
-
-  /**
-   * Swiper silently disables loop when there aren't enough slides
-   * (≈ slidesPerView + centered offset). Storefront-only, top the wrapper up by
-   * cloning the original slides until the loop requirement is comfortably met.
-   */
-  #ensureLoopableSlides() {
-    const wrapper = this.refs.viewport.querySelector('.swiper-wrapper');
-    if (!wrapper) return;
-
-    const originals = [...wrapper.children];
-    if (originals.length < 2) return;
-
-    const needed = Math.ceil(this.#maxItemsPerView) * 2;
-    let index = 0;
-    while (wrapper.children.length < needed) {
-      wrapper.append(originals[index % originals.length].cloneNode(true));
-      index += 1;
-    }
   }
 
   #destroy() {
@@ -128,32 +98,46 @@ class RkCarousel extends Component {
 
   #buildConfig() {
     const layout = this.#layout;
+    const centered = layout === 'centered';
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const autoplaySeconds = Number(this.dataset.autoplay) || 0;
     const continuous = layout === 'linear' && autoplaySeconds > 0;
+    const count = this.refs.viewport.querySelectorAll('.swiper-slide').length;
+
+    // Swiper's native loop requirement: slides >= slidesPerView + slidesPerGroup
+    // (+1 when centeredSlides) — below that it silently disables loop. So when loop
+    // is wanted, clamp slidesPerView to the largest loopable value; if not even
+    // 1-per-view fits, fall back to `rewind` (the documented native alternative).
+    const maxLoopableItems = count - 1 - (centered ? 1 : 0);
+    const loop = this.#loopWanted && maxLoopableItems >= 1;
+
+    const itemsFor = (value, fallback) => {
+      const items = Number(value) || fallback;
+      return loop ? Math.min(items, maxLoopableItems) : items;
+    };
 
     /** @type {Record<string, unknown>} */
     const config = {
-      slidesPerView: Number(this.dataset.mobileItems) || 1.2,
+      slidesPerView: itemsFor(this.dataset.mobileItems, 1.2),
       spaceBetween: Number(this.dataset.gap) || 16,
       speed: continuous ? autoplaySeconds * 1000 : Number(this.dataset.speed) || 600,
-      loop: this.#loopEnabled,
+      loop,
+      rewind: this.#loopWanted && !loop,
       grabCursor: true,
       a11y: { enabled: true },
       breakpoints: {
-        750: { slidesPerView: Number(this.dataset.tabletItems) || 2 },
-        990: { slidesPerView: Number(this.dataset.desktopItems) || 4 },
+        750: { slidesPerView: itemsFor(this.dataset.tabletItems, 2) },
+        990: { slidesPerView: itemsFor(this.dataset.desktopItems, 4) },
       },
     };
 
-    if (layout === 'centered') {
+    if (centered) {
       config.centeredSlides = true;
       config.slideToClickedSlide = true;
 
-      if (!this.#loopEnabled) {
-        // No-loop fallback (Theme Editor): start in the middle so the active card
-        // isn't pinned to the left edge with empty space before it.
-        const count = this.refs.viewport.querySelectorAll('.swiper-slide').length;
+      if (!loop) {
+        // No-loop fallback (Theme Editor / too few slides): start in the middle so
+        // the active card isn't pinned to the left edge with empty space before it.
         config.initialSlide = Math.floor((count - 1) / 2);
       }
     }
