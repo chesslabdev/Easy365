@@ -171,7 +171,7 @@
                         "align_baseline": false,
                         "horizontal_alignment_flex_direction_column": "flex-start",
                         "vertical_alignment_flex_direction_column": "center",
-                        "gap": 12,
+                        "gap": 0,
                         "width": "fill",
                         "custom_width": 100,
                         "width_mobile": "fill",
@@ -284,11 +284,92 @@
                         "text_kTQcAe",
                         "text_tdFQWJ"
                       ]
+                    },
+                    "group_YdK8YN": {
+                      "type": "group",
+                      "name": "Redes Sociais",
+                      "settings": {
+                        "content_direction": "row",
+                        "vertical_on_mobile": false,
+                        "horizontal_alignment": "flex-start",
+                        "vertical_alignment": "center",
+                        "align_baseline": false,
+                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "vertical_alignment_flex_direction_column": "center",
+                        "gap": 12,
+                        "width": "fill",
+                        "custom_width": 100,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "custom_height": 100,
+                        "inherit_color_scheme": true,
+                        "color_scheme": "",
+                        "background_media": "none",
+                        "video_position": "cover",
+                        "background_image_position": "cover",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "toggle_overlay": false,
+                        "overlay_color": "#00000026",
+                        "overlay_style": "solid",
+                        "gradient_direction": "to top",
+                        "link": "",
+                        "open_in_new_tab": false,
+                        "placeholder": "",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {
+                        "icon_6tqUKq": {
+                          "type": "icon",
+                          "name": "t:names.icon",
+                          "settings": {
+                            "icon": "youtube",
+                            "width": 24,
+                            "link": "",
+                            "open_in_new_tab": false
+                          },
+                          "blocks": {}
+                        },
+                        "icon_VMCAHV": {
+                          "type": "icon",
+                          "name": "t:names.icon",
+                          "settings": {
+                            "icon": "instagram",
+                            "width": 24,
+                            "link": "",
+                            "open_in_new_tab": false
+                          },
+                          "blocks": {}
+                        },
+                        "icon_NWhEek": {
+                          "type": "icon",
+                          "name": "t:names.icon",
+                          "settings": {
+                            "icon": "facebook",
+                            "width": 24,
+                            "link": "",
+                            "open_in_new_tab": false
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "icon_6tqUKq",
+                        "icon_VMCAHV",
+                        "icon_NWhEek"
+                      ]
                     }
                   },
                   "block_order": [
                     "text_gYbcxh",
-                    "group_WUXfqR"
+                    "group_WUXfqR",
+                    "group_YdK8YN"
                   ]
                 }
               },
