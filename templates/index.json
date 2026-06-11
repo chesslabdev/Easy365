@@ -1431,8 +1431,8 @@
         "rk_carousel_nWPNX7": {
           "type": "rk-carousel",
           "settings": {
-            "layout": "centered",
-            "active_scale": 110,
+            "layout": "normal",
+            "active_scale": 104,
             "desktop_items": 3,
             "tablet_items": 2,
             "mobile_items": 1.2,
