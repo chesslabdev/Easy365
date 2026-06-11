@@ -562,7 +562,7 @@
                             "accordion_dividers": false,
                             "inherit_color_scheme": true,
                             "color_scheme": "",
-                            "heading_preset": "h3",
+                            "heading_preset": "",
                             "link_preset": "paragraph",
                             "padding-block-start": 0,
                             "padding-block-end": 0,
