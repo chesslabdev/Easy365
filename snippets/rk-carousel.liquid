@@ -16,7 +16,9 @@
   @param {number} [gap] - space between slides in px (default 16)
   @param {boolean} [show_arrows] - render prev/next arrows (default false)
   @param {boolean} [show_dots] - render pagination dots (default false)
-  @param {boolean} [loop] - infinite loop (default false)
+  @param {boolean} [loop] - infinite loop (default false; layout 'centered' always loops
+                            on the storefront, and slides are cloned client-side when
+                            there aren't enough for Swiper's loop requirement)
   @param {number} [autoplay] - seconds between slides; 0 = off. With layout 'linear' it
                                becomes a continuous marquee-like scroll (default 0)
   @param {number} [speed] - transition speed in ms (default 600)

@@ -69,10 +69,55 @@ class RkCarousel extends Component {
     const Swiper = await whenSwiperReady();
     if (!this.isConnected || this.#swiper) return;
 
+    if (this.#loopEnabled) this.#ensureLoopableSlides();
+
     this.#swiper = new Swiper(this.refs.viewport, this.#buildConfig());
     this.classList.add('rk-carousel--ready');
 
     if (window.Shopify?.designMode) this.#bindEditorEvents();
+  }
+
+  get #layout() {
+    return this.dataset.layout || 'normal';
+  }
+
+  /**
+   * Centered layout loops by default — without loop the first (active) card sits
+   * against the left edge and the space before it stays empty. Loop reorders slide
+   * elements in the DOM, which breaks the Theme Editor's block mapping — so it
+   * stays storefront-only either way.
+   */
+  get #loopEnabled() {
+    const wanted = this.#layout === 'centered' || this.hasAttribute('data-loop');
+    return wanted && !window.Shopify?.designMode;
+  }
+
+  get #maxItemsPerView() {
+    return Math.max(
+      Number(this.dataset.mobileItems) || 1.2,
+      Number(this.dataset.tabletItems) || 2,
+      Number(this.dataset.desktopItems) || 4
+    );
+  }
+
+  /**
+   * Swiper silently disables loop when there aren't enough slides
+   * (≈ slidesPerView + centered offset). Storefront-only, top the wrapper up by
+   * cloning the original slides until the loop requirement is comfortably met.
+   */
+  #ensureLoopableSlides() {
+    const wrapper = this.refs.viewport.querySelector('.swiper-wrapper');
+    if (!wrapper) return;
+
+    const originals = [...wrapper.children];
+    if (originals.length < 2) return;
+
+    const needed = Math.ceil(this.#maxItemsPerView) * 2;
+    let index = 0;
+    while (wrapper.children.length < needed) {
+      wrapper.append(originals[index % originals.length].cloneNode(true));
+      index += 1;
+    }
   }
 
   #destroy() {
@@ -82,7 +127,7 @@ class RkCarousel extends Component {
   }
 
   #buildConfig() {
-    const layout = this.dataset.layout || 'normal';
+    const layout = this.#layout;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const autoplaySeconds = Number(this.dataset.autoplay) || 0;
     const continuous = layout === 'linear' && autoplaySeconds > 0;
@@ -92,9 +137,7 @@ class RkCarousel extends Component {
       slidesPerView: Number(this.dataset.mobileItems) || 1.2,
       spaceBetween: Number(this.dataset.gap) || 16,
       speed: continuous ? autoplaySeconds * 1000 : Number(this.dataset.speed) || 600,
-      // Loop reorders slide elements in the DOM, which breaks the Theme Editor's
-      // block mapping — keep it storefront-only.
-      loop: this.hasAttribute('data-loop') && !window.Shopify?.designMode,
+      loop: this.#loopEnabled,
       grabCursor: true,
       a11y: { enabled: true },
       breakpoints: {
@@ -106,6 +149,13 @@ class RkCarousel extends Component {
     if (layout === 'centered') {
       config.centeredSlides = true;
       config.slideToClickedSlide = true;
+
+      if (!this.#loopEnabled) {
+        // No-loop fallback (Theme Editor): start in the middle so the active card
+        // isn't pinned to the left edge with empty space before it.
+        const count = this.refs.viewport.querySelectorAll('.swiper-slide').length;
+        config.initialSlide = Math.floor((count - 1) / 2);
+      }
     }
 
     if (layout === 'linear') {
