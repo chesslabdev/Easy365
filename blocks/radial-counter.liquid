@@ -51,7 +51,7 @@
       {% render 'border-override', settings: bs %}
       {% render 'spacing-style', settings: bs %}
       --rc-diameter: {{ d }}px;
-      --rc-diameter-mobile: {{ bs.diameter_mobile | default: d }}px;
+      {% if bs.custom_mobile_size %}--rc-diameter-mobile: {{ bs.diameter_mobile }}px;{% endif %}
       --rc-track: {% if bs.track_color != blank %}{{ bs.track_color }}{% else %}rgb(var(--color-foreground-rgb) / 0.18){% endif %};
       --rc-progress: {% if bs.progress_color != blank %}{{ bs.progress_color }}{% else %}rgb(var(--color-primary)){% endif %};
       --rc-value-size: {{ bs.value_font_size }}px;
@@ -148,8 +148,8 @@
 
   @media screen and (max-width: 749px) {
     .radial-counter__ring {
-      width: var(--rc-diameter-mobile);
-      height: var(--rc-diameter-mobile);
+      width: var(--rc-diameter-mobile, var(--rc-diameter));
+      height: var(--rc-diameter-mobile, var(--rc-diameter));
     }
   }
 {% endstylesheet %}
