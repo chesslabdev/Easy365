@@ -1,0 +1,379 @@
+{%- doc -%}
+  FAQ — public parent block (Easy365 styled accordion).
+
+  Same mechanics as the native `accordion` block, restyled per the Easy365
+  design: separated cards with their own border/radius, automatic CSS-counter
+  numbering, and a circular +/× toggle. Accepts only `_faq-row` children.
+
+  Every color ships as an EMPTY-default picker: empty = inherit from the color
+  scheme (the CSS fallback chains live in `_faq-row`). Values are exposed as
+  scoped --faq-* custom properties consumed by the rows.
+
+  SEO: emits microdata FAQPage (rows emit Question/acceptedAnswer).
+{%- enddoc -%}
+
+{% assign block_settings = block.settings %}
+
+<div
+  class="faq spacing-style{% if block_settings.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}{% unless block_settings.show_numbers %} faq--no-numbers{% endunless %}{% if block_settings.inherit_color_scheme == false %} color-{{ block_settings.color_scheme }}{% endif %}"
+  style="
+    --faq-gap: {{ block_settings.gap }}px;
+    --faq-card-radius: {{ block_settings.border_radius }}px;
+    --faq-card-border-width: {{ block_settings.card_border_width }}px;
+    --faq-card-padding-inline: {{ block_settings.card_padding_inline }}px;
+    --faq-card-padding-block: {{ block_settings.card_padding_block }}px;
+    {% if block_settings.color_accent != blank %}--faq-accent: {{ block_settings.color_accent }};{% endif %}
+    {% if block_settings.color_card_border != blank %}--faq-card-border: {{ block_settings.color_card_border }};{% endif %}
+    {% if block_settings.color_card_bg != blank %}--faq-card-bg: {{ block_settings.color_card_bg }};{% endif %}
+    {% if block_settings.color_question != blank %}--faq-question-color: {{ block_settings.color_question }};{% endif %}
+    {% if block_settings.color_answer != blank %}--faq-answer-color: {{ block_settings.color_answer }};{% endif %}
+    {% if block_settings.color_toggle_bg != blank %}--faq-toggle-bg: {{ block_settings.color_toggle_bg }};{% endif %}
+    {% if block_settings.color_toggle_icon != blank %}--faq-toggle-icon: {{ block_settings.color_toggle_icon }};{% endif %}
+    {% if block_settings.color_toggle_icon_open != blank %}--faq-toggle-icon-open: {{ block_settings.color_toggle_icon_open }};{% endif %}
+    --summary-font-family: var(--font-{{ block_settings.type_preset }}--family);
+    --summary-font-style: var(--font-{{ block_settings.type_preset }}--style);
+    --summary-font-weight: var(--font-{{ block_settings.type_preset }}--weight);
+    --summary-font-size: var(--font-{{ block_settings.type_preset }}--size);
+    --summary-font-line-height: var(--font-{{ block_settings.type_preset }}--line-height);
+    --summary-font-case: var(--font-{{ block_settings.type_preset }}--case);
+    {% render 'spacing-style', settings: block_settings %}
+  "
+  itemscope
+  itemtype="https://schema.org/FAQPage"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% render 'mobile-spacing', settings: block_settings, id: block.id %}
+
+{% stylesheet %}
+  .faq {
+    display: flex;
+    flex-direction: column;
+    gap: var(--faq-gap, 20px);
+    flex: 1;
+    width: 100%;
+    counter-reset: faq-row;
+  }
+
+  /* mirror of the native `.accordion .details__header` typography hook */
+  .faq .faq-row__summary {
+    font-family: var(--summary-font-family);
+    font-style: var(--summary-font-style);
+    font-weight: var(--summary-font-weight);
+    font-size: var(--summary-font-size);
+    line-height: var(--summary-font-line-height);
+    text-transform: var(--summary-font-case);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_faq-row"
+    }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Mostrar numeração",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "type_preset",
+      "label": "t:settings.heading_preset",
+      "options": [
+        { "value": "", "label": "t:options.default" },
+        { "value": "paragraph", "label": "t:options.paragraph" },
+        { "value": "h1", "label": "t:options.h1" },
+        { "value": "h2", "label": "t:options.h2" },
+        { "value": "h3", "label": "t:options.h3" },
+        { "value": "h4", "label": "t:options.h4" },
+        { "value": "h5", "label": "t:options.h5" },
+        { "value": "h6", "label": "t:options.h6" }
+      ],
+      "default": "h5",
+      "info": "t:info.edit_presets_in_theme_settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "Cores"
+    },
+    {
+      "type": "paragraph",
+      "content": "Deixe um campo vazio para herdar do esquema de cores."
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "Destaque (número + botão aberto)"
+    },
+    {
+      "type": "color",
+      "id": "color_card_border",
+      "label": "Borda do card"
+    },
+    {
+      "type": "color",
+      "id": "color_card_bg",
+      "label": "Fundo do card",
+      "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "color_question",
+      "label": "Texto da pergunta"
+    },
+    {
+      "type": "color",
+      "id": "color_answer",
+      "label": "Texto da resposta"
+    },
+    {
+      "type": "color",
+      "id": "color_toggle_bg",
+      "label": "Fundo do botão",
+      "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "color_toggle_icon",
+      "label": "Ícone do botão"
+    },
+    {
+      "type": "color",
+      "id": "color_toggle_icon_open",
+      "label": "Ícone do botão (aberto)"
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "label": "t:settings.thickness",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "card_padding_inline",
+      "label": "Padding horizontal do card",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_padding_block",
+      "label": "Padding vertical do card",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_mobile_padding",
+      "label": "Espaçamento separado no mobile",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "Superior (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "Inferior (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Esquerda (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Direita (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "category": "t:categories.layout",
+      "blocks": {
+        "row-1": {
+          "type": "_faq-row",
+          "settings": {
+            "heading": "Como tomar?",
+            "open_by_default": true
+          },
+          "blocks": {
+            "text-1": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Misture 2g (um aperto firme) em 200ml de água ou na sua bebida favorita após o treino ou antes de dormir.</p>",
+                "width": "100%"
+              }
+            }
+          },
+          "block_order": ["text-1"]
+        },
+        "row-2": {
+          "type": "_faq-row",
+          "settings": {
+            "heading": "Qual a melhor hora para tomar?"
+          },
+          "blocks": {
+            "text-1": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Recomendamos 30 a 60 minutos antes de dormir, ou imediatamente após o treino noturno.</p>",
+                "width": "100%"
+              }
+            }
+          },
+          "block_order": ["text-1"]
+        },
+        "row-3": {
+          "type": "_faq-row",
+          "settings": {
+            "heading": "Posso tomar todos os dias?"
+          },
+          "blocks": {
+            "text-1": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Sim — a fórmula foi pensada para uso diário, todos os 365 dias do ano.</p>",
+                "width": "100%"
+              }
+            }
+          },
+          "block_order": ["text-1"]
+        }
+      },
+      "block_order": ["row-1", "row-2", "row-3"]
+    }
+  ]
+}
+{% endschema %}
