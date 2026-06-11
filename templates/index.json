@@ -953,7 +953,7 @@
           "blocks": {
             "group_T4PNJ4": {
               "type": "group",
-              "name": "t:names.group",
+              "name": "Cabeçalho",
               "settings": {
                 "content_direction": "column",
                 "vertical_on_mobile": true,
