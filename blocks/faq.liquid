@@ -10,6 +10,7 @@
   scoped --faq-* custom properties consumed by the rows.
 
   SEO: emits microdata FAQPage (rows emit Question/acceptedAnswer).
+  Use only one FAQ block per page: each instance emits its own FAQPage microdata entity.
 {%- enddoc -%}
 
 {% assign block_settings = block.settings %}
@@ -30,6 +31,7 @@
     {% if block_settings.color_toggle_bg != blank %}--faq-toggle-bg: {{ block_settings.color_toggle_bg }};{% endif %}
     {% if block_settings.color_toggle_icon != blank %}--faq-toggle-icon: {{ block_settings.color_toggle_icon }};{% endif %}
     {% if block_settings.color_toggle_icon_open != blank %}--faq-toggle-icon-open: {{ block_settings.color_toggle_icon_open }};{% endif %}
+    {% if block_settings.color_toggle_border_open != blank %}--faq-toggle-border-open: {{ block_settings.color_toggle_border_open }};{% endif %}
     --summary-font-family: var(--font-{{ block_settings.type_preset }}--family);
     --summary-font-style: var(--font-{{ block_settings.type_preset }}--style);
     --summary-font-weight: var(--font-{{ block_settings.type_preset }}--weight);
@@ -163,6 +165,11 @@
       "type": "color",
       "id": "color_toggle_icon_open",
       "label": "Ícone do botão (aberto)"
+    },
+    {
+      "type": "color",
+      "id": "color_toggle_border_open",
+      "label": "Borda do botão (aberto)"
     },
     {
       "type": "header",
