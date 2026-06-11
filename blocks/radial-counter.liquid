@@ -174,7 +174,7 @@
     { "type": "range", "id": "label_font_size", "label": "Tamanho do rótulo", "min": 8, "max": 40, "step": 1, "unit": "px", "default": 11 },
 
     { "type": "header", "content": "Anel" },
-    { "type": "range", "id": "diameter", "label": "Diâmetro", "min": 60, "max": 320, "step": 4, "unit": "px", "default": 130 },
+    { "type": "range", "id": "diameter", "label": "Diâmetro", "min": 60, "max": 320, "step": 5, "unit": "px", "default": 130 },
     { "type": "range", "id": "stroke_width", "label": "Espessura do anel", "min": 2, "max": 24, "step": 1, "unit": "px", "default": 10 },
     { "type": "range", "id": "duration_ms", "label": "Duração da animação", "min": 400, "max": 4000, "step": 100, "unit": "ms", "default": 1500 },
 
@@ -192,7 +192,7 @@
 
     { "type": "header", "content": "Mobile" },
     { "type": "checkbox", "id": "custom_mobile_size", "label": "Diâmetro separado no mobile", "default": false },
-    { "type": "range", "id": "diameter_mobile", "label": "Diâmetro (mobile)", "min": 60, "max": 320, "step": 4, "unit": "px", "default": 110, "visible_if": "{{ block.settings.custom_mobile_size }}" },
+    { "type": "range", "id": "diameter_mobile", "label": "Diâmetro (mobile)", "min": 60, "max": 320, "step": 5, "unit": "px", "default": 110, "visible_if": "{{ block.settings.custom_mobile_size }}" },
     { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
     { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
     { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
