@@ -56,7 +56,7 @@
           "blocks": {
             "group_kmrg6F": {
               "type": "group",
-              "name": "t:names.group",
+              "name": "Conteúdo Horizontal",
               "settings": {
                 "content_direction": "column",
                 "vertical_on_mobile": true,
