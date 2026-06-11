@@ -51,9 +51,13 @@
 %}
 
 {% stylesheet %}
-  .faq > accordion-custom {
-    counter-increment: faq-row;
+  .faq accordion-custom {
+    display: block;
     width: 100%;
+  }
+
+  .faq .faq-row {
+    counter-increment: faq-row;
   }
 
   .faq-row {
