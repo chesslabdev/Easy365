@@ -1,0 +1,221 @@
+{%- doc -%}
+  Radial Counter — public block.
+
+  An animated circular progress counter: a number counts up from 0 to `value`
+  while the SVG arc fills `value ÷ max` (or 100% when `max` is empty), triggered
+  once when the block scrolls into view (see `assets/radial-counter.js`).
+
+  The FINAL state is rendered server-side so no-JS and reduced-motion users see
+  the correct number + arc; the web component resets to 0 and animates only when
+  it intersects the viewport.
+
+  Chrome is composed from native snippets (color-schemes, border-override,
+  spacing-style, mobile-spacing) — no native files are edited.
+{%- enddoc -%}
+
+{%- liquid
+  assign bs = block.settings
+  assign d = bs.diameter
+  assign sw = bs.stroke_width
+  assign center = d | times: 1.0 | divided_by: 2.0
+  assign radius = d | minus: sw | times: 1.0 | divided_by: 2.0
+  assign circ = radius | times: 6.28318530718
+
+  if bs.max > 0
+    assign fill = bs.value | times: 1.0 | divided_by: bs.max
+    if fill > 1
+      assign fill = 1
+    endif
+  else
+    assign fill = 1
+  endif
+  assign dash = circ | times: fill
+  assign offset_final = circ | minus: dash
+
+  assign aria = bs.value | append: ''
+  if bs.unit_label != blank
+    assign aria = aria | append: ' ' | append: bs.unit_label
+  endif
+-%}
+
+<radial-counter
+  class="radial-counter"
+  data-target="{{ bs.value }}"
+  {% if bs.max > 0 %}data-max="{{ bs.max }}"{% endif %}
+  data-duration="{{ bs.duration_ms }}"
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="radial-counter__pill spacing-style{% if bs.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}{% if bs.inherit_color_scheme == false %} color-{{ bs.color_scheme }}{% endif %}"
+    style="
+      {% render 'border-override', settings: bs %}
+      {% render 'spacing-style', settings: bs %}
+      --rc-diameter: {{ d }}px;
+      --rc-diameter-mobile: {{ bs.diameter_mobile | default: d }}px;
+      --rc-track: {% if bs.track_color != blank %}{{ bs.track_color }}{% else %}rgb(var(--color-foreground-rgb) / 0.18){% endif %};
+      --rc-progress: {% if bs.progress_color != blank %}{{ bs.progress_color }}{% else %}rgb(var(--color-primary)){% endif %};
+      --rc-value-size: {{ bs.value_font_size }}px;
+      --rc-label-size: {{ bs.label_font_size }}px;
+    "
+    role="img"
+    aria-label="{{ aria | escape }}"
+  >
+    <svg class="radial-counter__ring" viewBox="0 0 {{ d }} {{ d }}" aria-hidden="true" focusable="false">
+      <circle class="radial-counter__track" cx="{{ center }}" cy="{{ center }}" r="{{ radius }}" fill="none" stroke-width="{{ sw }}"></circle>
+      <circle
+        class="radial-counter__arc"
+        ref="arc"
+        cx="{{ center }}"
+        cy="{{ center }}"
+        r="{{ radius }}"
+        fill="none"
+        stroke-width="{{ sw }}"
+        stroke-linecap="round"
+        transform="rotate(-90 {{ center }} {{ center }})"
+        style="stroke-dasharray: {{ circ }}; stroke-dashoffset: {{ offset_final }};"
+      ></circle>
+    </svg>
+    <span class="radial-counter__content">
+      <span class="radial-counter__value" ref="value">{{ bs.value }}</span>
+      {%- if bs.unit_label != blank -%}
+        <span class="radial-counter__label">{{ bs.unit_label }}</span>
+      {%- endif -%}
+    </span>
+  </div>
+</radial-counter>
+
+{% render 'mobile-spacing', settings: bs, id: block.id %}
+
+<script src="{{ 'radial-counter.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% stylesheet %}
+  .radial-counter {
+    display: contents;
+  }
+
+  .radial-counter__pill {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    box-sizing: border-box;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    border: var(--border-width, 0) var(--border-style, solid) var(--border-color, transparent);
+    border-radius: var(--border-radius, 999px);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 6%), 0 1px 2px rgb(0 0 0 / 4%);
+  }
+
+  .radial-counter__ring,
+  .radial-counter__content {
+    grid-area: 1 / 1;
+  }
+
+  .radial-counter__ring {
+    display: block;
+    width: var(--rc-diameter);
+    height: var(--rc-diameter);
+  }
+
+  .radial-counter__track {
+    stroke: var(--rc-track);
+  }
+
+  .radial-counter__arc {
+    stroke: var(--rc-progress);
+  }
+
+  .radial-counter__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .radial-counter__value {
+    font-size: var(--rc-value-size);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .radial-counter__label {
+    margin-top: 0.3em;
+    font-size: var(--rc-label-size);
+    letter-spacing: 0.08em;
+  }
+
+  @media screen and (max-width: 749px) {
+    .radial-counter__ring {
+      width: var(--rc-diameter-mobile);
+      height: var(--rc-diameter-mobile);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Radial counter",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "Conteúdo" },
+    { "type": "number", "id": "value", "label": "Valor (conta até)", "default": 2 },
+    { "type": "number", "id": "max", "label": "Meta (preenche o anel)", "info": "Deixe vazio para o anel preencher 100%." },
+    { "type": "text", "id": "unit_label", "label": "Rótulo (unidade)", "default": "doses" },
+
+    { "type": "header", "content": "Aparência" },
+    { "type": "checkbox", "id": "inherit_color_scheme", "label": "t:settings.inherit_color_scheme", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1", "visible_if": "{{ block.settings.inherit_color_scheme == false }}" },
+    { "type": "paragraph", "content": "Deixe uma cor vazia para herdar do esquema de cores." },
+    { "type": "color", "id": "track_color", "label": "Cor da trilha do anel" },
+    { "type": "color", "id": "progress_color", "label": "Cor do progresso" },
+    { "type": "range", "id": "value_font_size", "label": "Tamanho do número", "min": 12, "max": 96, "step": 1, "unit": "px", "default": 24 },
+    { "type": "range", "id": "label_font_size", "label": "Tamanho do rótulo", "min": 8, "max": 40, "step": 1, "unit": "px", "default": 11 },
+
+    { "type": "header", "content": "Anel" },
+    { "type": "range", "id": "diameter", "label": "Diâmetro", "min": 60, "max": 320, "step": 4, "unit": "px", "default": 130 },
+    { "type": "range", "id": "stroke_width", "label": "Espessura do anel", "min": 2, "max": 24, "step": 1, "unit": "px", "default": 10 },
+    { "type": "range", "id": "duration_ms", "label": "Duração da animação", "min": 400, "max": 4000, "step": 100, "unit": "ms", "default": 1500 },
+
+    { "type": "header", "content": "Borda" },
+    { "type": "select", "id": "border", "label": "t:settings.style", "options": [ { "value": "none", "label": "t:options.none" }, { "value": "solid", "label": "t:options.solid" }, { "value": "dashed", "label": "Tracejado" }, { "value": "dotted", "label": "t:options.dotted" } ], "default": "none" },
+    { "type": "range", "id": "border_width", "label": "t:settings.thickness", "min": 0, "max": 12, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "border_opacity", "label": "t:settings.opacity", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 100 },
+    { "type": "range", "id": "border_radius", "label": "t:settings.border_radius", "min": 0, "max": 200, "step": 2, "unit": "px", "default": 200 },
+
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "t:settings.left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "t:settings.right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_size", "label": "Diâmetro separado no mobile", "default": false },
+    { "type": "range", "id": "diameter_mobile", "label": "Diâmetro (mobile)", "min": 60, "max": 320, "step": 4, "unit": "px", "default": 110, "visible_if": "{{ block.settings.custom_mobile_size }}" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile", "label": "Direita (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    {
+      "name": "Radial counter",
+      "settings": {
+        "value": 2,
+        "max": 8,
+        "unit_label": "doses",
+        "inherit_color_scheme": false,
+        "color_scheme": "scheme-1",
+        "diameter": 130,
+        "stroke_width": 10,
+        "value_font_size": 24,
+        "label_font_size": 11,
+        "duration_ms": 1500,
+        "border_radius": 200
+      }
+    }
+  ]
+}
+{% endschema %}
