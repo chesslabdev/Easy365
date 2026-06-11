@@ -1,0 +1,214 @@
+{%- doc -%}
+  FAQ row — private child of the `faq` parent block.
+
+  Renders one question/answer pair as <details>/<summary> through the native
+  `accordion-custom-component` snippet (animation, keyboard and open-by-default
+  behavior come from the native engine — no custom JS).
+
+  Visual tokens (--faq-*) are set by the parent `faq` block; every value falls
+  back to color-scheme variables so the row inherits the scheme when the
+  merchant leaves a color picker empty.
+
+  SEO: microdata Question/acceptedAnswer (the parent emits FAQPage).
+{%- enddoc -%}
+
+{% assign block_settings = block.settings %}
+
+{% capture faq_row_children %}
+  <details
+    class="details faq-row"
+    itemscope
+    itemprop="mainEntity"
+    itemtype="https://schema.org/Question"
+    {% if block_settings.open_by_default %}
+      open
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    <summary class="details__header faq-row__summary">
+      <span class="faq-row__number" aria-hidden="true"></span>
+      <span class="faq-row__question" itemprop="name">{{ block_settings.heading }}</span>
+      <span class="faq-row__toggle" aria-hidden="true"></span>
+    </summary>
+
+    <div
+      class="details-content faq-row__answer"
+      itemscope
+      itemprop="acceptedAnswer"
+      itemtype="https://schema.org/Answer"
+    >
+      <div class="faq-row__answer-content" itemprop="text">
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </details>
+{% endcapture %}
+
+{% render 'accordion-custom-component',
+  children: faq_row_children,
+  open_by_default_on_desktop: block_settings.open_by_default,
+  open_by_default_on_mobile: block_settings.open_by_default
+%}
+
+{% stylesheet %}
+  .faq > accordion-custom {
+    counter-increment: faq-row;
+    width: 100%;
+  }
+
+  .faq-row {
+    background: var(--faq-card-bg, transparent);
+    border: var(--faq-card-border-width, 1px) solid var(--faq-card-border, var(--color-border));
+    border-radius: var(--faq-card-radius, 22px);
+    padding: var(--faq-card-padding-block, 16px) var(--faq-card-padding-inline, 24px);
+  }
+
+  .faq-row__summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    cursor: pointer;
+    list-style: none;
+    min-height: var(--minimum-touch-target);
+    color: var(--faq-question-color, var(--color-foreground));
+  }
+
+  .faq-row__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .faq-row__summary {
+      gap: 24px;
+    }
+  }
+
+  .faq-row__number {
+    color: var(--faq-accent, var(--color-primary));
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.44px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .faq-row__number::before {
+    content: counter(faq-row) '.';
+  }
+
+  .faq--no-numbers .faq-row__number {
+    display: none;
+  }
+
+  .faq-row__question {
+    flex: 1 0 0;
+    min-width: 0;
+    line-height: 1.15;
+  }
+
+  .faq-row__toggle {
+    position: relative;
+    flex-shrink: 0;
+    inline-size: 36px;
+    block-size: 36px;
+    border-radius: 50%;
+    background: var(--faq-toggle-bg, color-mix(in srgb, var(--color-foreground) 4%, transparent));
+    border: 1px solid var(--faq-card-border, var(--color-border));
+    transition: background-color var(--animation-speed) var(--animation-easing),
+      border-color var(--animation-speed) var(--animation-easing),
+      transform var(--animation-speed) var(--animation-easing);
+  }
+
+  .faq-row__toggle::before,
+  .faq-row__toggle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    inline-size: 12px;
+    block-size: 1.5px;
+    border-radius: 1px;
+    background: var(--faq-toggle-icon, currentColor);
+    translate: -50% -50%;
+    transition: background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  .faq-row__toggle::after {
+    rotate: 90deg;
+  }
+
+  .faq-row[open] > .faq-row__summary .faq-row__toggle {
+    background: var(--faq-accent, var(--color-primary));
+    border-color: var(--faq-toggle-border-open, var(--color-foreground));
+    transform: rotate(45deg);
+  }
+
+  .faq-row[open] > .faq-row__summary .faq-row__toggle::before,
+  .faq-row[open] > .faq-row__summary .faq-row__toggle::after {
+    background: var(--faq-toggle-icon-open, var(--color-foreground));
+  }
+
+  .faq-row__answer {
+    color: var(--faq-answer-color, color-mix(in srgb, var(--color-foreground) 65%, transparent));
+  }
+
+  .faq-row[open] .faq-row__answer {
+    padding-block-start: 12px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-row__toggle,
+    .faq-row__toggle::before,
+    .faq-row__toggle::after {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pergunta (FAQ)",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Pergunta frequente"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "t:settings.open_row_by_default",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pergunta (FAQ)",
+      "settings": {
+        "heading": "Pergunta frequente"
+      },
+      "blocks": {
+        "text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Escreva aqui a resposta para a pergunta.</p>",
+            "width": "100%"
+          }
+        }
+      },
+      "block_order": ["text-1"]
+    }
+  ]
+}
+{% endschema %}
