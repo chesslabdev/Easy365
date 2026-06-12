@@ -1,5 +1,5 @@
 import { Component } from '@theme/component';
-import { requestIdleCallback, prefersReducedMotion } from '@theme/utilities';
+import { prefersReducedMotion } from '@theme/utilities';
 
 /**
  * Animated circular progress counter.
@@ -24,14 +24,19 @@ class RadialCounter extends Component {
     // Reduced motion: leave the server-rendered final state untouched.
     if (prefersReducedMotion()) return;
 
-    const { arc } = this.refs;
+    const { value, arc } = this.refs;
     this.circumference = 2 * Math.PI * arc.r.baseVal.value;
     this.target = parseFloat(this.dataset.target) || 0;
     const max = parseFloat(this.dataset.max);
     this.fill = max > 0 ? Math.min(this.target / max, 1) : 1;
     this.duration = parseInt(this.dataset.duration, 10) || 1500;
 
-    requestIdleCallback(() => this.#observe());
+    // Reset to the empty state so the count-up is actually visible (the server
+    // renders the FINAL value for no-JS/reduced-motion users).
+    value.textContent = '0';
+    arc.style.strokeDashoffset = `${this.circumference}`;
+
+    this.#observe();
   }
 
   disconnectedCallback() {
@@ -40,19 +45,32 @@ class RadialCounter extends Component {
   }
 
   #observe() {
+    // Fallback: if IntersectionObserver is unavailable, animate right away so
+    // the counter never gets stuck on the reset (0) state.
+    if (typeof IntersectionObserver === 'undefined') {
+      this.#run();
+      return;
+    }
+
     this.#observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting && !this.#hasRun) {
-            this.#hasRun = true;
-            this.#observer?.disconnect();
-            this.#animate();
-          }
+          if (entry.isIntersecting) this.#run();
         }
       },
-      { threshold: 0.4 }
+      // Trigger as soon as any sliver scrolls into view. Observing `this` works
+      // now that the host is `display: block` (a real box) — under the previous
+      // `display: contents` the host had no box and never intersected.
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
     );
     this.#observer.observe(this);
+  }
+
+  #run() {
+    if (this.#hasRun) return;
+    this.#hasRun = true;
+    this.#observer?.disconnect();
+    this.#animate();
   }
 
   #animate() {
