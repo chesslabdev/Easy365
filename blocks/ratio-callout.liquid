@@ -1,0 +1,143 @@
+{%- doc -%}
+  Ratio Callout — public block.
+
+  A two-line callout card (large headline + smaller subtitle) that keeps the
+  EXACT Figma aspect-ratio (488 × 130) of both the card and the text at any
+  width. Built for dropping inside the native `group` block: it fills the
+  group's content box (`width: 100%`) and derives its height from the locked
+  aspect-ratio.
+
+  Fully fluid with NO JavaScript: an inner card establishes a container
+  (`container-type: inline-size`) and every size — font-sizes, gap, padding and
+  corner-radius — is expressed in `cqw` (percent of the card's own width). So
+  the proportions never break, on any viewport, inside any group. Mobile needs
+  no special handling because everything is already a percentage of the real
+  card width.
+
+  Chrome (colors) composes from the theme's color-scheme tokens; nothing is
+  hardcoded — the Figma values ship only as preset defaults.
+{%- enddoc -%}
+
+{%- liquid
+  assign bs = block.settings
+  comment
+    Design reference: 488 × 130. cqw = value ÷ 488 × 100 → locked proportions.
+  endcomment
+  assign radius_cqw = bs.border_radius | times: 100.0 | divided_by: 488.0
+-%}
+
+<div
+  class="ratio-callout{% if bs.inherit_color_scheme == false %} color-{{ bs.color_scheme }}{% endif %}"
+  style="
+    --rc-bg: {% if bs.background != blank %}{{ bs.background }}{% else %}var(--color-background){% endif %};
+    --rc-title-color: {% if bs.title_color != blank %}{{ bs.title_color }}{% else %}var(--color-foreground){% endif %};
+    --rc-subtitle-color: {% if bs.subtitle_color != blank %}{{ bs.subtitle_color }}{% else %}var(--color-foreground){% endif %};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- comment -%}
+    border-radius is applied DIRECTLY here (not via a custom property on the
+    container) because WebKit resolves container units stored in a custom
+    property declared on the container element itself to 0 → square corners.
+    Used directly on the card, the cqw resolves against `.ratio-callout` in
+    every browser, exactly like the cqw font-sizes below.
+  {%- endcomment -%}
+  <div class="ratio-callout__card" style="border-radius: {{ radius_cqw }}cqw;">
+    {%- if bs.title != blank -%}
+      <p class="ratio-callout__title">{{ bs.title }}</p>
+    {%- endif -%}
+    {%- if bs.subtitle != blank -%}
+      <p class="ratio-callout__subtitle">{{ bs.subtitle }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ratio-callout {
+    /* Block root: fills the group content box and becomes the container so
+       cqw inside resolves to the card's OWN width, not the viewport. */
+    display: block;
+    inline-size: 100%;
+    container-type: inline-size;
+  }
+
+  .ratio-callout__card {
+    box-sizing: border-box;
+    inline-size: 100%;
+    aspect-ratio: 488 / 130;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 3.2787cqw; /* 16 ÷ 488 */
+    padding: 4.918cqw 6.5574cqw; /* 24 / 32 ÷ 488 */
+    background: var(--rc-bg);
+    /* border-radius is set inline on the element (see block markup) so the
+       cqw value resolves directly against the container in WebKit too. */
+    overflow: clip;
+    white-space: nowrap;
+  }
+
+  .ratio-callout__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: 700;
+    font-size: 11.4754cqw; /* 56 ÷ 488 */
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--rc-title-color);
+  }
+
+  .ratio-callout__subtitle {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 4.918cqw; /* 24 ÷ 488 */
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--rc-subtitle-color);
+  }
+
+  .ratio-callout__subtitle strong,
+  .ratio-callout__subtitle b {
+    font-weight: 700;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Ratio callout",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "Conteúdo" },
+    { "type": "text", "id": "title", "label": "Título", "default": "Zero açúcar." },
+    { "type": "inline_richtext", "id": "subtitle", "label": "Subtítulo", "info": "Selecione uma palavra e deixe em negrito para destacá-la.", "default": "Adoçado com <strong>Stevia</strong>." },
+
+    { "type": "header", "content": "t:content.colors" },
+    { "type": "checkbox", "id": "inherit_color_scheme", "label": "t:settings.inherit_color_scheme", "default": false },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1", "visible_if": "{{ block.settings.inherit_color_scheme == false }}" },
+    { "type": "paragraph", "content": "Deixe uma cor vazia para herdar do esquema de cores." },
+    { "type": "color", "id": "background", "label": "t:settings.background", "default": "#FEFFFC" },
+    { "type": "color", "id": "title_color", "label": "Cor do título", "default": "#FF4C24" },
+    { "type": "color", "id": "subtitle_color", "label": "Cor do subtítulo", "default": "#1A388D" },
+
+    { "type": "header", "content": "Borda" },
+    { "type": "range", "id": "border_radius", "label": "t:settings.border_radius", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 14, "info": "Proporcional à largura do card (referência 488px)." }
+  ],
+  "presets": [
+    {
+      "name": "Ratio callout",
+      "settings": {
+        "title": "Zero açúcar.",
+        "subtitle": "Adoçado com <strong>Stevia</strong>.",
+        "inherit_color_scheme": false,
+        "background": "#FEFFFC",
+        "title_color": "#FF4C24",
+        "subtitle_color": "#1A388D",
+        "border_radius": 14
+      }
+    }
+  ]
+}
+{% endschema %}
