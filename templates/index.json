@@ -1650,8 +1650,8 @@
           "settings": {
             "content_direction": "row",
             "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "flex-start",
             "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "flex-start",
             "vertical_alignment_flex_direction_column": "center",
@@ -1954,7 +1954,165 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
-              "blocks": {}
+              "blocks": {
+                "faq_gGP7J4": {
+                  "type": "faq",
+                  "name": "FAQ",
+                  "settings": {
+                    "show_numbers": true,
+                    "type_preset": "h5",
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "color_accent": "",
+                    "color_card_border": "",
+                    "color_card_bg": "",
+                    "color_question": "",
+                    "color_answer": "",
+                    "color_toggle_bg": "",
+                    "color_toggle_icon": "",
+                    "color_toggle_icon_open": "",
+                    "color_toggle_border_open": "",
+                    "gap": 20,
+                    "border_radius": 22,
+                    "card_border_width": 1,
+                    "card_padding_inline": 24,
+                    "card_padding_block": 16,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0,
+                    "custom_mobile_padding": false,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
+                  },
+                  "blocks": {
+                    "faq_row_eyprgf": {
+                      "type": "_faq-row",
+                      "settings": {
+                        "heading": "Como tomar?",
+                        "open_by_default": true
+                      },
+                      "blocks": {
+                        "text_NrXgHH": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Misture 2g (um aperto firme) em 200ml de água ou na sua bebida favorita após o treino ou antes de dormir.</p>",
+                            "width": "100%",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_NrXgHH"
+                      ]
+                    },
+                    "faq_row_MqP4Hg": {
+                      "type": "_faq-row",
+                      "settings": {
+                        "heading": "Qual a melhor hora para tomar?",
+                        "open_by_default": false
+                      },
+                      "blocks": {
+                        "text_aEVcUH": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Recomendamos 30 a 60 minutos antes de dormir, ou imediatamente após o treino noturno.</p>",
+                            "width": "100%",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_aEVcUH"
+                      ]
+                    },
+                    "faq_row_FU33wE": {
+                      "type": "_faq-row",
+                      "settings": {
+                        "heading": "Posso tomar todos os dias?",
+                        "open_by_default": false
+                      },
+                      "blocks": {
+                        "text_xWnFh9": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Sim — a fórmula foi pensada para uso diário, todos os 365 dias do ano.</p>",
+                            "width": "100%",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_xWnFh9"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "faq_row_eyprgf",
+                    "faq_row_MqP4Hg",
+                    "faq_row_FU33wE"
+                  ]
+                }
+              },
+              "block_order": [
+                "faq_gGP7J4"
+              ]
             }
           },
           "block_order": [
