@@ -2101,12 +2101,90 @@
                       "block_order": [
                         "text_xWnFh9"
                       ]
+                    },
+                    "faq_row_aMHFLj": {
+                      "type": "_faq-row",
+                      "settings": {
+                        "heading": "Posso tomar todos os dias?",
+                        "open_by_default": false
+                      },
+                      "blocks": {
+                        "text_zXqV8f": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Sim — a fórmula foi pensada para uso diário, todos os 365 dias do ano.</p>",
+                            "width": "100%",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_zXqV8f"
+                      ]
+                    },
+                    "faq_row_twctqj": {
+                      "type": "_faq-row",
+                      "settings": {
+                        "heading": "Posso tomar todos os dias?",
+                        "open_by_default": false
+                      },
+                      "blocks": {
+                        "text_nY4NU7": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Sim — a fórmula foi pensada para uso diário, todos os 365 dias do ano.</p>",
+                            "width": "100%",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_nY4NU7"
+                      ]
                     }
                   },
                   "block_order": [
                     "faq_row_eyprgf",
                     "faq_row_MqP4Hg",
-                    "faq_row_FU33wE"
+                    "faq_row_FU33wE",
+                    "faq_row_aMHFLj",
+                    "faq_row_twctqj"
                   ]
                 }
               },
