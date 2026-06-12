@@ -46,6 +46,9 @@
     if is_rte
       echo ' rte '
     endif
+    if block_settings.font_size_mobile != blank
+      echo ' mobile-font-' | append: block.id
+    endif
   endcapture
 %}
 
@@ -92,6 +95,8 @@
     {{ block.settings.text }}
   </{{ element }}>
 {% endif %}
+
+{% render 'mobile-typography', value: block_settings.font_size_mobile, id: block.id %}
 
 {% stylesheet %}
   :root {

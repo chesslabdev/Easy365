@@ -44,7 +44,7 @@
       {% endif %}
       {{ block.shopify_attributes }}
     >
-      <summary class="menu__heading{% if heading == blank and menu.title == blank %} menu__heading--empty{% endif %} {{ block_settings.heading_preset }}">
+      <summary class="menu__heading{% if heading == blank and menu.title == blank %} menu__heading--empty{% endif %} {{ block_settings.heading_preset }}{% if block_settings.heading_font_size_mobile != blank %} mobile-font-{{ block.id }}-h{% endif %}">
         <span class="menu__heading__default">{{ heading | default: menu.title }}</span>
         <span class="menu__heading__accordion">
           {{ heading | default: menu.title }}
@@ -69,7 +69,7 @@
         {% if menu %}
           <ul class="list-unstyled">
             {% for link in menu.links %}
-              <li class="menu__item {{ block_settings.link_preset }}">
+              <li class="menu__item {{ block_settings.link_preset }}{% if block_settings.link_font_size_mobile != blank %} mobile-font-{{ block.id }}-l{% endif %}">
                 <a href="{{ link.url }}">
                   {{ link.title }}
                 </a>
@@ -88,6 +88,8 @@
     disable_on_mobile: should_disable_on_mobile,
     open_by_default_on_mobile: should_open_by_default_on_mobile
   %}
+  {% render 'mobile-typography', value: block_settings.heading_font_size_mobile, id: block.id | append: '-h' %}
+  {% render 'mobile-typography', value: block_settings.link_font_size_mobile, id: block.id | append: '-l' %}
 {% endif %}
 
 {% stylesheet %}
@@ -266,6 +268,82 @@
     },
     {
       "type": "select",
+      "id": "heading_font_size_mobile",
+      "label": "t:settings.size_mobile",
+      "options": [
+        {
+          "value": "",
+          "label": "t:options.default"
+        },
+        {
+          "value": "0.625rem",
+          "label": "10px"
+        },
+        {
+          "value": "0.75rem",
+          "label": "12px"
+        },
+        {
+          "value": "0.875rem",
+          "label": "14px"
+        },
+        {
+          "value": "1rem",
+          "label": "16px"
+        },
+        {
+          "value": "1.125rem",
+          "label": "18px"
+        },
+        {
+          "value": "1.25rem",
+          "label": "20px"
+        },
+        {
+          "value": "1.5rem",
+          "label": "24px"
+        },
+        {
+          "value": "2rem",
+          "label": "32px"
+        },
+        {
+          "value": "2.5rem",
+          "label": "40px"
+        },
+        {
+          "value": "3rem",
+          "label": "48px"
+        },
+        {
+          "value": "3.5rem",
+          "label": "56px"
+        },
+        {
+          "value": "4.5rem",
+          "label": "72px"
+        },
+        {
+          "value": "5.5rem",
+          "label": "88px"
+        },
+        {
+          "value": "7.5rem",
+          "label": "120px"
+        },
+        {
+          "value": "9.5rem",
+          "label": "152px"
+        },
+        {
+          "value": "11.5rem",
+          "label": "184px"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
       "id": "link_preset",
       "label": "t:settings.link_preset",
       "options": [
@@ -303,6 +381,82 @@
         }
       ],
       "default": "paragraph"
+    },
+    {
+      "type": "select",
+      "id": "link_font_size_mobile",
+      "label": "t:settings.size_mobile",
+      "options": [
+        {
+          "value": "",
+          "label": "t:options.default"
+        },
+        {
+          "value": "0.625rem",
+          "label": "10px"
+        },
+        {
+          "value": "0.75rem",
+          "label": "12px"
+        },
+        {
+          "value": "0.875rem",
+          "label": "14px"
+        },
+        {
+          "value": "1rem",
+          "label": "16px"
+        },
+        {
+          "value": "1.125rem",
+          "label": "18px"
+        },
+        {
+          "value": "1.25rem",
+          "label": "20px"
+        },
+        {
+          "value": "1.5rem",
+          "label": "24px"
+        },
+        {
+          "value": "2rem",
+          "label": "32px"
+        },
+        {
+          "value": "2.5rem",
+          "label": "40px"
+        },
+        {
+          "value": "3rem",
+          "label": "48px"
+        },
+        {
+          "value": "3.5rem",
+          "label": "56px"
+        },
+        {
+          "value": "4.5rem",
+          "label": "72px"
+        },
+        {
+          "value": "5.5rem",
+          "label": "88px"
+        },
+        {
+          "value": "7.5rem",
+          "label": "120px"
+        },
+        {
+          "value": "9.5rem",
+          "label": "152px"
+        },
+        {
+          "value": "11.5rem",
+          "label": "184px"
+        }
+      ],
+      "default": ""
     },
     {
       "type": "header",

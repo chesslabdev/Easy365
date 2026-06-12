@@ -16,10 +16,11 @@
   @param {number} [gap] - space between slides in px (default 16)
   @param {boolean} [show_arrows] - render prev/next arrows (default false)
   @param {boolean} [show_dots] - render pagination dots (default false)
-  @param {boolean} [loop] - infinite loop (default false; layout 'centered' always loops
-                            on the storefront). Swiper's native rule needs
-                            slides ≥ slidesPerView + 1 (+1 when centered): the component
-                            clamps slidesPerView to keep loop valid, falling back to the
+  @param {boolean} [loop] - infinite loop (default false; layouts 'centered' and
+                            'linear' with autoplay always loop on the storefront).
+                            Swiper's native rule needs slides ≥ slidesPerView +
+                            slidesPerGroup (+1 when centered): the component clamps
+                            slidesPerView to keep loop valid, falling back to the
                             native `rewind` when even 1-per-view can't loop.
   @param {number} [autoplay] - seconds between slides; 0 = off. With layout 'linear' it
                                becomes a continuous marquee-like scroll (default 0)
@@ -53,6 +54,14 @@
   assign scale_factor = active_scale | divided_by: 100.0
 -%}
 
+{%- comment -%}
+  Swiper's a11y module interpolates `{{index}}`/`{{slidesLength}}` client-side; the
+  literal placeholders must survive Liquid, so they're captured through {% raw %}.
+{%- endcomment -%}
+{%- capture swiper_index -%}{% raw %}{{index}}{% endraw %}{%- endcapture -%}
+{%- capture swiper_length -%}{% raw %}{{slidesLength}}{% endraw %}{%- endcapture -%}
+{%- assign slide_label = 'accessibility.slide_status' | t: index: swiper_index, length: swiper_length -%}
+
 <rk-carousel
   id="rk-carousel-{{ id }}"
   class="rk-carousel rk-carousel--{{ layout }}"
@@ -63,6 +72,9 @@
   data-gap="{{ gap }}"
   data-speed="{{ speed }}"
   data-autoplay="{{ autoplay }}"
+  data-label-prev="{{ 'accessibility.slideshow_previous' | t | escape }}"
+  data-label-next="{{ 'accessibility.slideshow_next' | t | escape }}"
+  data-label-slide="{{ slide_label | escape }}"
   {% if loop %}
     data-loop
   {% endif %}
@@ -80,13 +92,17 @@
     </div>
   </div>
 
+  {% comment %}
+    SSR `aria-label` is the pre-hydration baseline; on init Swiper's a11y module
+    re-applies the same translated strings (via data-label-*) and wires
+    `aria-controls` to the generated `swiper-wrapper` id itself.
+  {% endcomment %}
   {% if show_arrows %}
     <button
       type="button"
       class="rk-carousel__arrow rk-carousel__arrow--prev"
       ref="prevArrow"
       aria-label="{{ 'accessibility.slideshow_previous' | t }}"
-      aria-controls="rk-carousel-{{ id }}"
     >
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true" focusable="false">
         <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -97,7 +113,6 @@
       class="rk-carousel__arrow rk-carousel__arrow--next"
       ref="nextArrow"
       aria-label="{{ 'accessibility.slideshow_next' | t }}"
-      aria-controls="rk-carousel-{{ id }}"
     >
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true" focusable="false">
         <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -204,9 +219,13 @@
     inset-inline-end: 4px;
   }
 
-  .rk-carousel__arrow[disabled] {
+  /* Swiper's navigation module marks the edge state with `swiper-button-disabled`
+     (and the `disabled` attribute on <button> elements). */
+  .rk-carousel__arrow[disabled],
+  .rk-carousel__arrow.swiper-button-disabled {
     opacity: 0.35;
     cursor: default;
+    pointer-events: none;
   }
 
   .rk-carousel__arrow:focus-visible {

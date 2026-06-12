@@ -1,0 +1,28 @@
+{%- doc -%}
+  Per-instance MOBILE (≤749px) font-size override. Render this in the block BODY.
+
+  Pairs with a `font_size_mobile` select (empty = inherit the desktop size). When a value
+  is chosen, the target element must also carry `mobile-font-{{ id }}` so this scoped rule
+  (emitted after head CSS) overrides the preset/custom desktop size on mobile only. The
+  class is intentionally doubled to reach specificity (0,3,1 on the child, 0,2,0 on the
+  element itself), beating native preset selectors (`.text-block.h2 > *`, `.h3.h3`,
+  `.paragraph.paragraph`) in either layout — no `!important` needed. Emits nothing when the
+  value is blank, leaving the native responsive sizing intact.
+
+  @param {string} value - chosen font-size (e.g. '1rem'); blank = no override (inherit desktop)
+  @param {string} id - a unique id, e.g. block.id
+
+  @example
+  {% render 'mobile-typography', value: block.settings.font_size_mobile, id: block.id %}
+{%- enddoc -%}
+
+{%- if value != blank -%}
+  {%- style -%}
+    @media screen and (max-width: 749px) {
+      .mobile-font-{{ id }}.mobile-font-{{ id }},
+      .mobile-font-{{ id }}.mobile-font-{{ id }} > * {
+        font-size: {{ value }};
+      }
+    }
+  {%- endstyle -%}
+{%- endif -%}

@@ -79,14 +79,25 @@ class RkCarousel extends Component {
     return this.dataset.layout || 'normal';
   }
 
+  get #autoplaySeconds() {
+    return Number(this.dataset.autoplay) || 0;
+  }
+
+  /** Linear layout + autoplay = continuous marquee-like scroll. */
+  get #continuous() {
+    return this.#layout === 'linear' && this.#autoplaySeconds > 0;
+  }
+
   /**
-   * Centered layout loops by default — without loop the first (active) card sits
-   * against the left edge and the space before it stays empty. Loop reorders slide
-   * elements in the DOM, which breaks the Theme Editor's block mapping — so it
-   * stays storefront-only either way.
+   * Layouts that need loop to work at all loop by default:
+   * - centered: without loop the first (active) card sits against the left edge
+   *   and the space before it stays empty;
+   * - continuous (linear + autoplay): the marquee would dead-end on the last slide.
+   * Loop rearranges slide elements in the DOM, which breaks the Theme Editor's
+   * block mapping — so it stays storefront-only either way.
    */
   get #loopWanted() {
-    const wanted = this.#layout === 'centered' || this.hasAttribute('data-loop');
+    const wanted = this.#layout === 'centered' || this.#continuous || this.hasAttribute('data-loop');
     return wanted && !window.Shopify?.designMode;
   }
 
@@ -100,14 +111,15 @@ class RkCarousel extends Component {
     const layout = this.#layout;
     const centered = layout === 'centered';
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const autoplaySeconds = Number(this.dataset.autoplay) || 0;
-    const continuous = layout === 'linear' && autoplaySeconds > 0;
+    const autoplaySeconds = this.#autoplaySeconds;
+    const continuous = this.#continuous;
     const count = this.refs.viewport.querySelectorAll('.swiper-slide').length;
 
     // Swiper's native loop requirement: slides >= slidesPerView + slidesPerGroup
-    // (+1 when centeredSlides) — below that it silently disables loop. So when loop
-    // is wanted, clamp slidesPerView to the largest loopable value; if not even
-    // 1-per-view fits, fall back to `rewind` (the documented native alternative).
+    // (+1 when centeredSlides) — below that it silently disables loop. With our
+    // slidesPerGroup of 1, clamp slidesPerView to the largest loopable value when
+    // loop is wanted; if not even 1-per-view fits, fall back to `rewind` (the
+    // documented native alternative — must not be combined with `loop`).
     const maxLoopableItems = count - 1 - (centered ? 1 : 0);
     const loop = this.#loopWanted && maxLoopableItems >= 1;
 
@@ -124,7 +136,8 @@ class RkCarousel extends Component {
       loop,
       rewind: this.#loopWanted && !loop,
       grabCursor: true,
-      a11y: { enabled: true },
+      a11y: this.#buildA11y(),
+      // `slidesPerView` is breakpoint-safe; `loop` is not (it must stay global).
       breakpoints: {
         750: { slidesPerView: itemsFor(this.dataset.tabletItems, 2) },
         990: { slidesPerView: itemsFor(this.dataset.desktopItems, 4) },
@@ -153,14 +166,38 @@ class RkCarousel extends Component {
     }
 
     if (this.refs.prevArrow && this.refs.nextArrow) {
-      config.navigation = { prevEl: this.refs.prevArrow, nextEl: this.refs.nextArrow };
+      config.navigation = {
+        prevEl: this.refs.prevArrow,
+        nextEl: this.refs.nextArrow,
+        addIcons: false, // the snippet ships its own SVG arrows
+      };
     }
 
     if (this.refs.dots) {
-      config.pagination = { el: this.refs.dots, clickable: true };
+      config.pagination = {
+        el: this.refs.dots,
+        clickable: true,
+        hideOnClick: false, // default true would toggle the dots on container click
+      };
     }
 
     return config;
+  }
+
+  /**
+   * The a11y module overwrites the arrows' `aria-label` and labels each slide with
+   * its English defaults, so the theme's translated strings (provided by the snippet
+   * as data attributes) must be forwarded here.
+   */
+  #buildA11y() {
+    /** @type {Record<string, unknown>} */
+    const a11y = { enabled: true };
+
+    if (this.dataset.labelPrev) a11y.prevSlideMessage = this.dataset.labelPrev;
+    if (this.dataset.labelNext) a11y.nextSlideMessage = this.dataset.labelNext;
+    if (this.dataset.labelSlide) a11y.slideLabelMessage = this.dataset.labelSlide;
+
+    return a11y;
   }
 
   /** Theme Editor: bring the selected slide block into view. */
