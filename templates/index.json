@@ -24,7 +24,7 @@
             "vertical_alignment": "center",
             "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "space-between",
             "gap": 24,
             "inherit_color_scheme": false,
             "color_scheme": "scheme-1",
@@ -110,7 +110,7 @@
                   },
                   "blocks": {}
                 },
-                "blend_text_9XUx4T": {
+                "blend_text_LpxVtQ": {
                   "type": "blend-text",
                   "settings": {
                     "text": "Seu ritual de descanso em um squeeze.",
@@ -118,7 +118,7 @@
                     "type_preset": "h1",
                     "text_align": "left",
                     "blend_mode": "difference",
-                    "custom_color": "#f8380b80",
+                    "custom_color": "#f8a60b80",
                     "highlight_color": "#fc5027a8",
                     "padding-block-start": 0,
                     "padding-block-end": 0,
@@ -360,105 +360,150 @@
               },
               "block_order": [
                 "text_Mngxke",
-                "blend_text_9XUx4T",
+                "blend_text_LpxVtQ",
                 "text_VnWdzg",
                 "group_d4NtfK",
                 "group_w74N3w"
               ]
             },
-            "badge_row_9BJBhn": {
-              "type": "badge-row",
+            "group_eqtHqe": {
+              "type": "group",
+              "name": "t:names.group",
               "settings": {
-                "gap": 14,
-                "alignment": "center",
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "center",
+                "vertical_alignment_flex_direction_column": "flex-end",
+                "gap": 12,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
                 "inherit_color_scheme": true,
                 "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
                 "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "custom_mobile_padding": false,
-                "padding-block-start-mobile": 0,
-                "padding-block-end-mobile": 0,
-                "padding-inline-start-mobile": 0,
-                "padding-inline-end-mobile": 0
+                "padding-inline-end": 0
               },
               "blocks": {
-                "badge_XfpjiW": {
-                  "type": "_badge",
+                "badge_row_q8EXTG": {
+                  "type": "badge-row",
                   "settings": {
-                    "label": "Magnésio Bisglicinato",
-                    "background_color": "#2f2f30b8",
-                    "text_color": "#fefffc",
-                    "border_color": "#00010099",
-                    "backdrop_blur": 4,
-                    "padding-block-start": 8,
-                    "padding-block-end": 8,
-                    "padding-inline-start": 12,
-                    "padding-inline-end": 12,
+                    "gap": 14,
+                    "alignment": "center",
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0,
                     "custom_mobile_padding": false,
-                    "padding-block-start-mobile": 8,
-                    "padding-block-end-mobile": 8,
-                    "padding-inline-start-mobile": 12,
-                    "padding-inline-end-mobile": 12
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
                   },
-                  "blocks": {}
-                },
-                "badge_k4Ww7F": {
-                  "type": "_badge",
-                  "settings": {
-                    "label": "Stevia · 0% Açúcar",
-                    "background_color": "#2f2f30b8",
-                    "text_color": "#fefffc",
-                    "border_color": "#00010099",
-                    "backdrop_blur": 4,
-                    "padding-block-start": 8,
-                    "padding-block-end": 8,
-                    "padding-inline-start": 12,
-                    "padding-inline-end": 12,
-                    "custom_mobile_padding": false,
-                    "padding-block-start-mobile": 8,
-                    "padding-block-end-mobile": 8,
-                    "padding-inline-start-mobile": 12,
-                    "padding-inline-end-mobile": 12
+                  "blocks": {
+                    "badge_edjNCV": {
+                      "type": "_badge",
+                      "settings": {
+                        "label": "Magnésio Bisglicinato",
+                        "background_color": "#2f2f30b8",
+                        "text_color": "#fefffc",
+                        "border_color": "#00010099",
+                        "backdrop_blur": 4,
+                        "padding-block-start": 8,
+                        "padding-block-end": 8,
+                        "padding-inline-start": 12,
+                        "padding-inline-end": 12,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 8,
+                        "padding-block-end-mobile": 8,
+                        "padding-inline-start-mobile": 12,
+                        "padding-inline-end-mobile": 12
+                      },
+                      "blocks": {}
+                    },
+                    "badge_zKn4Gj": {
+                      "type": "_badge",
+                      "settings": {
+                        "label": "Stevia · 0% Açúcar",
+                        "background_color": "#2f2f30b8",
+                        "text_color": "#fefffc",
+                        "border_color": "#00010099",
+                        "backdrop_blur": 4,
+                        "padding-block-start": 8,
+                        "padding-block-end": 8,
+                        "padding-inline-start": 12,
+                        "padding-inline-end": 12,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 8,
+                        "padding-block-end-mobile": 8,
+                        "padding-inline-start-mobile": 12,
+                        "padding-inline-end-mobile": 12
+                      },
+                      "blocks": {}
+                    },
+                    "badge_h4qrCW": {
+                      "type": "_badge",
+                      "settings": {
+                        "label": "25 doses",
+                        "background_color": "#2f2f30b8",
+                        "text_color": "#fefffc",
+                        "border_color": "#00010099",
+                        "backdrop_blur": 4,
+                        "padding-block-start": 8,
+                        "padding-block-end": 8,
+                        "padding-inline-start": 12,
+                        "padding-inline-end": 12,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 8,
+                        "padding-block-end-mobile": 8,
+                        "padding-inline-start-mobile": 12,
+                        "padding-inline-end-mobile": 12
+                      },
+                      "blocks": {}
+                    }
                   },
-                  "blocks": {}
-                },
-                "badge_NxMLVY": {
-                  "type": "_badge",
-                  "settings": {
-                    "label": "25 doses",
-                    "background_color": "#2f2f30b8",
-                    "text_color": "#fefffc",
-                    "border_color": "#00010099",
-                    "backdrop_blur": 4,
-                    "padding-block-start": 8,
-                    "padding-block-end": 8,
-                    "padding-inline-start": 12,
-                    "padding-inline-end": 12,
-                    "custom_mobile_padding": false,
-                    "padding-block-start-mobile": 8,
-                    "padding-block-end-mobile": 8,
-                    "padding-inline-start-mobile": 12,
-                    "padding-inline-end-mobile": 12
-                  },
-                  "blocks": {}
+                  "block_order": [
+                    "badge_edjNCV",
+                    "badge_zKn4Gj",
+                    "badge_h4qrCW"
+                  ]
                 }
               },
               "block_order": [
-                "badge_XfpjiW",
-                "badge_k4Ww7F",
-                "badge_NxMLVY"
+                "badge_row_q8EXTG"
               ]
             }
           },
           "block_order": [
             "group_j4egUA",
-            "badge_row_9BJBhn"
+            "group_eqtHqe"
           ]
         }
       },
