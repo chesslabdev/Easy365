@@ -1960,7 +1960,7 @@
                   "name": "FAQ",
                   "settings": {
                     "show_numbers": true,
-                    "type_preset": "h5",
+                    "type_preset": "h4",
                     "inherit_color_scheme": true,
                     "color_scheme": "",
                     "color_accent": "#ff4c24",
