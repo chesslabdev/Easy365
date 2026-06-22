@@ -1405,13 +1405,13 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Tudo que você precisa saber.</p>",
+                        "text": "<p><strong>Tudo que você precisa saber.</strong></p>",
                         "width": "fit-content",
                         "max_width": "normal",
                         "alignment": "left",
                         "type_preset": "custom",
                         "font_size_mobile": "",
-                        "font": "var(--font-heading--family)",
+                        "font": "var(--font-body--family)",
                         "font_size": "4.5rem",
                         "line_height": "tight",
                         "letter_spacing": "normal",
@@ -1432,13 +1432,13 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Sem rodeios.</p>",
+                        "text": "<p><strong>Sem rodeios.</strong></p>",
                         "width": "fit-content",
                         "max_width": "normal",
                         "alignment": "left",
                         "type_preset": "custom",
                         "font_size_mobile": "",
-                        "font": "var(--font-heading--family)",
+                        "font": "var(--font-body--family)",
                         "font_size": "4.5rem",
                         "line_height": "normal",
                         "letter_spacing": "normal",
