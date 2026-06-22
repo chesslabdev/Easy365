@@ -75,13 +75,13 @@
             "placeholder": "",
             "padding-block-start": 80,
             "padding-block-end": 80,
-            "padding-inline-start": 24,
-            "padding-inline-end": 24,
-            "custom_mobile_padding": false,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 0,
-            "padding-inline-end-mobile": 0
+            "padding-inline-start": 100,
+            "padding-inline-end": 100,
+            "custom_mobile_padding": true,
+            "padding-block-start-mobile": 24,
+            "padding-block-end-mobile": 24,
+            "padding-inline-start-mobile": 24,
+            "padding-inline-end-mobile": 24
           },
           "blocks": {
             "group_kmrg6F": {
@@ -89,7 +89,7 @@
               "name": "Conteúdo Horizontal",
               "settings": {
                 "content_direction": "row",
-                "vertical_on_mobile": false,
+                "vertical_on_mobile": true,
                 "horizontal_alignment": "flex-start",
                 "vertical_alignment": "flex-start",
                 "align_baseline": false,
