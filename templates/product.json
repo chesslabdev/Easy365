@@ -236,14 +236,26 @@
               },
               "blocks": {}
             },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
+            "variant_card_picker_taGJGT": {
+              "type": "variant-card-picker",
+              "name": "Variante (cards)",
               "settings": {
+                "unit_label": "doses",
+                "sublabel_namespace": "custom",
+                "sublabel_key": "pack_subtitle",
+                "card_color": "#ffffff",
+                "card_color_selected": "#f7f7f7",
+                "text_color": "#000100",
+                "muted_color": "#8a847a",
+                "border_color": "#d9d4cb",
+                "accent_color": "#ff4c24",
+                "title_color": "",
+                "border_radius": 14,
                 "variant_style": "buttons",
                 "show_swatches": false,
                 "alignment": "left",
                 "padding-block-start": 0,
-                "padding-block-end": 0,
+                "padding-block-end": 8,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
@@ -308,40 +320,6 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "radial_counter_pdp": {
-              "type": "radial-counter",
-              "name": "Radial counter",
-              "settings": {
-                "value": 2,
-                "max": 8,
-                "unit_label": "doses",
-                "inherit_color_scheme": false,
-                "color_scheme": "scheme-1",
-                "track_color": "",
-                "progress_color": "",
-                "value_font_size": 24,
-                "label_font_size": 11,
-                "diameter": 130,
-                "stroke_width": 10,
-                "duration_ms": 1500,
-                "border": "none",
-                "border_width": 0,
-                "border_opacity": 100,
-                "border_radius": 200,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "custom_mobile_size": false,
-                "diameter_mobile": 110,
-                "custom_mobile_padding": false,
-                "padding-block-start-mobile": 0,
-                "padding-block-end-mobile": 0,
-                "padding-inline-start-mobile": 0,
-                "padding-inline-end-mobile": 0
               },
               "blocks": {}
             },
@@ -1164,10 +1142,9 @@
           "block_order": [
             "group_icgrde",
             "divider_VJhene",
-            "variant_picker_R3rGDr",
+            "variant_card_picker_taGJGT",
             "buy_buttons_eYQEYi",
             "text_aEtTtq",
-            "radial_counter_pdp",
             "tabs_pdp"
           ]
         }
