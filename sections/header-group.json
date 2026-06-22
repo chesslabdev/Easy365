@@ -112,7 +112,7 @@
         "text_color": "#fefffc",
         "accent_color": "#ff4c24",
         "button_border_color": "#d9d4cb",
-        "padding-block-start": 0,
+        "padding-block-start": 4,
         "padding-block-end": 4,
         "padding-inline-start": 0,
         "padding-inline-end": 0
