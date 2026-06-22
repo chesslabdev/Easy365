@@ -564,18 +564,6 @@
                 "price_tVjtKg"
               ]
             },
-            "divider_VJhene": {
-              "type": "_divider",
-              "name": "t:names.divider",
-              "settings": {
-                "thickness": 1,
-                "corner_radius": "square",
-                "width_percent": 100,
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
             "variant_card_picker_taGJGT": {
               "type": "variant-card-picker",
               "name": "Variante (cards)",
@@ -1481,7 +1469,6 @@
           },
           "block_order": [
             "group_icgrde",
-            "divider_VJhene",
             "variant_card_picker_taGJGT",
             "buy_buttons_eYQEYi",
             "text_aEtTtq",
