@@ -1,0 +1,440 @@
+{%- doc -%}
+  Value Comparison — tabela comparativa "Eazy × Sachês tradicionais".
+  Intro "A conta é simples." + grade de 3 colunas (rótulos / Eazy / Sachês) com as
+  linhas Doses, Preço e Custo por dose.
+
+  Bloco visual (HTML + CSS) reproduzindo o Figma fielmente em dois layouts
+  independentes (desktop / mobile). Escala fluida via container query units (cqw):
+  1cqw = 1% da largura da tabela (limitada por max-width), mantendo as proporções
+  do Figma em qualquer largura. Edição rápida pelas variáveis CSS no topo.
+
+  O título "Por que o Eazy..." fica FORA deste bloco (use um bloco de texto nativo).
+  A barra "Section · Highlights" é o bloco separado `value-comparison-highlights`.
+{%- enddoc -%}
+
+<div class="value-comparison" {{ block.shopify_attributes }}>
+  {%- comment -%} ===================== DESKTOP ===================== {%- endcomment -%}
+  <div class="value-comparison__d">
+    <div class="vcd">
+      {%- comment -%} Coluna 1 — rótulos (intro no topo) {%- endcomment -%}
+      <div class="vcd__col vcd__col--label">
+        <div class="vcd__intro">
+          {%- if block.settings.pill != blank -%}<span class="vcd__pill">{{ block.settings.pill }}</span>{%- endif -%}
+          {%- if block.settings.intro_text != blank -%}<p class="vcd__intro-text">{{ block.settings.intro_text }}</p>{%- endif -%}
+        </div>
+        {%- for i in (0..2) -%}
+          {%- assign n = i | plus: 1 -%}
+          {%- assign key = 'row_' | append: n | append: '_label' -%}
+          <div class="vcd__cell vcd__cell--label{% if i == 0 %} is-first{% endif %}{% if i == 2 %} is-last vcd__cell--strong{% endif %}">{{ block.settings[key] }}</div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Coluna 2 — Eazy {%- endcomment -%}
+      <div class="vcd__col vcd__col--eazy">
+        <div class="vcd__head vcd__head--eazy">
+          <img class="vcd__logo" src="{{ 'comparison-logo.svg' | asset_url }}" alt="{{ block.settings.eazy_alt | escape }}" width="178" height="48">
+          <div class="vcd__bottle-box">
+            <img class="vcd__bottle" src="{{ 'comparison-bottle.png' | asset_url }}" alt="" width="928" height="1152" loading="lazy" decoding="async">
+          </div>
+        </div>
+        {%- for i in (0..2) -%}
+          {%- assign n = i | plus: 1 -%}
+          {%- assign key = 'row_' | append: n | append: '_eazy' -%}
+          <div class="vcd__cell vcd__cell--eazy{% if i == 2 %} is-last vcd__cell--strong{% endif %}">{{ block.settings[key] }}</div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Coluna 3 — Sachês tradicionais {%- endcomment -%}
+      <div class="vcd__col vcd__col--alt">
+        <div class="vcd__head vcd__head--alt">{{ block.settings.alt_title }}</div>
+        {%- for i in (0..2) -%}
+          {%- assign n = i | plus: 1 -%}
+          {%- assign key = 'row_' | append: n | append: '_alt' -%}
+          <div class="vcd__cell vcd__cell--alt{% if i == 2 %} is-last vcd__cell--strong{% endif %}">{{ block.settings[key] }}</div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ===================== MOBILE ===================== {%- endcomment -%}
+  <div class="value-comparison__m">
+    <div class="vcm__intro">
+      {%- if block.settings.pill != blank -%}<span class="vcm__pill">{{ block.settings.pill }}</span>{%- endif -%}
+      {%- if block.settings.intro_text != blank -%}<p class="vcm__intro-text">{{ block.settings.intro_text }}</p>{%- endif -%}
+    </div>
+
+    <div class="vcm">
+      {%- comment -%} Coluna 1 — rótulos (sem cabeçalho, alinhada ao rodapé) {%- endcomment -%}
+      <div class="vcm__col vcm__col--label">
+        {%- for i in (0..2) -%}
+          {%- assign n = i | plus: 1 -%}
+          {%- assign key = 'row_' | append: n | append: '_label' -%}
+          <div class="vcm__cell vcm__cell--label{% if i == 0 %} is-first{% endif %}{% if i == 2 %} is-last vcm__cell--strong{% endif %}">{{ block.settings[key] }}</div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Coluna 2 — Eazy {%- endcomment -%}
+      <div class="vcm__col vcm__col--eazy">
+        <div class="vcm__head vcm__head--eazy">
+          <img class="vcm__logo" src="{{ 'comparison-logo.svg' | asset_url }}" alt="{{ block.settings.eazy_alt | escape }}" width="178" height="48">
+          <div class="vcm__bottle-box">
+            <img class="vcm__bottle" src="{{ 'comparison-bottle.png' | asset_url }}" alt="" width="928" height="1152" loading="lazy" decoding="async">
+          </div>
+        </div>
+        {%- for i in (0..2) -%}
+          {%- assign n = i | plus: 1 -%}
+          {%- assign key = 'row_' | append: n | append: '_eazy' -%}
+          <div class="vcm__cell vcm__cell--eazy{% if i == 2 %} is-last vcm__cell--strong{% endif %}">{{ block.settings[key] }}</div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Coluna 3 — Sachês tradicionais {%- endcomment -%}
+      <div class="vcm__col vcm__col--alt">
+        <div class="vcm__head vcm__head--alt">{{ block.settings.alt_title }}</div>
+        {%- for i in (0..2) -%}
+          {%- assign n = i | plus: 1 -%}
+          {%- assign key = 'row_' | append: n | append: '_alt' -%}
+          <div class="vcm__cell vcm__cell--alt{% if i == 2 %} is-last vcm__cell--strong{% endif %}">{{ block.settings[key] }}</div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+.value-comparison {
+  /* ===== Variáveis de marca (edite aqui) ===== */
+  --c-orange: #ff4c24;   /* coluna Eazy / rótulos / destaque */
+  --c-navy: #0a1a4d;     /* pill "A conta é simples." */
+  --c-cream: #fef1eb;    /* fundo creme das colunas */
+  --c-ink: #000100;      /* texto escuro */
+  --c-white: #fefffc;    /* texto claro */
+  --c-line: #f8ecca;     /* bordas laterais da coluna Eazy */
+  --c-divider: rgba(10, 26, 77, 0.08);          /* divisor nas colunas creme */
+  --c-divider-eazy: rgba(255, 255, 255, 0.22);  /* divisor na coluna Eazy */
+  --vc-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  font-family: var(--vc-font);
+  width: 100%;   /* essencial: bloco vira flex item na seção; sem isso o container-type/cqw colapsa */
+}
+
+/* Esconde o layout que não está ativo */
+.value-comparison__d,
+.value-comparison__m { width: 100%; }
+.value-comparison__m { display: none; }
+
+/* =========================================================
+   DESKTOP — base 1248px → cqw (px / 12.48)
+   ========================================================= */
+.vcd {
+  display: flex;
+  align-items: flex-end;
+  max-width: 1248px;
+  margin-inline: auto;
+  container-type: inline-size;
+  --head-h: 9.615cqw;   /* 120px */
+  --row-h: 7.212cqw;    /* 90px  */
+  --r: 1.763cqw;        /* 22px  */
+}
+.vcd__col { display: flex; flex-direction: column; flex: 1 1 0; min-width: 0; }
+
+/* Intro (cabeçalho da coluna de rótulos) */
+.vcd__intro {
+  height: var(--head-h);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.641cqw;
+  padding-bottom: 1.2cqw;
+}
+.vcd__pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--c-navy);
+  color: var(--c-white);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1.923cqw;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  padding: 0.962cqw 1.763cqw;
+  border-radius: var(--r);
+  white-space: nowrap;
+}
+.vcd__intro-text {
+  margin: 0;
+  color: var(--c-ink);
+  font-weight: 500;
+  font-size: 1.442cqw;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+/* Cabeçalhos das colunas Eazy / Sachês */
+.vcd__head {
+  height: var(--head-h);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 1.923cqw;
+}
+.vcd__head--eazy {
+  position: relative;
+  background: var(--c-orange);
+  border-radius: var(--r) var(--r) 0 0;
+  border-inline: 0.08cqw solid var(--c-line);
+  overflow: visible;
+}
+.vcd__logo { position: relative; z-index: 1; width: 14.29cqw; height: auto; display: block; }
+/* Caixa de recorte da garrafa, ancorada no canto inf-direito → recorta direita/baixo,
+   alta o suficiente para a TAMPA não ser cortada no topo. */
+.vcd__bottle-box {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 17cqw;
+  height: 16cqw;     /* mais alta que o cabeçalho → tampa aparece, sem corte no topo */
+  overflow: hidden;
+  border-top-right-radius: var(--r);
+  pointer-events: none;
+}
+.vcd__bottle {
+  position: absolute;
+  top: 1cqw;         /* tampa colada ao topo da caixa (ajuste fino aqui) */
+  right: 3cqw;       /* ↑ aumenta = mais para a esquerda */
+  width: 14cqw;      /* tamanho da garrafa */
+  height: auto;
+  transform: rotate(-40deg);
+  transform-origin: top right;
+}
+.vcd__head--alt {
+  justify-content: center;
+  background: var(--c-cream);
+  color: var(--c-ink);
+  font-weight: 700;
+  font-size: 2.564cqw;
+  letter-spacing: -0.015em;
+  border-radius: var(--r) var(--r) 0 0;
+  white-space: nowrap;
+}
+
+/* Células de dados */
+.vcd__cell {
+  height: var(--row-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0 1.923cqw;
+  font-weight: 500;
+  font-size: 1.923cqw;
+  line-height: 1.05;
+}
+.vcd__cell--label {
+  justify-content: flex-start;
+  background: var(--c-cream);
+  color: var(--c-orange);
+  text-transform: uppercase;
+  border-top: 0.08cqw solid var(--c-divider);
+}
+.vcd__cell--label.is-first { border-top-left-radius: var(--r); border-top: 0; }
+.vcd__cell--label.is-last { border-bottom-left-radius: var(--r); }
+
+.vcd__cell--eazy {
+  background: var(--c-orange);
+  color: var(--c-white);
+  border-top: 0.08cqw solid var(--c-divider-eazy);
+  border-inline: 0.08cqw solid var(--c-line);
+}
+.vcd__cell--alt {
+  background: var(--c-cream);
+  color: var(--c-ink);
+  border-top: 0.08cqw solid var(--c-divider);
+}
+.vcd__cell--alt.is-last { border-bottom-right-radius: var(--r); }
+
+/* Linha "Custo por dose" em destaque */
+.vcd__cell--strong { font-weight: 700; font-size: 2.564cqw; }
+
+/* =========================================================
+   MOBILE — base 386px → cqw (px / 3.86)
+   ========================================================= */
+.value-comparison__m {
+  --r: 3.627cqw;   /* 14px */
+}
+
+/* Intro acima da tabela */
+.vcm__intro {
+  container-type: inline-size;
+  max-width: 430px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.073cqw;
+  padding-bottom: 5.18cqw;
+}
+.vcm__pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--c-navy);
+  color: var(--c-white);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 4.145cqw;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  padding: 2.073cqw 4.145cqw;
+  border-radius: 5.181cqw;
+  white-space: nowrap;
+}
+.vcm__intro-text {
+  margin: 0;
+  color: var(--c-ink);
+  font-weight: 400;
+  font-size: 4.145cqw;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.vcm {
+  display: flex;
+  align-items: flex-end;
+  max-width: 430px;
+  margin-inline: auto;
+  container-type: inline-size;
+  --head-h: 19.41cqw;   /* ~75px */
+  --row-h: 15.544cqw;   /* 60px  */
+}
+.vcm__col { display: flex; flex-direction: column; min-width: 0; }
+.vcm__col--label { width: 24.87cqw; }   /* 96px  */
+.vcm__col--eazy  { flex: 1 1 0; }
+.vcm__col--alt   { width: 29.02cqw; }   /* 112px */
+
+.vcm__head {
+  height: var(--head-h);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 2.073cqw;
+}
+.vcm__head--eazy {
+  position: relative;
+  background: var(--c-orange);
+  border-radius: var(--r) var(--r) 0 0;
+  border-inline: 0.26cqw solid var(--c-line);
+  overflow: visible;
+}
+.vcm__logo { position: relative; z-index: 1; width: 25.9cqw; height: auto; display: block; }
+/* Caixa de recorte da garrafa, ancorada no canto inf-direito → recorta direita/baixo,
+   alta o suficiente para a TAMPA não ser cortada no topo. */
+.vcm__bottle-box {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 22cqw;
+  height: 42cqw;     /* mais alta que o cabeçalho → tampa aparece, sem corte no topo */
+  overflow: hidden;
+  border-top-right-radius: var(--r);
+  pointer-events: none;
+}
+.vcm__bottle {
+  position: absolute;
+  top: 2cqw;         /* tampa colada ao topo da caixa (ajuste fino aqui) */
+  right: 5cqw;       /* ↑ aumenta = mais para a esquerda */
+  width: 30cqw;      /* tamanho da garrafa */
+  height: auto;
+  transform: rotate(-40deg);
+  transform-origin: top right;
+}
+.vcm__head--alt {
+  justify-content: center;
+  text-align: center;
+  background: var(--c-cream);
+  color: var(--c-ink);
+  font-weight: 700;
+  font-size: 4.145cqw;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  border-radius: var(--r) var(--r) 0 0;
+}
+
+.vcm__cell {
+  height: var(--row-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0 2.073cqw;
+  font-weight: 500;
+  font-size: 4.145cqw;
+  line-height: 1.05;
+  text-align: center;
+}
+.vcm__cell--label {
+  justify-content: flex-start;
+  text-align: left;
+  background: var(--c-cream);
+  color: var(--c-orange);
+  text-transform: uppercase;
+  font-size: 3.627cqw;
+  border-top: 0.26cqw solid var(--c-divider);
+}
+.vcm__col--label .vcm__cell--label.is-first { border-top-left-radius: var(--r); border-top: 0; }
+.vcm__cell--label.is-last { border-bottom-left-radius: var(--r); }
+
+.vcm__cell--eazy {
+  background: var(--c-orange);
+  color: var(--c-white);
+  border-top: 0.26cqw solid var(--c-divider-eazy);
+  border-inline: 0.26cqw solid var(--c-line);
+}
+.vcm__cell--alt {
+  background: var(--c-cream);
+  color: var(--c-ink);
+  border-top: 0.26cqw solid var(--c-divider);
+}
+.vcm__cell--alt.is-last { border-bottom-right-radius: var(--r); }
+
+.vcm__cell--strong { font-weight: 700; font-size: 5.181cqw; }
+
+/* ===== Troca de layout (mobile ≤ 749px) ===== */
+@media (max-width: 749px) {
+  .value-comparison__d { display: none; }
+  .value-comparison__m { display: block; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Comparativo visual",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "Intro" },
+    { "type": "text", "id": "pill", "label": "Selo", "default": "A conta é simples." },
+    { "type": "textarea", "id": "intro_text", "label": "Texto de apoio", "default": "Quando você divide doses por preço, a matemática começa a falar mais alto que a embalagem." },
+
+    { "type": "header", "content": "Colunas" },
+    { "type": "text", "id": "eazy_alt", "label": "Texto alternativo do logo", "default": "Eazy 365" },
+    { "type": "text", "id": "alt_title", "label": "Título da coluna alternativa", "default": "Sachês tradicionais" },
+
+    { "type": "header", "content": "Linha 1" },
+    { "type": "text", "id": "row_1_label", "label": "Rótulo", "default": "Doses" },
+    { "type": "text", "id": "row_1_eazy", "label": "Valor Eazy", "default": "25" },
+    { "type": "text", "id": "row_1_alt", "label": "Valor alternativo", "default": "1" },
+
+    { "type": "header", "content": "Linha 2" },
+    { "type": "text", "id": "row_2_label", "label": "Rótulo", "default": "Preço" },
+    { "type": "text", "id": "row_2_eazy", "label": "Valor Eazy", "default": "R$16,90" },
+    { "type": "text", "id": "row_2_alt", "label": "Valor alternativo", "default": "R$7,12" },
+
+    { "type": "header", "content": "Linha 3 (destaque)" },
+    { "type": "text", "id": "row_3_label", "label": "Rótulo", "default": "Custo por dose" },
+    { "type": "text", "id": "row_3_eazy", "label": "Valor Eazy", "default": "~ R$ 0,82" },
+    { "type": "text", "id": "row_3_alt", "label": "Valor alternativo", "default": "R$7,12" }
+  ],
+  "presets": [
+    { "name": "Comparativo visual" }
+  ]
+}
+{% endschema %}

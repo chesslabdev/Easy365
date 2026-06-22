@@ -2,12 +2,20 @@
   Marquee strip — a global, brand-neutral scrolling "ticker" bar (the Figma "régua fio").
 
   ARCHITECTURE (see .fractal/instructions/standards/horizon-theme.instruction.md):
-  - Reuses the native MARQUEE engine: it renders the exact `<marquee-component>` DOM contract
-    that `assets/marquee.js` requires (refs wrapper/content/marqueeItems + data-speed-factor),
-    so the infinite scroll, speed calc, hover-pause and reduced-motion handling all come from
-    the native JS. We only restyle the host as a rounded accent bar and add settings.
-  - The marquee layout CSS is duplicated here on purpose: the native `sections/marquee.liquid`
-    stylesheet is only present when THAT section is on the page, so a standalone strip needs it.
+  - Chrome reuses NATIVE Horizon mechanisms instead of hand-rolled CSS:
+    • Width (page-width / full-width) → the native `.section` grid + `section--{width}`
+      modifier (base.css). The bar is the grid's child, so it lands in the centered
+      page column or spans full-bleed — the width system the theme warns not to rewrite.
+    • Color → the native `color-{scheme}` class on the bar exposes `--color-background`
+      / `--color-foreground`. Painted on the bar itself (not `.section-background`), so it
+      works inside the header group, where the section-background layer is suppressed.
+    • Padding → `spacing-style` snippet. Radius/border → `border-style` + `border-override`.
+    • Margin → inline `margin-*` from settings (no native margin snippet exists).
+  - Reuses the native MARQUEE engine: renders the exact `<marquee-component>` DOM contract
+    `assets/marquee.js` requires (refs wrapper/content/marqueeItems + data-speed-factor),
+    so infinite scroll, speed calc, hover-pause and reduced-motion all come from native JS.
+  - The marquee layout CSS is mirrored here on purpose: the native `sections/marquee.liquid`
+    stylesheet only loads when THAT section is present, so a standalone strip needs it.
   - Blocks: native `text` / `image` / `icon` / `logo` / `_divider` compose the ticker.
   - Mobile-first: ships the "Mobile" spacing controls via the `mobile-spacing` snippet.
 {%- endcomment -%}
@@ -18,16 +26,20 @@
   assign s = section.settings
 -%}
 
-<div class="marquee-strip-section{% if s.section_width == 'page-width' %} page-width{% endif %}">
+<div
+  class="section section--{{ s.section_width }} marquee-strip-section"
+  style="
+    margin-block: {{ s['margin-block-start'] | default: 0 }}px {{ s['margin-block-end'] | default: 0 }}px;
+    margin-inline: {{ s['margin-inline-start'] | default: 0 }}px {{ s['margin-inline-end'] | default: 0 }}px;
+  "
+>
   <marquee-component
-    class="marquee-strip spacing-style{% if s.custom_mobile_padding %} mobile-spacing-{{ section.id }}{% endif %}"
+    class="marquee-strip spacing-style border-style color-{{ s.color_scheme }}{% if s.custom_mobile_padding %} mobile-spacing-{{ section.id }}{% endif %}"
     style="
       {%- render 'spacing-style', settings: s %}
+      {%- render 'border-override', settings: s %}
       {% render 'gap-style', value: s.gap_between_elements, name: 'marquee-gap' %}
       --marquee-direction: {{ s.movement_direction }};
-      --marquee-strip-bg: {{ s.background_color }};
-      --marquee-strip-fg: {{ s.text_color }};
-      --marquee-strip-radius: {{ s.border_radius }}px;
       --marquee-strip-min-height: {{ s.min_height }}px;
     "
     data-speed-factor="{{ s.speed_factor }}"
@@ -46,26 +58,22 @@
 {% render 'mobile-spacing', settings: s, id: section.id %}
 
 {% stylesheet %}
-  .marquee-strip-section {
-    width: 100%;
-  }
-
-  /* Strip host (the marquee-component) — the rounded accent bar. */
+  /* Strip host (the marquee-component) — the rounded accent bar. Color comes from the
+     chosen color scheme via the color-{scheme} class on this element. */
   .marquee-strip {
     display: flex;
     align-items: center;
     width: 100%;
     overflow: hidden;
-    background: var(--marquee-strip-bg, #ff4c24);
-    color: var(--marquee-strip-fg, #fff);
-    border-radius: var(--marquee-strip-radius, 14px);
+    background: var(--color-background);
+    color: var(--color-foreground);
     min-height: var(--marquee-strip-min-height, 20px);
   }
 
   /* Force legible ticker text/marks over the accent bar, regardless of block color settings. */
   .marquee-strip :is(p, span, a, h1, h2, h3, h4, h5, h6),
   .marquee-strip :is(svg, .icon) {
-    color: var(--marquee-strip-fg, #fff);
+    color: var(--color-foreground);
   }
 
   /* Native marquee layout (mirrored from sections/marquee.liquid so the strip works standalone). */
@@ -149,16 +157,36 @@
     },
     { "type": "range", "id": "speed_factor", "label": "t:settings.speed", "min": 5, "max": 60, "step": 1, "default": 25 },
     { "type": "range", "id": "gap_between_elements", "label": "t:settings.gap", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 48 },
+
     { "type": "header", "content": "t:content.appearance" },
-    { "type": "color", "id": "background_color", "label": "Cor de fundo", "alpha": true, "default": "#ff4c24" },
-    { "type": "color", "id": "text_color", "label": "Cor do texto", "default": "#ffffff" },
-    { "type": "range", "id": "border_radius", "label": "t:settings.border_radius", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 14 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-3" },
     { "type": "range", "id": "min_height", "label": "Altura mínima", "min": 12, "max": 120, "step": 2, "unit": "px", "default": 20 },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.borders",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "solid", "label": "t:options.solid" }
+      ],
+      "default": "none"
+    },
+    { "type": "range", "id": "border_width", "min": 0, "max": 10, "step": 1, "unit": "px", "label": "t:settings.border_width", "default": 1, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_opacity", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "t:settings.border_opacity", "default": 100, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_radius", "label": "t:settings.border_radius", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 14 },
+
     { "type": "header", "content": "t:content.padding" },
     { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
     { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
     { "type": "range", "id": "padding-inline-start", "label": "t:settings.left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
     { "type": "range", "id": "padding-inline-end", "label": "t:settings.right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Margem" },
+    { "type": "range", "id": "margin-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "margin-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "margin-inline-start", "label": "t:settings.left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "margin-inline-end", "label": "t:settings.right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
     { "type": "header", "content": "Mobile" },
     { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
     { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0, "visible_if": "{{ section.settings.custom_mobile_padding }}" },
@@ -175,8 +203,7 @@
         "movement_direction": "normal",
         "speed_factor": 25,
         "gap_between_elements": 48,
-        "background_color": "#ff4c24",
-        "text_color": "#ffffff",
+        "color_scheme": "scheme-3",
         "border_radius": 14,
         "min_height": 20
       },

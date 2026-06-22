@@ -1,0 +1,536 @@
+{%- comment -%}
+  Hero Banner — hero cinematográfico full-bleed com vídeo de fundo.
+  Conteúdo à esquerda: eyebrow, headline (blend), subtítulo, prova social e dois botões.
+  Faixa de selos no rodapé.
+
+  Arquitetura (Decorator): conteúdo capturado em `children` e renderizado pelo MOTOR
+  BASE de seção ({% render 'section' %}) — herda largura, color scheme, borda e padding.
+  O fundo (vídeo/imagem) fica DENTRO do `.hero` (não no background do motor base), porque
+  o blend precisa do fundo no MESMO stacking context (com isolation: isolate).
+
+  Blend EXATO do Figma: headline + subtítulo em 2 camadas (overlay + difference) e prova
+  social em 2 (difference + base opacity .24). Aspect-ratio travado (desktop e mobile).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign av_fallback = 'hero-avatar-1.png,hero-avatar-2.png,hero-avatar-3.png,hero-avatar-4.png' | split: ','
+-%}
+
+{%- capture children -%}
+  <div class="hero">
+    <div class="hero__bg">
+      {%- if s.bg_video != blank -%}
+        <video class="hero__media" autoplay muted loop playsinline preload="auto"
+          {% if s.bg_image != blank %}poster="{{ s.bg_image | image_url: width: 1600 }}"{% endif %}>
+          {%- for source in s.bg_video.sources -%}
+            {%- if source.format == 'mp4' -%}<source src="{{ source.url }}" type="{{ source.mime_type }}">{%- endif -%}
+          {%- endfor -%}
+        </video>
+      {%- elsif s.bg_video_url != blank -%}
+        <video class="hero__media" autoplay muted loop playsinline preload="auto" src="{{ s.bg_video_url }}"
+          {% if s.bg_image != blank %}poster="{{ s.bg_image | image_url: width: 1600 }}"{% endif %}></video>
+      {%- elsif s.bg_image != blank -%}
+        {{ s.bg_image | image_url: width: 2400 | image_tag: class: 'hero__media', loading: 'eager', fetchpriority: 'high', decoding: 'async', sizes: '100vw', widths: '768, 1024, 1440, 1920, 2400', alt: '' }}
+      {%- else -%}
+        <img class="hero__media" src="{{ 'hero-bg.png' | asset_url }}" alt="" aria-hidden="true" width="1440" height="810" fetchpriority="high" decoding="async">
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Scrim: só no mobile, suaviza o blend (entra no backdrop, atrás do conteúdo) {%- endcomment -%}
+    <div class="hero__scrim" aria-hidden="true"></div>
+
+    <div class="hero__inner">
+      <div class="hero__content">
+        {%- if s.eyebrow != blank -%}
+          <p class="hero__eyebrow">
+            <img class="hero__eyebrow-icon" src="{{ 'hero-eyebrow-icon.svg' | asset_url }}" alt="" aria-hidden="true" width="25" height="16" loading="lazy">
+            <span>{{ s.eyebrow }}</span>
+          </p>
+        {%- endif -%}
+
+        {%- comment -%} Headline + subtítulo em 2 camadas de blend (mesmo texto nas duas) {%- endcomment -%}
+        <div class="hero__title-stack">
+          <div class="hero__layer hero__layer--overlay">
+            <h1 class="hero__title">{{ s.heading | newline_to_br }}</h1>
+            {%- if s.subtitle != blank -%}<p class="hero__sub">{{ s.subtitle | newline_to_br }}</p>{%- endif -%}
+          </div>
+          <div class="hero__layer hero__layer--difference" aria-hidden="true">
+            <p class="hero__title">{{ s.heading | newline_to_br }}</p>
+            {%- if s.subtitle != blank -%}<p class="hero__sub">{{ s.subtitle | newline_to_br }}</p>{%- endif -%}
+          </div>
+        </div>
+
+        {%- if s.social_text != blank -%}
+          <div class="hero__social">
+            <div class="hero__avatars">
+              {%- for n in (1..4) -%}
+                {%- assign akey = 'avatar_' | append: n -%}
+                {%- assign aimg = s[akey] -%}
+                {%- if aimg != blank -%}
+                  <img src="{{ aimg | image_url: width: 64 }}" alt="" aria-hidden="true" width="32" height="32" loading="lazy">
+                {%- else -%}
+                  <img src="{{ av_fallback[forloop.index0] | strip | asset_url }}" alt="" aria-hidden="true" width="32" height="32" loading="lazy">
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+            <div class="hero__social-text">
+              <span class="hero__social-blend">{{ s.social_text }}</span>
+              <span class="hero__social-base" aria-hidden="true">{{ s.social_text }}</span>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if s.button_1_label != blank or s.button_2_label != blank -%}
+          <div class="hero__buttons">
+            {%- if s.button_1_label != blank -%}
+              <a class="hero__btn hero__btn--primary" href="{{ s.button_1_link | default: '#' }}">{{ s.button_1_label }}</a>
+            {%- endif -%}
+            {%- if s.button_2_label != blank -%}
+              <a class="hero__btn hero__btn--ghost" href="{{ s.button_2_link | default: '#' }}">{{ s.button_2_label }}</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if s.chip_1 != blank or s.chip_2 != blank or s.chip_3 != blank -%}
+      <div class="hero__strip">
+        {%- if s.chip_1 != blank -%}<span class="hero__chip">{{ s.chip_1 }}</span>{%- endif -%}
+        {%- if s.chip_2 != blank -%}<span class="hero__chip">{{ s.chip_2 }}</span>{%- endif -%}
+        {%- if s.chip_3 != blank -%}<span class="hero__chip">{{ s.chip_3 }}</span>{%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endcapture -%}
+
+{% render 'section', section: section, children: children %}
+
+{% stylesheet %}
+.hero {
+  --hero-accent: #ff4c24;
+  --hero-text: #fefffc;
+  --hero-muted: #8a847a;
+  --hero-border: #d9d4cb;
+  --hero-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --hero-mono: ui-monospace, "Courier New", monospace;
+
+  position: relative;
+  isolation: isolate; /* contém o blend dentro do hero */
+  display: flex;
+  align-items: center;
+  width: 100%;
+  aspect-ratio: 1432 / 792;   /* mesmo aspect-ratio do Figma */
+  min-height: 480px;
+  overflow: hidden;
+  background: #66392f;
+  font-family: var(--hero-font);
+}
+
+/* ===== Fundo (vídeo/imagem) — backdrop do blend (sem z-index!) ===== */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+}
+.hero__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Scrim (overlay) — só no mobile; pinta entre o fundo e o conteúdo (sem z-index),
+   então entra no backdrop do mix-blend e suaviza as camadas. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0.28) 35%,
+    rgba(0, 0, 0, 0.55) 62%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+}
+
+/* ===== Conteúdo ===== */
+.hero__inner {
+  position: relative; /* posicionado (z auto) → acima do bg, sem criar stacking context */
+  width: 100%;
+  max-width: 1432px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 14vw, 204px);
+  padding-block: clamp(48px, 8vh, 96px);
+}
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(18px, 2.2vw, 32px);
+  max-width: clamp(320px, 42vw, 470px);
+}
+
+/* Eyebrow */
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--hero-muted);
+  font-family: var(--hero-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.hero__eyebrow-icon { width: clamp(20px, 1.8vw, 25px); height: auto; display: block; }
+
+/* Headline + subtítulo (camadas de blend) */
+.hero__title-stack { position: relative; width: 100%; }
+.hero__layer {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 32px);
+}
+.hero__layer--overlay { mix-blend-mode: overlay; }
+.hero__layer--difference {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: difference;
+}
+
+.hero__title {
+  margin: 0;
+  /* h1 e p (as 2 camadas) precisam ter métricas idênticas p/ sobrepor perfeitamente */
+  font-family: var(--hero-font);
+  font-weight: 700;
+  font-size: clamp(34px, 3.9vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-wrap: wrap;
+  white-space: normal;
+  word-spacing: normal;
+  color: #ffffff;
+}
+.hero__sub {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(18px, 1.7vw, 24px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--hero-text);
+}
+
+/* Prova social */
+.hero__social {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero__avatars { display: flex; align-items: center; }
+.hero__avatars img {
+  width: clamp(28px, 2.6vw, 32px);
+  height: clamp(28px, 2.6vw, 32px);
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: -8px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+}
+.hero__social-text {
+  position: relative;
+  max-width: 200px;
+  font-family: var(--hero-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  color: var(--hero-text);
+}
+.hero__social-text > * { margin: 0; }
+.hero__social-blend { mix-blend-mode: difference; }
+.hero__social-base {
+  position: absolute;
+  inset: 0;
+  opacity: 0.24;
+}
+
+/* Botões */
+.hero__buttons {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  align-items: stretch;
+}
+.hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 26px;
+  border-radius: 999px;
+  font-weight: 400;
+  font-size: clamp(16px, 1.4vw, 19px);
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.hero__btn--primary {
+  flex: 1 1 0;
+  background: var(--hero-accent);
+  color: #ffffff;
+}
+.hero__btn--ghost {
+  flex: 0 0 auto;
+  color: var(--hero-text);
+  background: rgba(244, 242, 238, 0.02);
+  border: 1px solid var(--hero-border);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ===== Faixa de selos (rodapé) ===== */
+.hero__strip {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(24px, 6vh, 64px);
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  max-width: calc(100% - 32px);
+}
+.hero__chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(47, 47, 48, 0.72);
+  border: 1px solid #000100;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: var(--hero-text);
+  font-family: var(--hero-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+/* ===== Mobile (≤749px) — idêntico ao Figma:
+   texto no topo, botões menores empilhados, tags em fluxo no rodapé (2 + 1). ===== */
+@media (max-width: 749px) {
+  .hero {
+    aspect-ratio: 390 / 600;       /* aspect-ratio do mobile (Figma) */
+    flex-direction: column;
+    justify-content: space-between; /* conteúdo no topo, tags no rodapé */
+    align-items: stretch;
+  }
+  .hero__media { object-position: 60% center; }
+  .hero__scrim { display: block; } /* overlay só no mobile */
+
+  .hero__inner {
+    padding-inline: 20px;
+    padding-block: 40px 0;          /* texto mais acima */
+  }
+  .hero__content {
+    max-width: 100%;
+    gap: clamp(16px, 4vw, 24px);
+  }
+  .hero__title { font-size: clamp(32px, 10vw, 44px); }
+  .hero__sub { font-size: clamp(17px, 4.6vw, 22px); }
+
+  /* botões menores: largura automática, empilhados à esquerda */
+  .hero__buttons {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+    width: auto;
+  }
+  .hero__btn {
+    width: auto;
+    flex: 0 0 auto;
+    padding: 11px 22px;
+    font-size: 16px;
+  }
+  .hero__btn--primary { flex: 0 0 auto; }
+
+  /* tags em fluxo no rodapé: 2 ao lado + 1 abaixo (flex-wrap) */
+  .hero__strip {
+    position: static;
+    transform: none;
+    left: auto;
+    bottom: auto;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0 20px 40px;
+    max-width: 100%;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero banner",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    { "type": "header", "content": "Fundo" },
+    { "type": "video", "id": "bg_video", "label": "Vídeo de fundo" },
+    { "type": "text", "id": "bg_video_url", "label": "Ou URL do vídeo (mp4)", "info": "Usado se nenhum vídeo for selecionado." },
+    { "type": "image_picker", "id": "bg_image", "label": "Imagem de fundo (poster/fallback)" },
+
+    { "type": "header", "content": "Conteúdo" },
+    { "type": "text", "id": "eyebrow", "label": "Selo (eyebrow)", "default": "O primeiro squeeze funcional do Brasil" },
+    { "type": "textarea", "id": "heading", "label": "Título", "default": "Seu ritual de descanso em um squeeze." },
+    { "type": "textarea", "id": "subtitle", "label": "Subtítulo", "default": "Magnésio Bisglicinato\n+ Frutas Amarelas" },
+    { "type": "text", "id": "social_text", "label": "Prova social", "default": "+500 atletas já mudaram seu ritual de descanso." },
+
+    { "type": "header", "content": "Avatares" },
+    { "type": "image_picker", "id": "avatar_1", "label": "Avatar 1" },
+    { "type": "image_picker", "id": "avatar_2", "label": "Avatar 2" },
+    { "type": "image_picker", "id": "avatar_3", "label": "Avatar 3" },
+    { "type": "image_picker", "id": "avatar_4", "label": "Avatar 4" },
+
+    { "type": "header", "content": "Botões" },
+    { "type": "text", "id": "button_1_label", "label": "Botão 1 — texto", "default": "Quero meu Eazy" },
+    { "type": "url", "id": "button_1_link", "label": "Botão 1 — link" },
+    { "type": "text", "id": "button_2_label", "label": "Botão 2 — texto", "default": "Ver Fórmula" },
+    { "type": "url", "id": "button_2_link", "label": "Botão 2 — link" },
+
+    { "type": "header", "content": "Tags (selos do rodapé)" },
+    { "type": "text", "id": "chip_1", "label": "Tag 1", "default": "Magnésio Bisglicinato" },
+    { "type": "text", "id": "chip_2", "label": "Tag 2", "default": "Stevia · 0% Açúcar" },
+    { "type": "text", "id": "chip_3", "label": "Tag 3", "default": "25 doses" },
+
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select", "id": "content_direction", "label": "t:settings.direction",
+      "options": [
+        { "value": "column", "label": "t:options.vertical" },
+        { "value": "row", "label": "t:options.horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "select", "id": "horizontal_alignment_flex_direction_column", "label": "t:settings.alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.right" }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ section.settings.content_direction != 'row' }}"
+    },
+    { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "t:content.size" },
+    {
+      "type": "select", "id": "section_width", "label": "t:settings.width",
+      "options": [
+        { "value": "page-width", "label": "t:options.page" },
+        { "value": "full-width", "label": "t:options.full" }
+      ],
+      "default": "full-width"
+    },
+    {
+      "type": "select", "id": "section_height", "label": "t:settings.height",
+      "options": [
+        { "value": "", "label": "t:options.auto" },
+        { "value": "small", "label": "t:options.small" },
+        { "value": "medium", "label": "t:options.medium" },
+        { "value": "large", "label": "t:options.large" },
+        { "value": "full-screen", "label": "t:options.full_screen" },
+        { "value": "custom", "label": "t:options.custom" }
+      ],
+      "default": ""
+    },
+    { "type": "range", "id": "section_height_custom", "label": "t:settings.custom_height", "min": 0, "max": 100, "step": 1, "default": 50, "unit": "%", "visible_if": "{{ section.settings.section_height == 'custom' }}" },
+
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    {
+      "type": "select", "id": "background_media", "label": "t:settings.background_media",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "image", "label": "t:options.image" },
+        { "value": "video", "label": "t:options.video" }
+      ],
+      "default": "none"
+    },
+    { "type": "video", "id": "video", "label": "t:settings.video", "visible_if": "{{ section.settings.background_media == 'video' }}" },
+    {
+      "type": "select", "id": "video_position", "label": "t:settings.video_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "contain", "label": "t:options.contain" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_media == 'video' }}"
+    },
+    { "type": "image_picker", "id": "background_image", "label": "t:settings.image", "visible_if": "{{ section.settings.background_media == 'image' }}" },
+    {
+      "type": "select", "id": "background_image_position", "label": "t:settings.image_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "fit", "label": "t:options.fit" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "select", "id": "border", "label": "t:settings.borders",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "solid", "label": "t:options.solid" }
+      ],
+      "default": "none"
+    },
+    { "type": "range", "id": "border_width", "min": 0, "max": 10, "step": 0.5, "unit": "px", "label": "t:settings.border_width", "default": 1, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_opacity", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "t:settings.border_opacity", "default": 100, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_radius", "label": "t:settings.border_radius", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "checkbox", "id": "toggle_overlay", "label": "t:settings.background_overlay" },
+    { "type": "color", "id": "overlay_color", "label": "t:settings.overlay_color", "alpha": true, "default": "#00000026", "visible_if": "{{ section.settings.toggle_overlay }}" },
+    {
+      "type": "select", "id": "overlay_style", "label": "t:settings.overlay_style",
+      "options": [
+        { "value": "solid", "label": "t:options.solid" },
+        { "value": "gradient", "label": "t:options.gradient" }
+      ],
+      "default": "solid",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select", "id": "gradient_direction", "label": "t:settings.gradient_direction",
+      "options": [
+        { "value": "to top", "label": "t:options.up" },
+        { "value": "to bottom", "label": "t:options.down" }
+      ],
+      "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    },
+
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "Hero banner",
+      "category": "t:categories.banners",
+      "settings": {
+        "section_width": "full-width",
+        "section_height": "",
+        "color_scheme": "",
+        "border": "none",
+        "border_radius": 0,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,155 @@
+{%- doc -%}
+  Logo badge — public block: a centered logo "dome" that overlaps the block below it.
+
+  Renders the brand logo inside a rounded-top dome; a negative margin-bottom + z-index
+  let it poke above the next sibling. Designed to sit on the footer's top edge (the
+  Figma arch with the EaZy 365 logo). MUST be placed in the footer's base `section`,
+  NOT inside the footer card `group` (its border-radius>0 sets overflow:hidden and
+  would clip the dome).
+
+  Logo source: settings.logo_inverse (white) → settings.logo → shop.name text.
+  Chrome reuses native snippets (color-schemes, spacing-style, mobile-spacing, image).
+{%- enddoc -%}
+
+{%- liquid
+  assign bs = block.settings
+  assign badge_logo = settings.logo_inverse | default: settings.logo
+  assign alt_text = 'accessibility.home_logo_alt' | t: store_name: shop.name
+  assign href = bs.link | default: routes.root_url
+  assign badge_logo_width = 0
+  assign badge_logo_width_mobile = 0
+  if badge_logo != blank
+    assign badge_logo_width = bs.logo_height | times: badge_logo.aspect_ratio | ceil
+    assign badge_logo_width_mobile = bs.logo_height_mobile | times: badge_logo.aspect_ratio | ceil
+  endif
+-%}
+
+<div
+  class="logo-badge spacing-style color-{{ bs.color_scheme }}{% if bs.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}"
+  style="
+    {% render 'spacing-style', settings: bs %}
+    --logo-badge-width: {{ bs.badge_width }}px;
+    --logo-badge-min-height: {{ bs.badge_min_height }}px;
+    --logo-badge-radius: {{ bs.badge_radius }}px;
+    --logo-badge-overlap: {{ bs.badge_overlap }}px;
+    --logo-badge-overlap-mobile: {{ bs.badge_overlap_mobile }}px;
+    --logo-badge-logo-height: {{ bs.logo_height }}px;
+    --logo-badge-logo-height-mobile: {{ bs.logo_height_mobile }}px;
+    {% if badge_logo != blank %}--logo-badge-logo-width: {{ badge_logo_width }}px; --logo-badge-logo-width-mobile: {{ badge_logo_width_mobile }}px;{% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <a class="logo-badge__link" href="{{ href }}" aria-label="{{ shop.name | escape }}">
+    {% render 'image',
+      image: badge_logo,
+      height: bs.logo_height,
+      class: 'logo-badge__logo',
+      alt_text_fallback: alt_text,
+      text_fallback: shop.name
+    %}
+  </a>
+</div>
+
+{% render 'mobile-spacing', settings: bs, id: block.id %}
+
+{% stylesheet %}
+  .logo-badge {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    margin-inline: auto;
+    /* Pull the next sibling (footer card) up so the dome pokes above it. */
+    margin-block-end: calc(-1 * var(--logo-badge-overlap, 72px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--logo-badge-width, 360px);
+    max-width: 100%;
+    min-height: var(--logo-badge-min-height, 120px);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    border-radius: var(--logo-badge-radius, 1000px) var(--logo-badge-radius, 1000px) 0 0;
+    overflow: hidden;
+  }
+
+  .logo-badge__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .logo-badge__logo {
+    height: var(--logo-badge-logo-height, 64px);
+    width: var(--logo-badge-logo-width, auto);
+    max-width: 100%;
+    display: block;
+  }
+
+  @media screen and (max-width: 749px) {
+    .logo-badge {
+      margin-block-end: calc(-1 * var(--logo-badge-overlap-mobile, 40px));
+    }
+
+    .logo-badge__logo {
+      height: var(--logo-badge-logo-height-mobile, 48px);
+      width: var(--logo-badge-logo-width-mobile, var(--logo-badge-logo-width, auto));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Logo badge",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-4" },
+    { "type": "range", "id": "logo_height", "label": "Altura do logo", "min": 16, "max": 160, "step": 2, "unit": "px", "default": 64 },
+    { "type": "range", "id": "badge_width", "label": "Largura do arco", "min": 200, "max": 600, "step": 4, "unit": "px", "default": 360 },
+    { "type": "range", "id": "badge_min_height", "label": "Altura do arco", "min": 60, "max": 200, "step": 4, "unit": "px", "default": 120 },
+    { "type": "range", "id": "badge_radius", "label": "Raio do topo", "min": 0, "max": 1000, "step": 10, "unit": "px", "default": 1000 },
+
+    { "type": "header", "content": "Sobreposição" },
+    { "type": "range", "id": "badge_overlap", "label": "Sobreposição (margin negativo)", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 72, "info": "Quanto o arco avança sobre o footer. O container tem gap de 12px, então o avanço visível ≈ valor − 12." },
+
+    { "type": "header", "content": "Link" },
+    { "type": "url", "id": "link", "label": "Link (vazio = página inicial)" },
+
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "t:settings.left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "t:settings.right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Mobile" },
+    { "type": "range", "id": "logo_height_mobile", "label": "Altura do logo (mobile)", "min": 12, "max": 120, "step": 2, "unit": "px", "default": 48 },
+    { "type": "range", "id": "badge_overlap_mobile", "label": "Sobreposição (mobile)", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 40 },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile", "label": "Direita (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    {
+      "name": "Logo badge",
+      "category": "t:categories.layout",
+      "settings": {
+        "color_scheme": "scheme-4",
+        "logo_height": 64,
+        "badge_width": 360,
+        "badge_min_height": 120,
+        "badge_radius": 1000,
+        "badge_overlap": 72,
+        "logo_height_mobile": 48,
+        "badge_overlap_mobile": 40
+      }
+    }
+  ]
+}
+{% endschema %}

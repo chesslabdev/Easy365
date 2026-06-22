@@ -1,0 +1,231 @@
+{% comment %}
+  Video Story — Instagram-Style Stories
+  =======================================
+  Bloco de stories de vídeo para página de produto.
+  Consome o metafield `custom.videos_produto` (lista de vídeos).
+
+  Recursos:
+  - Lazy loading com preload="none" (performance first)
+  - Modal Web Component nativo (sem z-index conflict)
+  - Barra de progresso segmentada no topo (estilo Instagram)
+  - Mute / Unmute toggle
+  - Pausa ao tocar fora da zona de vídeo
+  - Formato retrato (9:16), crop centralizado
+  - Thumbnails circulares com borda gradiente (estilo Instagram)
+  - Título condicional configurável pelo bloco
+  - Visível apenas se metafield estiver preenchido
+{% endcomment %}
+
+{{ 'video-story.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign videos = product.metafields.custom.videos_produto.value
+  assign heading = block.settings.heading
+  assign thumb_size = block.settings.thumb_size | default: 'md'
+
+  if videos == blank or videos.size == 0
+    assign has_videos = false
+  else
+    assign has_videos = true
+  endif
+-%}
+
+{%- if has_videos -%}
+  <video-stories-component
+    id="block-{{ block.id }}"
+    {{ block.shopify_attributes }}
+    class="vs-block vs-block--thumb-{{ thumb_size }}"
+    style="
+      --vs-thumb-sm: 56px;
+      --vs-thumb-md: 72px;
+      --vs-thumb-lg: 88px;
+    "
+    data-block-id="{{ block.id }}"
+  >
+    {%- if heading != blank -%}
+      <p class="vs-heading">{{ heading }}</p>
+    {%- endif -%}
+
+    {%- comment -%} ===== THUMBNAILS ROW ===== {%- endcomment -%}
+    <div class="vs-list" role="list" aria-label="Stories de vídeo">
+      {%- for video in videos -%}
+        {%- liquid
+          assign thumb_image = video.preview_image
+          assign video_alt = video.alt | default: 'Vídeo'
+          assign aria_label = video_alt | append: ' — story ' | append: forloop.index | append: ' de ' | append: forloop.length
+        -%}
+
+        <div class="vs-item" role="listitem">
+          <button
+            class="vs-trigger"
+            type="button"
+            data-story-index="{{ forloop.index0 }}"
+            aria-label="{{ aria_label }}"
+            aria-haspopup="dialog"
+          >
+            <span class="vs-ring" aria-hidden="true">
+              <span class="vs-thumb">
+                {%- if thumb_image != blank -%}
+                  <img
+                    class="vs-thumb__img"
+                    src="{{ thumb_image | image_url: width: 200 }}"
+                    srcset="
+                      {{ thumb_image | image_url: width: 120 }} 120w,
+                      {{ thumb_image | image_url: width: 200 }} 200w,
+                      {{ thumb_image | image_url: width: 300 }} 300w
+                    "
+                    sizes="var(--vs-thumb-{{ thumb_size }}, 72px)"
+                    alt=""
+                    loading="lazy"
+                    width="{{ thumb_image.width }}"
+                    height="{{ thumb_image.height }}"
+                    decoding="async"
+                  >
+                {%- else -%}
+                  <span class="vs-thumb__placeholder" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </span>
+                {%- endif -%}
+              </span>
+            </span>
+            {%- if video.alt != blank -%}
+              <span class="vs-label">{{ video.alt }}</span>
+            {%- endif -%}
+          </button>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} ===== MODAL (portal — appended to body on connectedCallback) ===== {%- endcomment -%}
+    <template id="vs-modal-tpl-{{ block.id }}">
+      <video-story-modal
+        class="vs-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Stories de vídeo"
+        data-block-id="{{ block.id }}"
+      >
+        {%- comment -%} Backdrop {%- endcomment -%}
+        <div class="vs-modal__backdrop" data-action="close" aria-hidden="true"></div>
+
+        {%- comment -%} Stage {%- endcomment -%}
+        <div class="vs-modal__stage">
+
+          {%- comment -%} Progress bars {%- endcomment -%}
+          <div class="vs-modal__progress-row" aria-hidden="true">
+            {%- for video in videos -%}
+              <div class="vs-modal__progress-seg" data-progress-index="{{ forloop.index0 }}">
+                <div class="vs-modal__progress-fill"></div>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          {%- comment -%} Close button {%- endcomment -%}
+          <button type="button" class="vs-modal__glass-btn vs-modal__close" data-action="close" aria-label="Fechar stories">
+            <svg viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+              <path d="M15.07 4.93a.75.75 0 0 1 0 1.06L11.06 10l4.01 4.01a.75.75 0 1 1-1.06 1.06L10 11.06l-4.01 4.01a.75.75 0 1 1-1.06-1.06L8.94 10 4.93 5.99a.75.75 0 0 1 1.06-1.06L10 8.94l4.01-4.01a.75.75 0 0 1 1.06 0Z"/>
+            </svg>
+          </button>
+
+          {%- comment -%} Mute toggle {%- endcomment -%}
+          <button type="button" class="vs-modal__glass-btn vs-modal__mute" aria-label="Alternar som">
+            <svg class="vs-modal__mute-icon vs-modal__mute-icon--off" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 3.5a.5.5 0 0 0-.8-.4L5.38 6H2.5a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h2.88l3.82 2.9a.5.5 0 0 0 .8-.4v-13ZM14.15 6.15a.5.5 0 0 1 .7 0l1.65 1.65 1.65-1.65a.5.5 0 0 1 .7.7L17.2 8.5l1.65 1.65a.5.5 0 0 1-.7.7L16.5 9.2l-1.65 1.65a.5.5 0 0 1-.7-.7l1.65-1.65-1.65-1.65a.5.5 0 0 1 0-.7Z"/>
+            </svg>
+            <svg class="vs-modal__mute-icon vs-modal__mute-icon--on" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 3.5a.5.5 0 0 0-.8-.4L5.38 6H2.5a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h2.88l3.82 2.9a.5.5 0 0 0 .8-.4v-13ZM13.54 6.16a.5.5 0 0 1 .7 0A6.47 6.47 0 0 1 16 10.5a6.47 6.47 0 0 1-1.76 4.34.5.5 0 0 1-.7-.7A5.47 5.47 0 0 0 15 10.5c0-1.5-.52-2.88-1.46-3.64a.5.5 0 0 1 0-.7Zm-1.08 2.3a.5.5 0 0 1 .7 0c.55.5.84 1.24.84 2.04s-.29 1.54-.84 2.04a.5.5 0 0 1-.7-.7c.35-.32.54-.79.54-1.34s-.19-1.02-.54-1.34a.5.5 0 0 1 0-.7Z"/>
+            </svg>
+          </button>
+
+          {%- comment -%} Tap zones prev / next {%- endcomment -%}
+          <div class="vs-modal__tap vs-modal__tap--prev" data-tap="prev" aria-hidden="true"></div>
+          <div class="vs-modal__tap vs-modal__tap--next" data-tap="next" aria-hidden="true"></div>
+
+          {%- comment -%} Video slides {%- endcomment -%}
+          <div class="vs-modal__slides">
+            {%- for video in videos -%}
+              {%- liquid
+                assign video_sources = video.sources
+                assign mp4_url = ''
+                assign mp4_best_h = 0
+                for source in video_sources
+                  if source.mime_type == 'video/mp4'
+                    if mp4_url == blank
+                      assign mp4_url = source.url
+                      assign mp4_best_h = source.height
+                    elsif source.height >= 720 and source.height > mp4_best_h
+                      assign mp4_url = source.url
+                      assign mp4_best_h = source.height
+                    endif
+                  endif
+                endfor
+              -%}
+              <div
+                class="vs-modal__slide"
+                data-slide-index="{{ forloop.index0 }}"
+                aria-hidden="{{ forloop.index0 | minus: 0 | plus: 1 | default: 1 }}"
+              >
+                <video
+                  class="vs-modal__video"
+                  playsinline
+                  muted
+                  preload="none"
+                  loop
+                  aria-label="{{ video.alt | default: 'Vídeo' }} {{ forloop.index }} de {{ forloop.length }}"
+                  data-src="{{ mp4_url }}"
+                >
+                </video>
+              </div>
+            {%- endfor -%}
+          </div>
+
+        </div>{%- comment -%} /.vs-modal__stage {%- endcomment -%}
+      </video-story-modal>
+    </template>
+  </video-stories-component>
+
+  <script src="{{ 'video-story.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Video Stories",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Conteúdo"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título da seção",
+      "info": "Deixe em branco para ocultar. Os vídeos vêm do metafield custom.videos_produto.",
+      "default": "Veja em vídeo"
+    },
+    {
+      "type": "header",
+      "content": "Aparência"
+    },
+    {
+      "type": "select",
+      "id": "thumb_size",
+      "label": "Tamanho das miniaturas",
+      "options": [
+        { "value": "sm", "label": "Pequeno (56px)" },
+        { "value": "md", "label": "Médio (72px)" },
+        { "value": "lg", "label": "Grande (88px)" }
+      ],
+      "default": "md"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Stories",
+      "category": "Produto"
+    }
+  ]
+}
+{% endschema %}

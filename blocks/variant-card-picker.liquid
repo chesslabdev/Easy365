@@ -1,0 +1,248 @@
+{%- doc -%}
+  Decorator do seletor de variantes nativo (Decorator pattern via capture/content).
+  Captura a saída do engine nativo `variant-main-picker` — preservando TODA a
+  funcionalidade (web component <variant-picker>, radios, troca de variante,
+  atualização de preço, add-to-cart, URL) — e restiliza os botões em "cards"
+  conforme o Figma (número grande + unidade, sublabel e preço por variante).
+
+  - Número grande  = valor da opção (vem do engine nativo)
+  - Unidade        = block.settings.unit_label (ex.: "doses")
+  - Sublabel       = metafield por variante (namespace/key configuráveis)
+  - Preço          = variant.price (nativo, sempre disponível)
+  - Estado selecionado = fundo claro + borda/realce de destaque (via :has(input:checked))
+
+  Pensado para produtos de UMA opção (ex.: tamanho do pack), onde cada valor de
+  opção corresponde a uma variante (o input nativo carrega data-variant-id).
+{%- enddoc -%}
+
+{%- liquid
+  assign s = block.settings
+  assign product_resource = closest.product
+  if request.visual_preview_mode and product_resource == blank
+    assign product_resource = collections.all.products.first
+  endif
+-%}
+
+{%- comment -%} 1) Captura a saída nativa sem tocar no engine (Decorator) {%- endcomment -%}
+{%- capture variant_picker -%}
+  {%- unless product_resource == blank -%}
+    {%- render 'variant-main-picker', product_resource: product_resource, section: section, product: product -%}
+  {%- endunless -%}
+{%- endcapture -%}
+
+{%- unless product_resource == blank or product_resource.has_only_default_variant -%}
+  <div
+    class="variant-card-picker"
+    data-vcp="{{ block.id }}"
+    style="
+      --vcp-bg: {{ s.card_color }};
+      --vcp-bg-selected: {{ s.card_color_selected }};
+      --vcp-border: {{ s.border_color }};
+      --vcp-accent: {{ s.accent_color }};
+      --vcp-fg: {{ s.text_color }};
+      --vcp-muted: {{ s.muted_color }};
+      --vcp-radius: {{ s.border_radius }}px;
+      {% if s.unit_label != blank %}--vcp-unit: ' {{ s.unit_label }}';{% endif %}
+      {% if s.title_color != blank %}--vcp-title: {{ s.title_color }};{% endif %}
+    "
+    {{ block.shopify_attributes }}
+  >
+    {{ variant_picker }}
+  </div>
+
+  {%- comment -%} 2) Injeta preço + sublabel por variante (display) via CSS gerado {%- endcomment -%}
+  {%- style -%}
+    {%- for variant in product_resource.variants -%}
+      {%- assign sub = variant.metafields[s.sublabel_namespace][s.sublabel_key] -%}
+      [data-vcp="{{ block.id }}"] .variant-option__button-label:has(input[data-variant-id="{{ variant.id }}"]) {
+        --vcp-price: "{{ variant.price | money | strip_html | replace: '"', "'" }}";
+        {%- if sub != blank %}--vcp-sub: "{{ sub | strip_html | replace: '"', "'" }}";{%- endif -%}
+      }
+    {%- endfor -%}
+  {%- endstyle -%}
+{%- endunless -%}
+
+{% stylesheet %}
+  .variant-card-picker {
+    width: 100%;
+  }
+
+  /* Linha de cards: título (legend) ocupa a linha inteira, cards dividem a próxima */
+  .variant-card-picker .variant-option--buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-sm, 12px) var(--sp-xs, 8px);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  /* Título (ex.: "TAMANHO DO PACK") — usa o nome nativo da opção */
+  .variant-card-picker legend {
+    flex: 0 0 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.55;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--vcp-title, inherit);
+  }
+
+  /* Card = label nativo */
+  .variant-card-picker .variant-option__button-label {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-xs, 8px);
+    min-height: 120px;
+    padding: var(--sp-md, 16px) var(--sp-sm, 12px);
+    border-radius: var(--vcp-radius, 14px);
+    background: var(--vcp-bg, #ffffff);
+    color: var(--vcp-fg, #000100);
+    box-shadow: inset 0 0 0 1px var(--vcp-border, #d9d4cb);
+    cursor: pointer;
+    overflow: clip;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Radio nativo: acessível mas invisível (o clique no label continua funcionando) */
+  .variant-card-picker .variant-option__button-label input[type='radio'] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+  }
+
+  .variant-card-picker .variant-option__button-label__pill {
+    display: none;
+  }
+
+  /* Número grande (valor da opção) + unidade ("doses") */
+  .variant-card-picker .variant-option__button-label__text {
+    order: 1;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: var(--font-body--family);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+
+  .variant-card-picker .variant-option__button-label__text::after {
+    content: var(--vcp-unit, '');
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+    color: var(--vcp-muted, #8a847a);
+  }
+
+  /* Sublabel (metafield) */
+  .variant-card-picker .variant-option__button-label::before {
+    content: var(--vcp-sub, '');
+    order: 2;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    color: var(--vcp-muted, #8a847a);
+  }
+
+  /* Preço (variant.price) */
+  .variant-card-picker .variant-option__button-label::after {
+    content: var(--vcp-price, '');
+    order: 3;
+    font-family: var(--font-body--family);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--vcp-fg, #000100);
+  }
+
+  /* Estado selecionado */
+  .variant-card-picker .variant-option__button-label:has(input:checked) {
+    background: var(--vcp-bg-selected, #f7f7f7);
+    box-shadow: inset 0 0 0 2px var(--vcp-accent, #ff4c24);
+  }
+
+  .variant-card-picker .variant-option__button-label:has(input:checked)::after {
+    color: var(--vcp-accent, #ff4c24);
+  }
+
+  /* Foco por teclado */
+  .variant-card-picker .variant-option__button-label:has(input:focus-visible) {
+    outline: var(--focus-outline-width) solid var(--vcp-accent, #ff4c24);
+    outline-offset: 2px;
+  }
+
+  /* Indisponível / esgotado */
+  .variant-card-picker .variant-option__button-label:has(input[aria-disabled='true']) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .variant-card-picker .variant-option__button-label {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Variante (cards)",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "Decora o seletor de variante nativo em formato de cards. Use em produtos de uma opção (ex.: tamanho do pack)." },
+    { "type": "header", "content": "Conteúdo" },
+    { "type": "text", "id": "unit_label", "label": "Unidade (após o número)", "info": "Ex.: doses. Deixe vazio para ocultar.", "default": "doses" },
+    { "type": "text", "id": "sublabel_namespace", "label": "Metafield do sublabel — namespace", "default": "custom" },
+    { "type": "text", "id": "sublabel_key", "label": "Metafield do sublabel — key", "info": "Metafield POR VARIANTE com o texto auxiliar (ex.: \"6 frascos de 50ml\").", "default": "pack_subtitle" },
+    { "type": "header", "content": "Aparência" },
+    { "type": "color", "id": "card_color", "label": "Fundo do card", "default": "#ffffff" },
+    { "type": "color", "id": "card_color_selected", "label": "Fundo do card selecionado", "default": "#f7f7f7" },
+    { "type": "color", "id": "text_color", "label": "Cor do texto", "default": "#000100" },
+    { "type": "color", "id": "muted_color", "label": "Cor secundária (doses/sublabel)", "default": "#8a847a" },
+    { "type": "color", "id": "border_color", "label": "Cor da borda", "default": "#d9d4cb" },
+    { "type": "color", "id": "accent_color", "label": "Cor de destaque (selecionado/preço)", "default": "#ff4c24" },
+    { "type": "color", "id": "title_color", "label": "Cor do título" },
+    { "type": "range", "id": "border_radius", "label": "Raio da borda", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 14 },
+    { "type": "header", "content": "Variantes (nativo)" },
+    {
+      "type": "select",
+      "id": "variant_style",
+      "label": "t:settings.style",
+      "options": [
+        { "value": "buttons", "label": "t:options.buttons" },
+        { "value": "dropdowns", "label": "t:options.dropdowns" }
+      ],
+      "default": "buttons"
+    },
+    { "type": "checkbox", "id": "show_swatches", "label": "t:settings.swatches", "default": false },
+    { "type": "text_alignment", "id": "alignment", "label": "t:settings.alignment", "default": "left" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 8 },
+    { "type": "range", "id": "padding-inline-start", "label": "t:settings.left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "t:settings.right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ],
+  "presets": [
+    { "name": "Variante (cards)", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

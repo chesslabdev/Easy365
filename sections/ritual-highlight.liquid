@@ -1,0 +1,321 @@
+{%- comment -%}
+  Ritual Highlight — banner azul "Pronto pro Ritual".
+  Esquerda: selo (ícone + texto) + headline em duas cores + descrição.
+  Direita: garrafa laranja inclinada, recortada na borda do card.
+
+  Arquitetura (Decorator): conteúdo capturado em `children` e renderizado pelo MOTOR
+  BASE de seção ({% render 'section' %}) — herda largura (section_width), color scheme,
+  background, overlay, borda/raio e padding. O schema replica as settings do base.
+
+  Responsivo: garrafa à direita no desktop; empilhada abaixo do texto no mobile (≤749px).
+  Tipografia fluida via clamp().
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- capture children -%}
+  <div class="ritual" style="--rt-bg: {{ s.bg_color }}; --rt-accent: {{ s.accent_color }};">
+    <div class="ritual__content">
+      {%- if s.eyebrow != blank -%}
+        <div class="ritual__eyebrow">
+          <img class="ritual__icon" src="{{ 'ritual-icon.svg' | asset_url }}" alt="" aria-hidden="true" width="27" height="17" loading="lazy">
+          <span class="ritual__eyebrow-text">{{ s.eyebrow }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if s.heading != blank or s.heading_accent != blank -%}
+        <h2 class="ritual__heading">
+          {%- if s.heading != blank -%}<span class="ritual__heading-main">{{ s.heading }}</span>{%- endif -%}
+          {%- if s.heading_accent != blank -%} <span class="ritual__heading-accent">{{ s.heading_accent }}</span>{%- endif -%}
+        </h2>
+      {%- endif -%}
+
+      {%- if s.description != blank -%}
+        <p class="ritual__desc">{{ s.description }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="ritual__media">
+      {%- if s.bottle_image != blank -%}
+        {{ s.bottle_image | image_url: width: 1000 | image_tag: class: 'ritual__bottle', loading: 'lazy', decoding: 'async', widths: '400, 600, 800, 1000', alt: '' }}
+      {%- else -%}
+        <img class="ritual__bottle" src="{{ 'ritual-bottle.png' | asset_url }}" alt="" aria-hidden="true" width="928" height="1152" loading="lazy" decoding="async">
+      {%- endif -%}
+    </div>
+  </div>
+{%- endcapture -%}
+
+{% render 'section', section: section, children: children %}
+
+{% stylesheet %}
+.ritual {
+  --rt-on-accent: #fefffc;
+  --rt-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --rt-bottle-w: 100%;   /* tamanho da garrafa (ajuste fino) */
+
+  position: relative;
+  width: 100%;
+  overflow: visible;     /* garrafa aparece inteira, pode sangrar para fora do card */
+  background: var(--rt-bg, #1a388d);
+  border-radius: clamp(14px, 1.6vw, 22px);
+  padding: clamp(36px, 4.5vw, 64px) clamp(24px, 8.8vw, 132px);
+  min-height: clamp(280px, 26vw, 380px);
+  display: flex;
+  align-items: center;
+  font-family: var(--rt-font);
+}
+
+/* ===== Conteúdo (esquerda) ===== */
+.ritual__content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 60%);
+  max-width: 632px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2.4vw, 34px);
+}
+
+.ritual__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 0.8vw, 11px);
+}
+.ritual__icon {
+  width: clamp(20px, 1.9vw, 27px);
+  height: auto;
+  display: block;
+}
+.ritual__eyebrow-text {
+  color: var(--rt-on-accent);
+  font-family: ui-monospace, "Courier New", monospace;
+  font-weight: 600;
+  font-size: clamp(13px, 1.2vw, 17px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ritual__heading {
+  margin: 0;
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(34px, 4.9vw, 70px);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  color: var(--rt-on-accent);
+}
+.ritual__heading-accent { color: var(--rt-accent, #ff4c24); }
+
+.ritual__desc {
+  margin: 0;
+  max-width: 540px;
+  font-weight: 400;
+  font-size: clamp(15px, 1.55vw, 22px);
+  line-height: 1.55;
+  color: var(--rt-on-accent);
+  opacity: 0.92;
+}
+
+/* ===== Mídia (garrafa, direita) ===== */
+.ritual__media {
+  position: absolute;
+  top: 50%;
+  right: clamp(8px, 3vw, 56px);
+  width: clamp(200px, 30vw, 400px);
+  transform: translateY(-50%);
+  overflow: visible;
+  pointer-events: none;
+}
+.ritual__bottle {
+  display: block;
+  width: var(--rt-bottle-w, 100%);
+  height: auto;
+  transform: rotate(-40deg);
+  transform-origin: center;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.18));
+}
+
+/* ===== Mobile (≤749px) — garrafa empilhada abaixo do texto ===== */
+@media (max-width: 749px) {
+  .ritual {
+    flex-direction: column;
+    align-items: stretch;
+    padding: clamp(28px, 7vw, 40px);
+  }
+  .ritual__content {
+    width: 100%;
+    max-width: 100%;
+  }
+  .ritual__media {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
+    width: 100%;
+    height: clamp(240px, 62vw, 340px);
+    margin-top: clamp(20px, 5vw, 28px);
+    overflow: visible;
+  }
+  .ritual__bottle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 62%;
+    transform: translate(-50%, -50%) rotate(-40deg);
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Destaque ritual",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    { "type": "header", "content": "Conteúdo" },
+    { "type": "text", "id": "eyebrow", "label": "Selo", "default": "Pronto pro Ritual" },
+    { "type": "text", "id": "heading", "label": "Título (claro)", "default": "Bora dormir melhor" },
+    { "type": "text", "id": "heading_accent", "label": "Título (destaque)", "default": "hoje à noite?" },
+    { "type": "textarea", "id": "description", "label": "Descrição", "default": "Um squeeze, 25 doses, um mês inteiro de recuperação no piloto automático. Sem caixa, sem sachê, sem desperdício." },
+
+    { "type": "header", "content": "Imagem" },
+    { "type": "image_picker", "id": "bottle_image", "label": "Imagem do produto", "info": "Vazio usa a imagem padrão." },
+
+    { "type": "header", "content": "Cores do card" },
+    { "type": "color", "id": "bg_color", "label": "Fundo do card", "default": "#1a388d" },
+    { "type": "color", "id": "accent_color", "label": "Cor de destaque", "default": "#ff4c24" },
+
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select", "id": "content_direction", "label": "t:settings.direction",
+      "options": [
+        { "value": "column", "label": "t:options.vertical" },
+        { "value": "row", "label": "t:options.horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "select", "id": "horizontal_alignment_flex_direction_column", "label": "t:settings.alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.right" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction != 'row' }}"
+    },
+    { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "t:content.size" },
+    {
+      "type": "select", "id": "section_width", "label": "t:settings.width",
+      "options": [
+        { "value": "page-width", "label": "t:options.page" },
+        { "value": "full-width", "label": "t:options.full" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "select", "id": "section_height", "label": "t:settings.height",
+      "options": [
+        { "value": "", "label": "t:options.auto" },
+        { "value": "small", "label": "t:options.small" },
+        { "value": "medium", "label": "t:options.medium" },
+        { "value": "large", "label": "t:options.large" },
+        { "value": "full-screen", "label": "t:options.full_screen" },
+        { "value": "custom", "label": "t:options.custom" }
+      ],
+      "default": ""
+    },
+    { "type": "range", "id": "section_height_custom", "label": "t:settings.custom_height", "min": 0, "max": 100, "step": 1, "default": 50, "unit": "%", "visible_if": "{{ section.settings.section_height == 'custom' }}" },
+
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    {
+      "type": "select", "id": "background_media", "label": "t:settings.background_media",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "image", "label": "t:options.image" },
+        { "value": "video", "label": "t:options.video" }
+      ],
+      "default": "none"
+    },
+    { "type": "video", "id": "video", "label": "t:settings.video", "visible_if": "{{ section.settings.background_media == 'video' }}" },
+    {
+      "type": "select", "id": "video_position", "label": "t:settings.video_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "contain", "label": "t:options.contain" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_media == 'video' }}"
+    },
+    { "type": "image_picker", "id": "background_image", "label": "t:settings.image", "visible_if": "{{ section.settings.background_media == 'image' }}" },
+    {
+      "type": "select", "id": "background_image_position", "label": "t:settings.image_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "fit", "label": "t:options.fit" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "select", "id": "border", "label": "t:settings.borders",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "solid", "label": "t:options.solid" }
+      ],
+      "default": "none"
+    },
+    { "type": "range", "id": "border_width", "min": 0, "max": 10, "step": 0.5, "unit": "px", "label": "t:settings.border_width", "default": 1, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_opacity", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "t:settings.border_opacity", "default": 100, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_radius", "label": "t:settings.border_radius", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "checkbox", "id": "toggle_overlay", "label": "t:settings.background_overlay" },
+    { "type": "color", "id": "overlay_color", "label": "t:settings.overlay_color", "alpha": true, "default": "#00000026", "visible_if": "{{ section.settings.toggle_overlay }}" },
+    {
+      "type": "select", "id": "overlay_style", "label": "t:settings.overlay_style",
+      "options": [
+        { "value": "solid", "label": "t:options.solid" },
+        { "value": "gradient", "label": "t:options.gradient" }
+      ],
+      "default": "solid",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select", "id": "gradient_direction", "label": "t:settings.gradient_direction",
+      "options": [
+        { "value": "to top", "label": "t:options.up" },
+        { "value": "to bottom", "label": "t:options.down" }
+      ],
+      "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    },
+
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    {
+      "name": "Destaque ritual",
+      "category": "t:categories.banners",
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "",
+        "color_scheme": "",
+        "border": "none",
+        "border_radius": 0,
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    }
+  ]
+}
+{% endschema %}

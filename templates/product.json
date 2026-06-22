@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "main": {
       "type": "product-information",
@@ -68,9 +69,8 @@
           "blocks": {
             "group_icgrde": {
               "type": "group",
-              "name": "Header",
+              "name": "Conteúdo Global",
               "settings": {
-                "open_in_new_tab": false,
                 "content_direction": "column",
                 "vertical_on_mobile": true,
                 "horizontal_alignment": "flex-start",
@@ -98,6 +98,7 @@
                 "overlay_color": "#00000026",
                 "overlay_style": "solid",
                 "gradient_direction": "to top",
+                "open_in_new_tab": false,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -242,6 +243,327 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
+            },
+            "radial_counter_pdp": {
+              "type": "radial-counter",
+              "name": "Radial counter",
+              "settings": {
+                "value": 2,
+                "max": 8,
+                "unit_label": "doses",
+                "inherit_color_scheme": false,
+                "color_scheme": "scheme-1",
+                "value_font_size": 24,
+                "label_font_size": 11,
+                "diameter": 130,
+                "stroke_width": 10,
+                "duration_ms": 1500,
+                "border_radius": 200
+              },
+              "blocks": {}
+            },
+            "tabs_pdp": {
+              "type": "tabs",
+              "name": "Tabs",
+              "settings": {
+                "color_scheme": "scheme-1"
+              },
+              "blocks": {
+                "tab-1": {
+                  "type": "_tab",
+                  "settings": {
+                    "label": "Descrição"
+                  },
+                  "blocks": {
+                    "heading": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Sabor Tropic Bloom, função Magnésio Bisglicinato.</p>",
+                        "width": "100%",
+                        "type_preset": "h2"
+                      }
+                    },
+                    "body-1": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Um squeeze funcional com perfil tropical de frutas amarelas (maracujá, cupuaçu, maçã, banana, manga, pêssego) e fundo cítrico. Dose padrão de 2g entrega 63mg de Magnésio Bisglicinato — forma de alta biodisponibilidade absorvida pelo intestino sem desconforto gástrico — para apoiar a recuperação muscular e a qualidade do sono profundo.</p>",
+                        "width": "100%"
+                      }
+                    },
+                    "body-2": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Adoçado naturalmente com Stevia. Sem glúten, sem corante artificial, sem açúcar adicionado. Cada frasco de 50g rende 25 doses — aproximadamente um mês de ritual diário. Embalagem reciclável feita de PET monomaterial com tampa flip-top hermética.</p>",
+                        "width": "100%"
+                      }
+                    },
+                    "callout": {
+                      "type": "group",
+                      "settings": {
+                        "content_direction": "column",
+                        "gap": 12,
+                        "inherit_color_scheme": false,
+                        "color_scheme": "scheme-2",
+                        "border_radius": 14,
+                        "padding-block-start": 24,
+                        "padding-block-end": 24,
+                        "padding-inline-start": 24,
+                        "padding-inline-end": 24
+                      },
+                      "blocks": {
+                        "kicker": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>DICA DO TIME</p>",
+                            "width": "100%",
+                            "type_preset": "paragraph"
+                          }
+                        },
+                        "tip": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Misture 2g em 200ml de água gelada após o treino ou 30-60min antes de dormir. Dose pensada para o ritual de recuperação noturna.</p>",
+                            "width": "100%",
+                            "type_preset": "h4"
+                          }
+                        }
+                      },
+                      "block_order": [
+                        "kicker",
+                        "tip"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "heading",
+                    "body-1",
+                    "body-2",
+                    "callout"
+                  ]
+                },
+                "tab-2": {
+                  "type": "_tab",
+                  "settings": {
+                    "label": "Ingredientes"
+                  },
+                  "blocks": {
+                    "heading": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Fórmula limpa, com função em cada grama.</p>",
+                        "width": "100%",
+                        "type_preset": "h2"
+                      }
+                    },
+                    "body-1": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Composição enxuta e reconhecível: Magnésio Bisglicinato (mineral quelato de alta absorção), blend natural de frutas amarelas — maracujá, cupuaçu, maçã, banana, manga e pêssego — e um toque cítrico para equilibrar. Adoçado exclusivamente com Stevia.</p>",
+                        "width": "100%"
+                      }
+                    },
+                    "body-2": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>A cada dose de 2g você recebe 63mg de Magnésio Bisglicinato. Sem glúten, sem lactose, sem corante artificial e sem açúcar adicionado — nada de aromas sintéticos ou ingredientes que você não consegue pronunciar.</p>",
+                        "width": "100%"
+                      }
+                    },
+                    "callout": {
+                      "type": "group",
+                      "settings": {
+                        "content_direction": "column",
+                        "gap": 12,
+                        "inherit_color_scheme": false,
+                        "color_scheme": "scheme-2",
+                        "border_radius": 14,
+                        "padding-block-start": 24,
+                        "padding-block-end": 24,
+                        "padding-inline-start": 24,
+                        "padding-inline-end": 24
+                      },
+                      "blocks": {
+                        "kicker": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>LIVRE DE</p>",
+                            "width": "100%",
+                            "type_preset": "paragraph"
+                          }
+                        },
+                        "tip": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Glúten · Lactose · Açúcar adicionado · Corante artificial · Aroma sintético. Só o que o seu corpo reconhece.</p>",
+                            "width": "100%",
+                            "type_preset": "h4"
+                          }
+                        }
+                      },
+                      "block_order": [
+                        "kicker",
+                        "tip"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "heading",
+                    "body-1",
+                    "body-2",
+                    "callout"
+                  ]
+                },
+                "tab-3": {
+                  "type": "_tab",
+                  "settings": {
+                    "label": "Como usar"
+                  },
+                  "blocks": {
+                    "heading": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Dois gramas, um ritual de recuperação.</p>",
+                        "width": "100%",
+                        "type_preset": "h2"
+                      }
+                    },
+                    "body-1": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Adicione 2g — uma colher dosadora rasa — em 200ml de água bem gelada e mexa por alguns segundos até dissolver por completo. Sem grumos, sem espuma. Também cai bem em sucos, smoothies ou na garrafa do pré-treino.</p>",
+                        "width": "100%"
+                      }
+                    },
+                    "body-2": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Uma dose por dia já entrega seus 63mg de Magnésio Bisglicinato. Cada frasco de 50g rende 25 doses — cerca de um mês de uso contínuo. É a constância que transforma o squeeze em ritual.</p>",
+                        "width": "100%"
+                      }
+                    },
+                    "callout": {
+                      "type": "group",
+                      "settings": {
+                        "content_direction": "column",
+                        "gap": 12,
+                        "inherit_color_scheme": false,
+                        "color_scheme": "scheme-2",
+                        "border_radius": 14,
+                        "padding-block-start": 24,
+                        "padding-block-end": 24,
+                        "padding-inline-start": 24,
+                        "padding-inline-end": 24
+                      },
+                      "blocks": {
+                        "kicker": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>MOMENTO IDEAL</p>",
+                            "width": "100%",
+                            "type_preset": "paragraph"
+                          }
+                        },
+                        "tip": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Após o treino, para repor o magnésio; ou 30 a 60 min antes de dormir, para apoiar o sono profundo e a recuperação noturna.</p>",
+                            "width": "100%",
+                            "type_preset": "h4"
+                          }
+                        }
+                      },
+                      "block_order": [
+                        "kicker",
+                        "tip"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "heading",
+                    "body-1",
+                    "body-2",
+                    "callout"
+                  ]
+                },
+                "tab-4": {
+                  "type": "_tab",
+                  "settings": {
+                    "label": "Envio & Trocas"
+                  },
+                  "blocks": {
+                    "heading": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Chega rápido, troca fácil e sem letra miúda.</p>",
+                        "width": "100%",
+                        "type_preset": "h2"
+                      }
+                    },
+                    "body-1": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Pedidos confirmados até as 14h saem no mesmo dia útil. Enviamos para todo o Brasil com código de rastreio: capitais em 2 a 4 dias úteis e demais regiões em 5 a 9 dias úteis. Frete grátis acima de R$199.</p>",
+                        "width": "100%"
+                      }
+                    },
+                    "body-2": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Não curtiu? Você tem até 7 dias corridos após o recebimento para solicitar troca ou devolução, conforme o Código de Defesa do Consumidor. Produto lacrado garante reembolso integral; aberto, avaliamos caso a caso.</p>",
+                        "width": "100%"
+                      }
+                    },
+                    "callout": {
+                      "type": "group",
+                      "settings": {
+                        "content_direction": "column",
+                        "gap": 12,
+                        "inherit_color_scheme": false,
+                        "color_scheme": "scheme-2",
+                        "border_radius": 14,
+                        "padding-block-start": 24,
+                        "padding-block-end": 24,
+                        "padding-inline-start": 24,
+                        "padding-inline-end": 24
+                      },
+                      "blocks": {
+                        "kicker": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>NOSSA PROMESSA</p>",
+                            "width": "100%",
+                            "type_preset": "paragraph"
+                          }
+                        },
+                        "tip": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Se o lacre chegar violado ou o produto vier com qualquer defeito, reenviamos sem custo. É só falar com a gente em até 7 dias.</p>",
+                            "width": "100%",
+                            "type_preset": "h4"
+                          }
+                        }
+                      },
+                      "block_order": [
+                        "kicker",
+                        "tip"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "heading",
+                    "body-1",
+                    "body-2",
+                    "callout"
+                  ]
+                }
+              },
+              "block_order": [
+                "tab-1",
+                "tab-2",
+                "tab-3",
+                "tab-4"
+              ]
             }
           },
           "block_order": [
@@ -249,10 +571,13 @@
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "text_aEtTtq"
+            "text_aEtTtq",
+            "radial_counter_pdp",
+            "tabs_pdp"
           ]
         }
       },
+      "name": "Seção | Produto",
       "settings": {
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
@@ -262,6 +587,310 @@
         "color_scheme": "",
         "padding-block-start": 0,
         "padding-block-end": 0
+      }
+    },
+    "whats_inside_pdp": {
+      "type": "whats-inside",
+      "name": "Seção | Tudo o que entra",
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "",
+        "color_scheme": "",
+        "border": "none",
+        "border_radius": 0,
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "nutritional_table_pdp": {
+      "type": "nutritional-table",
+      "blocks": {
+        "row-1": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "Valor energético",
+            "qty": "12 kcal",
+            "vd": "0,6%"
+          }
+        },
+        "row-2": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "Carboidratos",
+            "qty": "0,8 g",
+            "vd": "0,3%"
+          }
+        },
+        "row-3": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "└ dos quais açúcares",
+            "qty": "0 g",
+            "vd": "—"
+          }
+        },
+        "row-4": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "Proteínas",
+            "qty": "0 g",
+            "vd": "—"
+          }
+        },
+        "row-5": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "Gorduras totais",
+            "qty": "0 g",
+            "vd": "—"
+          }
+        },
+        "row-6": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "Sódio",
+            "qty": "210 mg",
+            "vd": "9%"
+          }
+        },
+        "row-7": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "Magnésio Bisglicinato",
+            "qty": "63 mg",
+            "vd": "20%"
+          }
+        },
+        "row-8": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "Potássio",
+            "qty": "120 mg",
+            "vd": "3%"
+          }
+        },
+        "row-9": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "Cálcio",
+            "qty": "80 mg",
+            "vd": "8%"
+          }
+        },
+        "row-10": {
+          "type": "_nutritional-row",
+          "settings": {
+            "name": "Zinco",
+            "qty": "2,5 mg",
+            "vd": "23%"
+          }
+        }
+      },
+      "block_order": [
+        "row-1",
+        "row-2",
+        "row-3",
+        "row-4",
+        "row-5",
+        "row-6",
+        "row-7",
+        "row-8",
+        "row-9",
+        "row-10"
+      ],
+      "name": "Seção | Tabela nutricional",
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "",
+        "color_scheme": "",
+        "border": "none",
+        "border_radius": 0,
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "ritual_highlight_pdp": {
+      "type": "ritual-highlight",
+      "name": "Seção | Bora dormir melhor",
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "",
+        "color_scheme": "",
+        "border": "none",
+        "border_radius": 0,
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "faq_pdp": {
+      "type": "faq",
+      "blocks": {
+        "static-header": {
+          "type": "group",
+          "name": "Conteúdo Global",
+          "static": true,
+          "settings": {
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "inherit_color_scheme": true,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Perguntas frequentes</h2>",
+                "width": "100%",
+                "alignment": "center",
+                "type_preset": "h2"
+              }
+            }
+          },
+          "block_order": [
+            "heading"
+          ]
+        },
+        "faq": {
+          "type": "faq",
+          "name": "Conteúdo Global",
+          "settings": {
+            "show_numbers": true,
+            "type_preset": "h5",
+            "gap": 20,
+            "border_radius": 22,
+            "card_padding_inline": 24,
+            "card_padding_block": 16
+          },
+          "blocks": {
+            "row-1": {
+              "type": "_faq-row",
+              "settings": {
+                "heading": "Como tomar?",
+                "open_by_default": true
+              },
+              "blocks": {
+                "text-1": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Misture 2g (um aperto firme) em 200ml de água ou na sua bebida favorita após o treino ou antes de dormir. Um squeeze rende 25 doses — mais ou menos um mês de ritual diário.</p>",
+                    "width": "100%"
+                  }
+                }
+              },
+              "block_order": [
+                "text-1"
+              ]
+            },
+            "row-2": {
+              "type": "_faq-row",
+              "settings": {
+                "heading": "Qual a melhor hora para tomar?"
+              },
+              "blocks": {
+                "text-1": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Recomendamos 30 a 60 minutos antes de dormir, ou imediatamente após o treino noturno. O Magnésio Bisglicinato age na recuperação muscular e na qualidade do sono profundo.</p>",
+                    "width": "100%"
+                  }
+                }
+              },
+              "block_order": [
+                "text-1"
+              ]
+            },
+            "row-3": {
+              "type": "_faq-row",
+              "settings": {
+                "heading": "Posso tomar todos os dias?"
+              },
+              "blocks": {
+                "text-1": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Sim — é exatamente para isso. A fórmula foi pensada para uso diário, todos os 365 dias do ano. A dose padrão (2g/dia) está dentro da recomendação para adultos saudáveis.</p>",
+                    "width": "100%"
+                  }
+                }
+              },
+              "block_order": [
+                "text-1"
+              ]
+            },
+            "row-4": {
+              "type": "_faq-row",
+              "settings": {
+                "heading": "Qual é o sabor?"
+              },
+              "blocks": {
+                "text-1": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Tropic Bloom — um mix de frutas amarelas (maracujá, cupuaçu, maçã, banana, manga, pêssego) com perfume cítrico e fundo doce. Adoçado naturalmente com Stevia.</p>",
+                    "width": "100%"
+                  }
+                }
+              },
+              "block_order": [
+                "text-1"
+              ]
+            },
+            "row-5": {
+              "type": "_faq-row",
+              "settings": {
+                "heading": "Quanto tempo dura a entrega?"
+              },
+              "blocks": {
+                "text-1": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Envio em 24h úteis a partir de São Paulo. Capital: 1-2 dias. Demais regiões: 3-7 dias úteis. Frete grátis para pedidos acima de R$ 120.</p>",
+                    "width": "100%"
+                  }
+                }
+              },
+              "block_order": [
+                "text-1"
+              ]
+            }
+          },
+          "block_order": [
+            "row-1",
+            "row-2",
+            "row-3",
+            "row-4",
+            "row-5"
+          ]
+        }
+      },
+      "block_order": [
+        "faq"
+      ],
+      "name": "Seção | FAQ",
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 40,
+        "section_width": "page-width",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 64,
+        "padding-block-end": 64
       }
     },
     "product_recommendations_qggXJq": {
@@ -385,7 +1014,7 @@
       "block_order": [
         "text_cbcgyb"
       ],
-      "name": "t:names.product_recommendations",
+      "name": "Seção | Você também pode gostar",
       "settings": {
         "product": "{{ closest.product }}",
         "recommendation_type": "related",
@@ -408,6 +1037,10 @@
   },
   "order": [
     "main",
+    "whats_inside_pdp",
+    "nutritional_table_pdp",
+    "ritual_highlight_pdp",
+    "faq_pdp",
     "product_recommendations_qggXJq"
   ]
 }

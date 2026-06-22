@@ -1,0 +1,307 @@
+{%- doc -%}
+  Tabs — public parent block (compose with private `_tab` children).
+
+  A pill-style tab bar (MiniTabs, per Figma) that switches between panels.
+  Add a tab = add a `_tab` block; its `label` becomes the pill caption and its
+  @theme children become the panel content. The parent iterates `block.blocks`
+  to build the `role="tablist"` and renders the panels via `content_for`; both
+  reference each child `block.id` so they stay linked across editor re-renders.
+
+  Behavior is progressive: pre-JS only the first panel shows (no flash/CLS);
+  `assets/tabs.js` (<tabs-component>) adds switching + full WAI-ARIA keyboard
+  support. Chrome (color schemes, border + radius, padding, mobile padding) is
+  composed from native snippets — no native files edited.
+{%- enddoc -%}
+
+{%- liquid
+  assign bs = block.settings
+-%}
+
+<tabs-component
+  class="tabs"
+  data-active-scheme="color-{{ bs.active_color_scheme }}"
+  {{ block.shopify_attributes }}
+  style="
+    --tabs-list-radius: {{ bs.pill_radius }}px;
+    --tabs-tab-radius: {{ bs.tab_radius }}px;
+    --tabs-gap: {{ bs.tab_gap }}px;
+    --tabs-section-gap: {{ bs.section_gap }}px;
+    --tabs-panel-gap: {{ bs.panel_gap }}px;
+    --tabs-label-family: var(--font-{{ bs.type_preset }}--family);
+    --tabs-label-weight: var(--font-{{ bs.type_preset }}--weight);
+    --tabs-label-style: var(--font-{{ bs.type_preset }}--style);
+    --tabs-label-size: {{ bs.label_font_size }}px;
+    --tabs-label-tracking: {{ bs.label_tracking | divided_by: 100.0 }}em;
+  "
+>
+  <div
+    class="tabs__list spacing-style{% if bs.inherit_color_scheme == false %} color-{{ bs.color_scheme }}{% endif %}{% if bs.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}"
+    role="tablist"
+    aria-label="{{ bs.tablist_label | escape }}"
+    style="
+      {% render 'border-override', settings: bs %}
+      {% render 'spacing-style', settings: bs %}
+      justify-content: {{ bs.tab_alignment }};
+    "
+  >
+    {%- for tab in block.blocks -%}
+      <button
+        class="tabs__tab{% if forloop.first %} tabs__tab--active color-{{ bs.active_color_scheme }}{% endif %}"
+        id="tabs-tab-{{ tab.id }}"
+        type="button"
+        role="tab"
+        aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+        aria-controls="tabs-panel-{{ tab.id }}"
+        tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+        ref="tab[]"
+        on:click="/select"
+      >
+        {%- comment -%}
+          Label is filled by assets/tabs.js from the matching panel's
+          data-tab-label: a parent block's block.blocks[i].settings is NOT
+          accessible, so {{ tab.settings.label }} would be empty here.
+        {%- endcomment -%}
+        <span class="tabs__tab-label"></span>
+      </button>
+    {%- endfor -%}
+  </div>
+
+  <div class="tabs__panels">
+    {% content_for 'blocks' %}
+  </div>
+</tabs-component>
+
+{% render 'mobile-spacing', settings: bs, id: block.id %}
+
+<script src="{{ 'tabs.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% stylesheet %}
+  .tabs {
+    display: block;
+    width: 100%;
+  }
+
+  .tabs__list {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--tabs-gap, 0px);
+    width: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    background: var(--color-background);
+    border: var(--border-width, 1px) var(--border-style, solid) var(--border-color, transparent);
+    border-radius: var(--tabs-list-radius, 999px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x proximity;
+  }
+
+  .tabs__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabs__tab {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border: 0;
+    background: transparent;
+    border-radius: var(--tabs-tab-radius, 999px);
+    cursor: pointer;
+    scroll-snap-align: start;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    font-family: var(--tabs-label-family);
+    font-weight: var(--tabs-label-weight);
+    font-style: var(--tabs-label-style);
+    font-size: var(--tabs-label-size, 12px);
+    letter-spacing: var(--tabs-label-tracking, 0.12em);
+    text-transform: uppercase;
+    line-height: 1.4;
+    white-space: nowrap;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .tabs__tab--active {
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .tabs__tab:focus-visible {
+    outline: 2px solid var(--color-foreground);
+    outline-offset: 2px;
+  }
+
+  /* Scale gaps with the theme's spacing scale (0.7 below 990px, 1.0 above) so
+     the panel spacing stays consistent with native paddings, which also shrink
+     on smaller screens — otherwise these fixed gaps look oversized on mobile. */
+  .tabs__panels {
+    margin-block-start: calc(var(--tabs-section-gap, 24px) * var(--spacing-scale-md, 0.7));
+  }
+
+  .tabs__panel {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tabs-panel-gap, 24px) * var(--spacing-scale-md, 0.7));
+  }
+
+  @media screen and (min-width: 990px) {
+    .tabs__panels {
+      margin-block-start: calc(var(--tabs-section-gap, 24px) * var(--spacing-scale-default, 1));
+    }
+
+    .tabs__panel {
+      gap: calc(var(--tabs-panel-gap, 24px) * var(--spacing-scale-default, 1));
+    }
+  }
+
+  /* Pre-JS / no-JS: show only the first panel (no flash/CLS). */
+  .tabs:not([data-ready]) .tabs__panel:not(:first-child) {
+    display: none;
+  }
+
+  /* After JS upgrade, panel visibility is driven by [hidden]. */
+  .tabs[data-ready] .tabs__panel[hidden] {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .tabs__tab {
+      min-height: 44px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tabs",
+  "tag": null,
+  "blocks": [{ "type": "_tab" }],
+  "settings": [
+    { "type": "header", "content": "Aparência da barra" },
+    { "type": "text", "id": "tablist_label", "label": "Rótulo acessível da barra (aria-label)", "default": "Informações do produto" },
+    { "type": "checkbox", "id": "inherit_color_scheme", "label": "t:settings.inherit_color_scheme", "default": false },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1", "visible_if": "{{ block.settings.inherit_color_scheme == false }}" },
+    { "type": "color_scheme", "id": "active_color_scheme", "label": "Esquema da aba ativa", "default": "scheme-2" },
+    { "type": "select", "id": "tab_alignment", "label": "t:settings.alignment", "options": [ { "value": "flex-start", "label": "Início" }, { "value": "center", "label": "Centro" }, { "value": "flex-end", "label": "Fim" } ], "default": "flex-start" },
+
+    { "type": "header", "content": "Tipografia do rótulo" },
+    { "type": "select", "id": "type_preset", "label": "Estilo da fonte", "options": [ { "value": "paragraph", "label": "Parágrafo" }, { "value": "h6", "label": "H6" }, { "value": "h5", "label": "H5" } ], "default": "paragraph" },
+    { "type": "range", "id": "label_font_size", "label": "Tamanho do rótulo", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "label_tracking", "label": "Espaçamento entre letras (·0,01em)", "min": 0, "max": 30, "step": 1, "default": 12 },
+
+    { "type": "header", "content": "Espaçamentos internos" },
+    { "type": "range", "id": "tab_gap", "label": "Espaço entre abas", "min": 0, "max": 24, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "section_gap", "label": "Espaço barra → painel", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 24 },
+    { "type": "range", "id": "panel_gap", "label": "Espaço entre itens do painel", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 24 },
+
+    { "type": "header", "content": "Borda e raio" },
+    { "type": "select", "id": "border", "label": "t:settings.style", "options": [ { "value": "none", "label": "t:options.none" }, { "value": "solid", "label": "t:options.solid" } ], "default": "solid" },
+    { "type": "range", "id": "border_width", "label": "t:settings.thickness", "min": 0, "max": 8, "step": 1, "unit": "px", "default": 1, "visible_if": "{{ block.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_opacity", "label": "t:settings.opacity", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 100, "visible_if": "{{ block.settings.border != 'none' }}" },
+    { "type": "range", "id": "pill_radius", "label": "Raio da barra (pílula)", "min": 0, "max": 1000, "step": 10, "unit": "px", "default": 1000 },
+    { "type": "range", "id": "tab_radius", "label": "Raio das abas", "min": 0, "max": 1000, "step": 10, "unit": "px", "default": 1000 },
+
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 4 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 4 },
+    { "type": "range", "id": "padding-inline-start", "label": "t:settings.left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 4 },
+    { "type": "range", "id": "padding-inline-end", "label": "t:settings.right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 4 },
+
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 4, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 4, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 4, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile", "label": "Direita (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 4, "visible_if": "{{ block.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    {
+      "name": "Tabs",
+      "category": "t:categories.layout",
+      "blocks": {
+        "tab-1": {
+          "type": "_tab",
+          "settings": { "label": "Descrição" },
+          "blocks": {
+            "heading": { "type": "text", "settings": { "text": "<p>Sabor Tropic Bloom, função Magnésio Bisglicinato.</p>", "width": "100%", "type_preset": "h2" } },
+            "body-1": { "type": "text", "settings": { "text": "<p>Um squeeze funcional com perfil tropical de frutas amarelas (maracujá, cupuaçu, maçã, banana, manga, pêssego) e fundo cítrico. Dose padrão de 2g entrega 63mg de Magnésio Bisglicinato — forma de alta biodisponibilidade absorvida pelo intestino sem desconforto gástrico — para apoiar a recuperação muscular e a qualidade do sono profundo.</p>", "width": "100%" } },
+            "body-2": { "type": "text", "settings": { "text": "<p>Adoçado naturalmente com Stevia. Sem glúten, sem corante artificial, sem açúcar adicionado. Cada frasco de 50g rende 25 doses — aproximadamente um mês de ritual diário. Embalagem reciclável feita de PET monomaterial com tampa flip-top hermética.</p>", "width": "100%" } },
+            "callout": {
+              "type": "group",
+              "settings": { "inherit_color_scheme": false, "color_scheme": "scheme-2", "border_radius": 14, "gap": 12, "content_direction": "column", "padding-block-start": 24, "padding-block-end": 24, "padding-inline-start": 24, "padding-inline-end": 24 },
+              "blocks": {
+                "kicker": { "type": "text", "settings": { "text": "<p>DICA DO TIME</p>", "width": "100%", "type_preset": "paragraph" } },
+                "tip": { "type": "text", "settings": { "text": "<p>Misture 2g em 200ml de água gelada após o treino ou 30-60min antes de dormir. Dose pensada para o ritual de recuperação noturna.</p>", "width": "100%", "type_preset": "h4" } }
+              },
+              "block_order": ["kicker", "tip"]
+            }
+          },
+          "block_order": ["heading", "body-1", "body-2", "callout"]
+        },
+        "tab-2": {
+          "type": "_tab",
+          "settings": { "label": "Ingredientes" },
+          "blocks": {
+            "heading": { "type": "text", "settings": { "text": "<p>Fórmula limpa, com função em cada grama.</p>", "width": "100%", "type_preset": "h2" } },
+            "body-1": { "type": "text", "settings": { "text": "<p>Composição enxuta e reconhecível: Magnésio Bisglicinato (mineral quelato de alta absorção), blend natural de frutas amarelas — maracujá, cupuaçu, maçã, banana, manga e pêssego — e um toque cítrico para equilibrar. Adoçado exclusivamente com Stevia.</p>", "width": "100%" } },
+            "body-2": { "type": "text", "settings": { "text": "<p>A cada dose de 2g você recebe 63mg de Magnésio Bisglicinato. Sem glúten, sem lactose, sem corante artificial e sem açúcar adicionado — nada de aromas sintéticos ou ingredientes que você não consegue pronunciar.</p>", "width": "100%" } },
+            "callout": {
+              "type": "group",
+              "settings": { "inherit_color_scheme": false, "color_scheme": "scheme-2", "border_radius": 14, "gap": 12, "content_direction": "column", "padding-block-start": 24, "padding-block-end": 24, "padding-inline-start": 24, "padding-inline-end": 24 },
+              "blocks": {
+                "kicker": { "type": "text", "settings": { "text": "<p>LIVRE DE</p>", "width": "100%", "type_preset": "paragraph" } },
+                "tip": { "type": "text", "settings": { "text": "<p>Glúten · Lactose · Açúcar adicionado · Corante artificial · Aroma sintético. Só o que o seu corpo reconhece.</p>", "width": "100%", "type_preset": "h4" } }
+              },
+              "block_order": ["kicker", "tip"]
+            }
+          },
+          "block_order": ["heading", "body-1", "body-2", "callout"]
+        },
+        "tab-3": {
+          "type": "_tab",
+          "settings": { "label": "Como usar" },
+          "blocks": {
+            "heading": { "type": "text", "settings": { "text": "<p>Dois gramas, um ritual de recuperação.</p>", "width": "100%", "type_preset": "h2" } },
+            "body-1": { "type": "text", "settings": { "text": "<p>Adicione 2g — uma colher dosadora rasa — em 200ml de água bem gelada e mexa por alguns segundos até dissolver por completo. Sem grumos, sem espuma. Também cai bem em sucos, smoothies ou na garrafa do pré-treino.</p>", "width": "100%" } },
+            "body-2": { "type": "text", "settings": { "text": "<p>Uma dose por dia já entrega seus 63mg de Magnésio Bisglicinato. Cada frasco de 50g rende 25 doses — cerca de um mês de uso contínuo. É a constância que transforma o squeeze em ritual.</p>", "width": "100%" } },
+            "callout": {
+              "type": "group",
+              "settings": { "inherit_color_scheme": false, "color_scheme": "scheme-2", "border_radius": 14, "gap": 12, "content_direction": "column", "padding-block-start": 24, "padding-block-end": 24, "padding-inline-start": 24, "padding-inline-end": 24 },
+              "blocks": {
+                "kicker": { "type": "text", "settings": { "text": "<p>MOMENTO IDEAL</p>", "width": "100%", "type_preset": "paragraph" } },
+                "tip": { "type": "text", "settings": { "text": "<p>Após o treino, para repor o magnésio; ou 30 a 60 min antes de dormir, para apoiar o sono profundo e a recuperação noturna.</p>", "width": "100%", "type_preset": "h4" } }
+              },
+              "block_order": ["kicker", "tip"]
+            }
+          },
+          "block_order": ["heading", "body-1", "body-2", "callout"]
+        },
+        "tab-4": {
+          "type": "_tab",
+          "settings": { "label": "Envio & Trocas" },
+          "blocks": {
+            "heading": { "type": "text", "settings": { "text": "<p>Chega rápido, troca fácil e sem letra miúda.</p>", "width": "100%", "type_preset": "h2" } },
+            "body-1": { "type": "text", "settings": { "text": "<p>Pedidos confirmados até as 14h saem no mesmo dia útil. Enviamos para todo o Brasil com código de rastreio: capitais em 2 a 4 dias úteis e demais regiões em 5 a 9 dias úteis. Frete grátis acima de R$199.</p>", "width": "100%" } },
+            "body-2": { "type": "text", "settings": { "text": "<p>Não curtiu? Você tem até 7 dias corridos após o recebimento para solicitar troca ou devolução, conforme o Código de Defesa do Consumidor. Produto lacrado garante reembolso integral; aberto, avaliamos caso a caso.</p>", "width": "100%" } },
+            "callout": {
+              "type": "group",
+              "settings": { "inherit_color_scheme": false, "color_scheme": "scheme-2", "border_radius": 14, "gap": 12, "content_direction": "column", "padding-block-start": 24, "padding-block-end": 24, "padding-inline-start": 24, "padding-inline-end": 24 },
+              "blocks": {
+                "kicker": { "type": "text", "settings": { "text": "<p>NOSSA PROMESSA</p>", "width": "100%", "type_preset": "paragraph" } },
+                "tip": { "type": "text", "settings": { "text": "<p>Se o lacre chegar violado ou o produto vier com qualquer defeito, reenviamos sem custo. É só falar com a gente em até 7 dias.</p>", "width": "100%", "type_preset": "h4" } }
+              },
+              "block_order": ["kicker", "tip"]
+            }
+          },
+          "block_order": ["heading", "body-1", "body-2", "callout"]
+        }
+      },
+      "block_order": ["tab-1", "tab-2", "tab-3", "tab-4"]
+    }
+  ]
+}
+{% endschema %}

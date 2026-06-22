@@ -1,0 +1,53 @@
+{%- doc -%}
+  Tab — private child of the `tabs` block.
+
+  Renders ONE tab panel (role="tabpanel"). The pill button that controls this
+  panel is rendered by the parent `tabs` block, which iterates its child blocks
+  to build the tablist; button and panel are linked by `block.id`
+  (`tabs-tab-{id}` ↔ `tabs-panel-{id}`).
+
+  IMPORTANT: a parent block's `block.blocks[i]` exposes `.id`/`.type` but NOT
+  `.settings` — so the parent cannot read this tab's `label`. The label is
+  therefore emitted here as `data-tab-label` (the child CAN read its own
+  settings); `assets/tabs.js` copies it into the matching pill button on connect.
+
+  Panel content is composed from native @theme blocks (text, group, button …) —
+  the blue "callout" in the Figma is a native `group` block. JS (assets/tabs.js)
+  toggles the active panel; pre-JS only the first panel shows (CSS), so there is
+  no layout flash. Panel layout/visibility CSS lives in the parent `tabs.liquid`.
+{%- enddoc -%}
+
+<div
+  class="tabs__panel"
+  id="tabs-panel-{{ block.id }}"
+  role="tabpanel"
+  aria-labelledby="tabs-tab-{{ block.id }}"
+  tabindex="0"
+  ref="panel[]"
+  data-tab-label="{{ block.settings.label | escape }}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "Aba",
+  "tag": null,
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    { "type": "text", "id": "label", "label": "Rótulo da aba", "default": "Aba" }
+  ],
+  "presets": [
+    {
+      "name": "Aba",
+      "settings": { "label": "Aba" },
+      "blocks": {
+        "heading": { "type": "text", "settings": { "text": "<p>Título da aba</p>", "width": "100%", "type_preset": "h3" } },
+        "body": { "type": "text", "settings": { "text": "<p>Conteúdo da aba.</p>", "width": "100%" } }
+      },
+      "block_order": ["heading", "body"]
+    }
+  ]
+}
+{% endschema %}

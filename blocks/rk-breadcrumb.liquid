@@ -1,0 +1,77 @@
+{% comment %}
+  Breadcrumb (Block) — wrapper Shopify schema do snippet `rk-breadcrumb`.
+  Forwarda settings pro snippet e injeta padding via Horizon's spacing-style,
+  com override de padding separado no mobile (mobile-spacing).
+{% endcomment %}
+
+{%- liquid
+  assign s = block.settings
+  assign bc_class = 'spacing-style'
+  if s.custom_mobile_padding
+    assign bc_class = bc_class | append: ' mobile-spacing-' | append: block.id
+  endif
+-%}
+
+{%- capture bc_style -%}{% render 'spacing-style', settings: s %}{%- endcapture -%}
+
+{% render 'rk-breadcrumb',
+  home_label: s.home_label,
+  separator: s.separator,
+  show_current: s.show_current,
+  custom_class: bc_class,
+  style: bc_style,
+  shopify_attributes: block.shopify_attributes
+%}
+
+{% render 'mobile-spacing', settings: s, id: block.id %}
+
+{% schema %}
+{
+  "name": "Breadcrumb",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "Conteúdo" },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Texto do início",
+      "default": "Início"
+    },
+    {
+      "type": "select",
+      "id": "separator",
+      "label": "Separador",
+      "options": [
+        { "value": "slash",   "label": "/" },
+        { "value": "chevron", "label": "›" },
+        { "value": "arrow",   "label": "→" },
+        { "value": "dot",     "label": "·" },
+        { "value": "bar",     "label": "|" }
+      ],
+      "default": "slash"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_current",
+      "label": "Mostrar página atual",
+      "default": true
+    },
+
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start",  "label": "t:settings.top",    "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end",    "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "t:settings.left",   "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end",   "label": "t:settings.right",  "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile",  "label": "Superior (mobile)",  "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile",    "label": "Inferior (mobile)",  "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-start-mobile", "label": "Esquerda (mobile)",  "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-inline-end-mobile",   "label": "Direita (mobile)",   "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ block.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    { "name": "Breadcrumb" }
+  ]
+}
+{% endschema %}

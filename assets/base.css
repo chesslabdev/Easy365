@@ -1,3 +1,53 @@
+/* ============================================================
+   Fontes do projeto (Figma: Eazy 365)
+   - Helvetica Neue ...... corpo e títulos (Lead/Body/Title/Headline/Caption)
+   - Bitcount Prop Single  editorial/mono (Editorial XL/M, Mono)
+   Hospedadas no CDN da Shopify. font-display: swap evita FOIT.
+   ============================================================ */
+@font-face {
+  font-family: 'Helvetica Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://cdn.shopify.com/s/files/1/0963/5296/0696/files/HelveticaNeueLTPro-Roman.otf?v=1781210595')
+    format('opentype');
+}
+
+@font-face {
+  font-family: 'Bitcount Prop Single';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('https://cdn.shopify.com/s/files/1/0963/5296/0696/files/BitcountPropSingle-MediumCircle.otf?v=1781210524')
+    format('opentype');
+}
+
+@font-face {
+  font-family: 'Bitcount Prop Single';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://cdn.shopify.com/s/files/1/0963/5296/0696/files/BitcountPropSingle-BoldCircle.otf?v=1781210524')
+    format('opentype');
+}
+
+/* ------------------------------------------------------------
+   Tipografia global (Figma: Eazy 365)
+   - Títulos (h1–h6) ........ Bitcount Prop Single
+   - Resto do site (body, p, span, a, inputs, botões…) Helvetica Neue
+   Os presets paragraph/h1–h6 do tema derivam destas famílias base
+   (ver snippets/theme-styles-variables.liquid), então sobrescrevê-las
+   aqui propaga para todo o site. Usamos `html:root` (especificidade
+   0,1,1) para vencer o `:root` (0,1,0) do theme-styles-variables, que
+   é renderizado inline depois do base.css.
+   ------------------------------------------------------------ */
+html:root {
+  --font-body--family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-subheading--family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-accent--family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-heading--family: 'Bitcount Prop Single', 'Helvetica Neue', Helvetica, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }

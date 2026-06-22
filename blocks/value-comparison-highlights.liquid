@@ -1,0 +1,249 @@
+{%- doc -%}
+  Value Comparison Highlights — barra-resumo "Section · Highlights" do comparativo.
+  "+ PERFORMANCE - CUSTO = ZERO DESPERDÍCIO" + CTA "Quero meu Eazy / Tropic Bloom".
+
+  Bloco visual (HTML + CSS) reproduzindo o Figma fielmente em dois layouts
+  independentes (desktop horizontal / mobile empilhado). Escala fluida via container
+  query units (cqw): 1cqw = 1% da largura da barra (limitada por max-width).
+  Edição rápida pelas variáveis CSS no topo.
+
+  Par do bloco `value-comparison` (a tabela). O título "Por que o Eazy..." fica fora.
+{%- enddoc -%}
+
+<div class="vc-highlights" {{ block.shopify_attributes }}>
+  {%- comment -%} ===================== DESKTOP ===================== {%- endcomment -%}
+  <div class="vc-highlights__d">
+    <div class="vchd">
+      <div class="vchd__claim">
+        <p class="vchd__perf">{{ block.settings.perf_left }} {{ block.settings.perf_right }} =</p>
+        <span class="vchd__tag">{{ block.settings.tag }}</span>
+      </div>
+      <a class="vchd__cta" href="{{ block.settings.cta_link | default: '#' }}">
+        <span class="vchd__cta-title">{{ block.settings.cta_title }}</span>
+        {%- if block.settings.cta_subtitle != blank -%}<span class="vchd__cta-sub">{{ block.settings.cta_subtitle }}</span>{%- endif -%}
+      </a>
+    </div>
+  </div>
+
+  {%- comment -%} ===================== MOBILE ===================== {%- endcomment -%}
+  <div class="vc-highlights__m">
+    <div class="vchm">
+      <div class="vchm__claim">
+        <div class="vchm__perf-row">
+          <span class="vchm__perf">{{ block.settings.perf_left }}</span>
+          <span class="vchm__perf">{{ block.settings.perf_right }}</span>
+        </div>
+        <span class="vchm__tag">{{ block.settings.tag }}</span>
+      </div>
+      <a class="vchm__cta" href="{{ block.settings.cta_link | default: '#' }}">
+        <span class="vchm__cta-title">{{ block.settings.cta_title }}</span>
+        {%- if block.settings.cta_subtitle != blank -%}<span class="vchm__cta-sub">{{ block.settings.cta_subtitle }}</span>{%- endif -%}
+      </a>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+.vc-highlights {
+  /* ===== Variáveis de marca (edite aqui) ===== */
+  --c-bar: #1a388d;     /* fundo da barra (accent secundário) */
+  --c-navy: #0a1a4d;    /* caixa "ZERO DESPERDÍCIO" */
+  --c-orange: #ff4c24;  /* botão CTA */
+  --c-white: #fefffc;   /* texto claro */
+  --vch-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  font-family: var(--vch-font);
+  width: 100%;   /* essencial: bloco vira flex item na seção; sem isso o container-type/cqw colapsa */
+}
+
+.vc-highlights__d,
+.vc-highlights__m { width: 100%; }
+.vc-highlights__m { display: none; }
+
+/* =========================================================
+   DESKTOP — base 1248px → cqw (px / 12.48)
+   ========================================================= */
+.vchd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.564cqw;
+  max-width: 1248px;
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding: 0.962cqw 1.282cqw;
+  background: var(--c-bar);
+  border-radius: 1.763cqw;
+  box-shadow: 0 0.16cqw 0.48cqw rgba(0, 0, 0, 0.06);
+  container-type: inline-size;
+}
+
+.vchd__claim { display: flex; align-items: center; gap: 0.962cqw; }
+.vchd__perf {
+  margin: 0;
+  color: var(--c-white);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 2.564cqw;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+.vchd__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-navy);
+  color: var(--c-white);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 2.564cqw;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  padding: 0.962cqw 1.282cqw;
+  border-radius: 1.122cqw;
+  white-space: nowrap;
+}
+
+.vchd__cta {
+  flex: none;
+  width: 25.64cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2cqw;
+  padding: 1.923cqw 2.083cqw;
+  background: var(--c-orange);
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 0.16cqw 0.48cqw rgba(0, 0, 0, 0.12);
+}
+.vchd__cta-title {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.923cqw;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.vchd__cta-sub {
+  color: var(--c-white);
+  font-weight: 400;
+  font-size: 1.282cqw;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   MOBILE — base 386px → cqw (px / 3.86)
+   ========================================================= */
+.vchm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4.145cqw;
+  max-width: 430px;
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding: 3.108cqw;
+  background: var(--c-bar);
+  border-radius: 3.627cqw;
+  box-shadow: 0 0.52cqw 1.55cqw rgba(0, 0, 0, 0.06);
+  container-type: inline-size;
+}
+
+.vchm__claim {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.036cqw;
+  width: 100%;
+}
+.vchm__perf-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.vchm__perf {
+  color: var(--c-white);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 6.218cqw;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  padding: 2.073cqw;
+  white-space: nowrap;
+}
+.vchm__tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--c-navy);
+  color: var(--c-white);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 6.218cqw;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  padding: 3.108cqw 6.218cqw;
+  border-radius: 3.627cqw;
+  white-space: nowrap;
+}
+
+.vchm__cta {
+  width: 82.9cqw;
+  min-height: 20.7cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5cqw;
+  padding: 4.145cqw;
+  box-sizing: border-box;
+  background: var(--c-orange);
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 0.52cqw 1.55cqw rgba(0, 0, 0, 0.12);
+}
+.vchm__cta-title {
+  color: #fff;
+  font-weight: 500;
+  font-size: 6.218cqw;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.vchm__cta-sub {
+  color: var(--c-white);
+  font-weight: 400;
+  font-size: 4.145cqw;
+  line-height: 1.55;
+}
+
+/* ===== Troca de layout (mobile ≤ 749px) ===== */
+@media (max-width: 749px) {
+  .vc-highlights__d { display: none; }
+  .vc-highlights__m { display: block; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Comparativo destaques",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "Destaques" },
+    { "type": "text", "id": "perf_left", "label": "Destaque 1", "default": "+ PERFORMANCE" },
+    { "type": "text", "id": "perf_right", "label": "Destaque 2", "default": "- CUSTO" },
+    { "type": "text", "id": "tag", "label": "Selo", "default": "ZERO DESPERDÍCIO" },
+
+    { "type": "header", "content": "Botão" },
+    { "type": "text", "id": "cta_title", "label": "Título do botão", "default": "Quero meu Eazy" },
+    { "type": "text", "id": "cta_subtitle", "label": "Subtítulo do botão", "default": "Tropic Bloom" },
+    { "type": "url", "id": "cta_link", "label": "Link do botão" }
+  ],
+  "presets": [
+    { "name": "Comparativo destaques" }
+  ]
+}
+{% endschema %}

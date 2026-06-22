@@ -1,0 +1,79 @@
+{%- doc -%}
+  Video Carousel — carrossel "center-mode" de vídeos verticais (estilo Figma VIDEO SHOP).
+  Pai público: captura seus filhos privados `_video-card` (cada um é um `.swiper-slide`) e
+  delega a mecânica do carrossel ao snippet nativo `rk-carousel` (Swiper, layout 'centered'),
+  que destaca o slide central e cuida de loop/setas/responsividade.
+
+  O web component `<video-carousel>` (assets/video-carousel.js) cuida apenas do play do vídeo.
+  Bloco (sem título — use um bloco de texto nativo). Responsivo via itens-por-tela do rk-carousel.
+{%- enddoc -%}
+
+{%- liquid
+  assign bs = block.settings
+-%}
+
+{%- capture slides -%}{% content_for 'blocks' %}{%- endcapture -%}
+
+<video-carousel class="vc" {{ block.shopify_attributes }}>
+  {% render 'rk-carousel',
+    content: slides,
+    id: block.id,
+    layout: 'centered',
+    desktop_items: bs.desktop_items,
+    tablet_items: bs.tablet_items,
+    mobile_items: bs.mobile_items,
+    gap: bs.gap,
+    show_arrows: bs.show_arrows,
+    loop: bs.loop,
+    autoplay: bs.autoplay,
+    active_scale: bs.active_scale
+  %}
+</video-carousel>
+
+<script src="{{ 'video-carousel.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% stylesheet %}
+.vc {
+  display: block;
+  width: 100%;
+}
+
+/* Respiro vertical para o slide central ampliado (scale) não ser cortado pelo
+   overflow:hidden do viewport do Swiper. O slide central cresce ~5,5% da altura
+   por lado, então o padding precisa cobrir isso (inclusive no mobile). */
+.vc .rk-carousel__viewport {
+  padding-block: clamp(40px, 6vw, 64px);
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Carrossel de vídeos",
+  "tag": null,
+  "blocks": [{ "type": "_video-card" }],
+  "settings": [
+    { "type": "header", "content": "Carrossel" },
+    { "type": "range", "id": "desktop_items", "label": "Itens por tela (desktop)", "min": 2, "max": 8, "step": 0.5, "default": 4 },
+    { "type": "range", "id": "tablet_items", "label": "Itens por tela (tablet)", "min": 1.5, "max": 5, "step": 0.5, "default": 2.5 },
+    { "type": "range", "id": "mobile_items", "label": "Itens por tela (mobile)", "min": 1, "max": 3, "step": 0.1, "default": 1.3 },
+    { "type": "range", "id": "gap", "label": "Espaço entre itens", "min": 0, "max": 48, "step": 2, "unit": "px", "default": 16 },
+    { "type": "range", "id": "active_scale", "label": "Escala do item central", "min": 100, "max": 130, "step": 1, "unit": "%", "default": 111 },
+    { "type": "checkbox", "id": "loop", "label": "Loop infinito", "default": true },
+    { "type": "checkbox", "id": "show_arrows", "label": "Mostrar setas", "default": false },
+    { "type": "range", "id": "autoplay", "label": "Autoplay (s)", "min": 0, "max": 10, "step": 1, "unit": "s", "default": 0 }
+  ],
+  "presets": [
+    {
+      "name": "Carrossel de vídeos",
+      "blocks": [
+        { "type": "_video-card" },
+        { "type": "_video-card" },
+        { "type": "_video-card" },
+        { "type": "_video-card" },
+        { "type": "_video-card" },
+        { "type": "_video-card" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -14,6 +14,26 @@
     "section_UP6fMc": {
       "type": "section",
       "blocks": {
+        "logo_badge_a1b2c3": {
+          "type": "logo-badge",
+          "name": "Logo badge",
+          "settings": {
+            "color_scheme": "scheme-4",
+            "logo_height": 64,
+            "badge_width": 360,
+            "badge_min_height": 120,
+            "badge_radius": 1000,
+            "badge_overlap": 72,
+            "logo_height_mobile": 48,
+            "badge_overlap_mobile": 40,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "custom_mobile_padding": false
+          },
+          "blocks": {}
+        },
         "group_DfWkbK": {
           "type": "group",
           "name": "Conteúdo Global",
@@ -759,6 +779,7 @@
         }
       },
       "block_order": [
+        "logo_badge_a1b2c3",
         "group_DfWkbK"
       ],
       "name": "t:names.custom_section",

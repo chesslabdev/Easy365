@@ -1,0 +1,373 @@
+{%- comment -%}
+  Header Custom — header próprio (não edita o header.liquid nativo).
+  Barra arredondada: logo (das settings) + menu (linklist Shopify) + account + carrinho
+  lateral (reaproveitando header-actions) + botão "COMPRE AQUI". Mobile: logo + account +
+  carrinho + hambúrguer que abre um drawer full-screen com o menu Shopify.
+
+  - SÓ o header flutua na home+desktop (z acima do hero); o marquee fica no fluxo.
+  - Demais páginas e mobile: em fluxo, largura = section_width do tema (page-width).
+  - Popover da conta posicionado via --account-offset-top.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign is_home = false
+  if request.page_type == 'index'
+    assign is_home = true
+  endif
+  assign menu = s.menu
+-%}
+
+<header
+  class="hc spacing-style{% if is_home %} hc--home{% endif %}"
+  style="
+    --hc-bg: {{ s.bg_color }};
+    --hc-bg-float: {{ s.bg_color_float }};
+    --hc-text: {{ s.text_color }};
+    --hc-accent: {{ s.accent_color }};
+    --hc-border: {{ s.button_border_color }};
+    --hc-blur: {{ s.blur | default: 6 }}px;
+    --hc-logo-h: {{ settings.logo_height | default: 36 }}px;
+    --hc-logo-h-mobile: {{ settings.logo_height_mobile | default: 28 }}px;
+    {% render 'spacing-style', settings: s %}
+  "
+>
+  <div class="hc__bar">
+    {%- comment -%} Logo (das settings) {%- endcomment -%}
+    <a class="hc__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+      {%- if settings.logo != blank -%}
+        {{ settings.logo | image_url: width: 480 | image_tag: class: 'hc__logo-img', alt: shop.name, widths: '120,180,240,360,480', loading: 'eager', fetchpriority: 'high' }}
+      {%- else -%}
+        <span class="hc__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    {%- comment -%} Menu desktop (linklist Shopify) {%- endcomment -%}
+    {%- if menu != blank and menu.links.size > 0 -%}
+      <nav class="hc__nav" aria-label="Menu principal">
+        {%- for link in menu.links -%}
+          <a class="hc__link{% if link.active or link.child_active %} hc__link--active{% endif %}" href="{{ link.url }}">{{ link.title }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+
+    <div class="hc__actions">
+      <div class="hc__icons">
+        {% render 'header-custom-actions', section: section, display_style: 'icon', customer_account_menu: s.customer_account_menu %}
+      </div>
+
+      {%- if s.show_buy_button and s.buy_button_label != blank -%}
+        <a class="hc__cta" href="{{ s.buy_button_link | default: routes.all_products_collection_url }}">{{ s.buy_button_label }}</a>
+      {%- endif -%}
+
+      {%- comment -%} Hambúrguer + drawer mobile (menu Shopify) {%- endcomment -%}
+      {%- if menu != blank and menu.links.size > 0 -%}
+        <header-custom-menu class="hc__menu">
+          <button class="hc__burger" type="button" on:click="/open" aria-label="Menu" aria-haspopup="dialog">
+            <span></span><span></span><span></span>
+          </button>
+
+          <dialog class="hc__drawer" ref="dialog">
+            <div class="hc__drawer-top">
+              <a class="hc__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+                {%- if settings.logo != blank -%}
+                  {{ settings.logo | image_url: width: 360 | image_tag: class: 'hc__logo-img', alt: shop.name, widths: '120,180,240,360', loading: 'lazy' }}
+                {%- else -%}
+                  <span class="hc__logo-text">{{ shop.name }}</span>
+                {%- endif -%}
+              </a>
+              <button class="hc__close" type="button" on:click="/close" aria-label="Fechar">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+
+            <nav class="hc__drawer-nav" aria-label="Menu principal">
+              {%- for link in menu.links -%}
+                <a href="{{ link.url }}">{{ link.title }}</a>
+              {%- endfor -%}
+            </nav>
+
+            {%- if s.show_buy_button and s.buy_button_label != blank -%}
+              <a class="hc__cta hc__cta--solid" href="{{ s.buy_button_link | default: routes.all_products_collection_url }}">{{ s.buy_button_label }}</a>
+            {%- endif -%}
+          </dialog>
+        </header-custom-menu>
+      {%- endif -%}
+    </div>
+  </div>
+</header>
+
+<script src="{{ 'header-custom.js' | asset_url }}" type="module" fetchpriority="high"></script>
+<script src="{{ 'header-custom-menu.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% stylesheet %}
+.hc {
+  --hc-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* popover da conta ancora logo abaixo da barra (altura real medida via JS) */
+  --account-offset-top: var(--hc-header-h, 92px);
+  position: relative;
+  width: 100%;
+  font-family: var(--hc-font);
+  color: var(--hc-text, #fefffc);
+}
+
+/* Header FIXO (sticky) em toda a página: o #header-group vira display:contents para
+   o sticky não ficar preso na altura curta do grupo; a seção do header gruda no topo.
+   O marquee continua no fluxo e rola para fora normalmente. */
+#header-group:has(.header-custom-section) { display: contents; }
+.header-custom-section {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Barra — largura = section_width do tema (page-width central column) */
+.hc__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(12px, 2vw, 24px);
+  width: 100%;
+  max-width: min(var(--page-width) - var(--page-margin) * 2, calc(100% - var(--page-margin) * 2));
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding: 12px clamp(16px, 2vw, 24px);
+  border-radius: 14px;
+  background: var(--hc-bg, #1a388d);
+  /* blur opcional: com a cor da barra translúcida (alpha < 1), dá o efeito glassy
+     da home em qualquer página. Com cor opaca, não tem efeito visível. */
+  backdrop-filter: blur(var(--hc-blur, 6px));
+  -webkit-backdrop-filter: blur(var(--hc-blur, 6px));
+}
+
+/* ===== Logo ===== */
+.hc__logo { display: inline-flex; align-items: center; flex: 0 0 auto; }
+.hc__logo-img { height: var(--hc-logo-h, 36px); width: auto; display: block; }
+.hc__logo-text { color: var(--hc-text, #fefffc); font-weight: 700; font-size: 22px; }
+
+/* ===== Nav desktop ===== */
+.hc__nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 16px);
+  flex: 1 1 auto;
+  justify-content: center;
+}
+.hc__link {
+  color: var(--hc-text, #fefffc);
+  font-size: 16px;
+  line-height: 1.55;
+  text-decoration: none;
+  padding: 12px 8px;
+  white-space: nowrap;
+  opacity: 0.92;
+  transition: opacity 0.15s ease;
+}
+.hc__link:hover,
+.hc__link--active { opacity: 1; }
+
+/* ===== Ações ===== */
+.hc__actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 24px);
+  flex: 0 0 auto;
+}
+.hc__icons {
+  --hc-icon-size: 30px; /* tamanho dos ícones (account/carrinho) no desktop */
+  --icon-size-sm: var(--hc-icon-size); /* o carrinho usa .svg-wrapper, dimensionado por esse token */
+  display: flex;
+  align-items: center;
+  color: var(--hc-text, #fefffc);
+}
+.hc__icons header-actions { gap: 4px; align-items: center; }
+.hc__icons :is(.header-actions__action, .account-button, cart-icon, shopify-account) { color: var(--hc-text, #fefffc); }
+/* aproxima os ícones: remove padding/margens extras dos botões de ação */
+.hc__icons :is(.header-actions__action, .account-button) { padding: 0; margin: 0; }
+.hc__icons .cart-drawer { margin-inline-end: 0; }
+
+/* aumenta os ícones (account = icon-account.svg, carrinho = icon-cart.svg).
+   !important garante prioridade sobre as regras base de .svg-wrapper do tema. */
+.hc__icons .account-button__icon { display: inline-flex; }
+.hc__icons .account-button__icon svg { width: var(--hc-icon-size) !important; height: var(--hc-icon-size) !important; }
+.hc__icons .svg-wrapper { width: var(--hc-icon-size) !important; height: var(--hc-icon-size) !important; }
+.hc__icons .svg-wrapper > svg { width: var(--hc-icon-size) !important; height: var(--hc-icon-size) !important; }
+
+/* CTA "COMPRE AQUI" (outline) */
+.hc__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 26px;
+  border: 1px solid var(--hc-border, #d9d4cb);
+  border-radius: 999px;
+  background: rgba(244, 242, 238, 0.02);
+  color: var(--hc-text, #fefffc);
+  font-size: 19px;
+  line-height: 1.45;
+  text-decoration: none;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+/* CTA sólido (drawer mobile) */
+.hc__cta--solid {
+  border: 0;
+  background: var(--hc-accent, #ff4c24);
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ===== Hambúrguer + drawer mobile ===== */
+.hc__menu { display: none; }
+.hc__burger {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4.6px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.hc__burger span {
+  display: block;
+  width: 22px;
+  height: 2.4px;
+  border-radius: 2px;
+  background: var(--hc-text, #fefffc);
+}
+
+.hc__drawer {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 0 0 auto; /* ancora à direita */
+  padding: 24px 28px 32px;
+  border: 0;
+  background: var(--hc-bg, #1a388d);
+  color: var(--hc-text, #fefffc);
+  /* entra deslizando da direita; sai deslizando ao fechar */
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    display 0.35s allow-discrete, overlay 0.35s allow-discrete;
+}
+.hc__drawer[open] { transform: translateX(0); }
+@starting-style {
+  .hc__drawer[open] { transform: translateX(100%); }
+}
+.hc__drawer::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.35s ease, display 0.35s allow-discrete, overlay 0.35s allow-discrete;
+}
+.hc__drawer[open]::backdrop { opacity: 1; }
+@starting-style {
+  .hc__drawer[open]::backdrop { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc__drawer,
+  .hc__drawer::backdrop { transition: none; }
+}
+.hc__drawer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 36px;
+}
+.hc__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  background: none;
+  color: var(--hc-text, #fefffc);
+  cursor: pointer;
+}
+.hc__drawer-nav { display: flex; flex-direction: column; gap: 6px; }
+.hc__drawer-nav a {
+  color: var(--hc-text, #fefffc);
+  font-size: 24px;
+  line-height: 1.7;
+  text-decoration: none;
+}
+.hc__drawer .hc__cta--solid {
+  margin-top: 36px;
+  width: 100%;
+  padding: 16px;
+}
+
+/* =========================================================
+   HOME + DESKTOP → só o header flutua sobre o hero (z acima).
+   O header continua sticky; o conteúdo sobe por baixo dele (margem negativa =
+   altura do header), então o hero fica atrás da barra translúcida. O marquee
+   permanece no fluxo, acima (não flutua).
+   ========================================================= */
+@media (min-width: 750px) {
+  body:has(.hc--home) #MainContent {
+    margin-top: calc(-1 * var(--hc-header-h, 92px));
+    position: relative;
+    z-index: 1; /* abaixo do header (z-index 50) */
+  }
+  .header-custom-section:has(.hc--home) { pointer-events: none; }
+  .header-custom-section:has(.hc--home) .hc__bar { pointer-events: auto; }
+
+  .hc--home .hc__bar {
+    margin-top: 20px;
+    max-width: min(1248px, calc(100% - var(--page-margin) * 2));
+    padding-inline: clamp(24px, 5vw, 72px);
+    background: var(--hc-bg-float, rgba(26, 56, 141, 0.72)); /* blur herdado de .hc__bar */
+  }
+}
+
+/* ===== Mobile (≤749px) ===== */
+@media (max-width: 749px) {
+  .hc__bar { padding: 16px 20px; border-radius: 8px; gap: 12px; }
+  .hc__logo-img { height: var(--hc-logo-h-mobile, 28px); }
+  .hc__nav { display: none; }
+  .hc__cta { display: none; }
+  .hc__menu { display: inline-flex; }
+  .hc__actions { gap: 16px; }
+  .hc__icons { --hc-icon-size: 26px; }
+  .hc__icons header-actions { gap: 16px; }
+  .hc__burger { width: 26px; height: 26px; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Header custom",
+  "class": "header-custom-section",
+  "settings": [
+    { "type": "header", "content": "Menu" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "link_list", "id": "customer_account_menu", "label": "Menu da conta" },
+
+    { "type": "header", "content": "Botão" },
+    { "type": "checkbox", "id": "show_buy_button", "label": "Mostrar botão", "default": true },
+    { "type": "text", "id": "buy_button_label", "label": "Texto do botão", "default": "COMPRE AQUI" },
+    { "type": "url", "id": "buy_button_link", "label": "Link do botão" },
+
+    { "type": "header", "content": "Cores" },
+    { "type": "color", "id": "bg_color", "label": "Fundo da barra", "alpha": true, "default": "#1a388d" },
+    { "type": "color", "id": "bg_color_float", "label": "Fundo flutuante (home)", "alpha": true, "default": "#1a388dB8" },
+    { "type": "range", "id": "blur", "label": "Desfoque do fundo (glassy)", "min": 0, "max": 20, "step": 1, "unit": "px", "default": 6 },
+    { "type": "color", "id": "text_color", "label": "Texto / ícones", "default": "#fefffc" },
+    { "type": "color", "id": "accent_color", "label": "Cor do botão (drawer mobile)", "default": "#ff4c24" },
+    { "type": "color", "id": "button_border_color", "label": "Borda do botão", "default": "#d9d4cb" },
+
+    { "type": "header", "content": "Espaçamento" },
+    { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-start", "label": "Esquerda", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-inline-end", "label": "Direita", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ]
+}
+{% endschema %}

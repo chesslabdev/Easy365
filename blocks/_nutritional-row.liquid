@@ -1,0 +1,43 @@
+{%- doc -%}
+  Private child of `nutritional-table`. Renders one nutrition row: nutriente, qtd por
+  dose e %VD. As larguras das colunas (--col-qty / --col-vd / --col-gap) são herdadas
+  do pai (.nt__table) para alinhar com o cabeçalho.
+{%- enddoc -%}
+
+<div class="ntr" {{ block.shopify_attributes }}>
+  <span class="ntr__name">{{ block.settings.name }}</span>
+  <span class="ntr__qty">{{ block.settings.qty }}</span>
+  <span class="ntr__vd">{{ block.settings.vd }}</span>
+</div>
+
+{% stylesheet %}
+.ntr {
+  display: flex;
+  align-items: center;
+  gap: var(--col-gap, 16px);
+  padding-block: clamp(10px, 1.2vw, 16px);
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  color: var(--nt-on-accent, #fefffc);
+  font-family: var(--nt-font, "Helvetica Neue", Helvetica, Arial, sans-serif);
+  font-weight: 500;
+  font-size: clamp(13px, 1.4vw, 16px);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.ntr__name { flex: 1; min-width: 0; }
+.ntr__qty { width: var(--col-qty, 110px); text-align: right; white-space: nowrap; }
+.ntr__vd { width: var(--col-vd, 120px); text-align: right; white-space: nowrap; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Linha nutricional",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "name", "label": "Nutriente", "default": "Nutriente" },
+    { "type": "text", "id": "qty", "label": "Qtd por dose", "default": "0 g" },
+    { "type": "text", "id": "vd", "label": "%VD", "default": "—" }
+  ]
+}
+{% endschema %}

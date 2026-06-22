@@ -1,0 +1,758 @@
+{%- comment -%}
+  Nutrient Equivalence — bloco visual "1 SQUEEZE = 25 SACHÊS TRADICIONAIS".
+  Figura central (mulher segurando o squeeze) ladeada por 6 cards de nutrientes,
+  com headline de equivalência no topo.
+
+  Arquitetura (Decorator): o conteúdo é capturado em `children` e renderizado
+  através do MOTOR BASE de seção ({% render 'section' %}), herdando de graça
+  largura (section_width: page-width / full-width), color scheme, background,
+  overlay, borda/raio e padding — sem editar o arquivo nativo. O schema replica
+  as settings do motor base (o contrato do snippet).
+
+  Escala fluida via container query units (cqw): 1cqw = 1% da largura do palco,
+  então as proporções do Figma se mantêm em qualquer largura e o aspect-ratio é
+  sempre o mesmo (desktop 1432/880, mobile 390/844). Edição rápida pelas
+  variáveis CSS no topo do bloco.
+
+  Animação de entrada (scroll-reveal) via <reveal-on-scroll> (assets/reveal-on-scroll.js),
+  reproduzindo o Smart Animate do Figma: título desce + fade, figura faz leve zoom-out,
+  e os cards deslizam (coluna esquerda da esquerda, direita da direita) com stagger por
+  linha. O estado FINAL é server-rendered → no-JS e prefers-reduced-motion veem tudo no
+  lugar, sem animação.
+{%- endcomment -%}
+
+{%- capture children -%}
+  <div class="nutrient-equivalence">
+    <reveal-on-scroll class="ne-reveal">
+      {%- comment -%} ===================== DESKTOP ===================== {%- endcomment -%}
+      <div class="ne-stage ne-stage--desktop">
+        <img
+          class="ne-figure"
+          src="{{ 'nutrient-equivalence-figure-desktop.png' | asset_url }}"
+          alt="Mulher segurando um squeeze Eazy"
+          width="1472"
+          height="892"
+          loading="lazy"
+          decoding="async"
+        >
+
+        <header class="ne-header">
+          <h2 class="ne-title">
+            <span class="ne-title__accent">{{ section.settings.title_accent }}</span><span class="ne-title__eq"> {{ section.settings.title_suffix }}</span>
+          </h2>
+          <p class="ne-subtitle">{{ section.settings.subtitle }}</p>
+        </header>
+
+        <ul class="ne-cards" role="list">
+          {%- for i in (1..6) -%}
+            {%- assign vkey = 'card_' | append: i | append: '_value' -%}
+            {%- assign ukey = 'card_' | append: i | append: '_unit' -%}
+            {%- assign lkey = 'card_' | append: i | append: '_label' -%}
+            <li class="ne-card ne-card--{{ i }}">
+              <p class="ne-card__metric">
+                <span class="ne-card__value">{{ section.settings[vkey] }}</span><span class="ne-card__unit">{{ section.settings[ukey] }}</span>
+              </p>
+              <p class="ne-card__label">{{ section.settings[lkey] }}</p>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      {%- comment -%} ===================== MOBILE ===================== {%- endcomment -%}
+      <div class="ne-stage ne-stage--mobile">
+        <img
+          class="ne-figure"
+          src="{{ 'nutrient-equivalence-figure-mobile.png' | asset_url }}"
+          alt="Mulher segurando um squeeze Eazy"
+          width="663"
+          height="1200"
+          loading="lazy"
+          decoding="async"
+        >
+
+        <header class="ne-header">
+          <h2 class="ne-title">
+            <span class="ne-title__accent">{{ section.settings.title_accent }}</span><span class="ne-title__eq"> {{ section.settings.title_suffix }}</span>
+          </h2>
+          <p class="ne-subtitle">{{ section.settings.subtitle }}</p>
+        </header>
+
+        <ul class="ne-cards" role="list">
+          {%- for i in (1..6) -%}
+            {%- assign vkey = 'card_' | append: i | append: '_value' -%}
+            {%- assign ukey = 'card_' | append: i | append: '_unit' -%}
+            {%- assign lkey = 'card_' | append: i | append: '_label' -%}
+            <li class="ne-card ne-card--{{ i }}">
+              <p class="ne-card__metric">
+                <span class="ne-card__value">{{ section.settings[vkey] }}</span><span class="ne-card__unit">{{ section.settings[ukey] }}</span>
+              </p>
+              <p class="ne-card__label">{{ section.settings[lkey] }}</p>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </reveal-on-scroll>
+  </div>
+{%- endcapture -%}
+
+{% render 'section', section: section, children: children %}
+
+<script src="{{ 'reveal-on-scroll.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% stylesheet %}
+.nutrient-equivalence {
+  /* ===== Variáveis de marca (edite aqui) ===== */
+  --ne-accent: #ff4c24;        /* laranja do título / números */
+  --ne-text: #fefffc;          /* texto claro */
+  --ne-card-bg: #0a1a4d;       /* azul profundo dos cards */
+  --ne-bg: #050a1c;            /* fundo atrás da imagem (fallback) */
+  --ne-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* ===== Geometria ===== */
+  --ne-stage-radius: 14px;
+
+  /* ===== Espaçamento vertical dos cards no mobile (gap entre linhas) ===== */
+  --ne-m-row1: 38.205cqw;      /* topo da 1ª linha */
+  --ne-m-row-step: 25cqw;      /* distância entre linhas (↑ aumenta o gap) */
+
+  /* ===== Animação ===== */
+  --ne-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ne-dur: 0.7s;        /* duração título / cards */
+  --ne-dur-figure: 1s;   /* duração do zoom-out da figura */
+
+  width: 100%;           /* a largura externa é controlada pelo section_width */
+}
+
+/* ===== Palco (define a unidade cqw = 1% da largura do palco) ===== */
+.ne-stage {
+  position: relative;
+  width: 100%;
+  border-radius: var(--ne-stage-radius);
+  overflow: hidden;
+  background-color: var(--ne-bg);
+  container-type: inline-size;
+  font-family: var(--ne-font);
+}
+
+.ne-stage--desktop {
+  aspect-ratio: 1432 / 880;
+}
+
+.ne-stage--mobile {
+  display: none;
+  aspect-ratio: 390 / 844;
+}
+
+/* ===== Imagem da figura (fundo full-bleed com luz/glow já compostos) ===== */
+.ne-figure {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ===== Cabeçalho / título ===== */
+.ne-header {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.ne-title {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.ne-title__accent { color: var(--ne-accent); }
+.ne-title__eq { color: var(--ne-text); }
+
+.ne-subtitle {
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--ne-text);
+}
+
+/* ===== Cards de nutrientes ===== */
+.ne-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ne-card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  background-color: var(--ne-card-bg);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.ne-card__metric {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  font-weight: 700;
+  color: var(--ne-accent);
+  white-space: nowrap;
+}
+.ne-card__value {
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+.ne-card__unit {
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.ne-card__label {
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ne-text);
+}
+
+/* =========================================================
+   DESKTOP — medidas convertidas do Figma (base 1432px → cqw)
+   ========================================================= */
+.ne-stage--desktop .ne-header { top: 6.145cqw; gap: 1.117cqw; }
+.ne-stage--desktop .ne-title { font-size: 5.028cqw; }
+.ne-stage--desktop .ne-subtitle { font-size: 2.514cqw; }
+
+.ne-stage--desktop .ne-card {
+  width: 19.553cqw;
+  height: 8.939cqw;
+  padding: 1.117cqw;
+  gap: 1.117cqw;
+  border-radius: 1.536cqw;
+  box-shadow:
+    0 0.698cqw 1.397cqw -0.279cqw rgba(0, 0, 0, 0.10),
+    0 2.095cqw 3.911cqw -0.559cqw rgba(0, 0, 0, 0.18);
+}
+.ne-stage--desktop .ne-card__metric { gap: 0.279cqw; }
+.ne-stage--desktop .ne-card__value { font-size: 5.028cqw; }
+.ne-stage--desktop .ne-card__unit { font-size: 1.676cqw; }
+.ne-stage--desktop .ne-card__label { font-size: 1.676cqw; }
+
+/* Coluna esquerda (com leve zig-zag para fora no card do meio) */
+.ne-stage--desktop .ne-card--1 { left: 12.570cqw; top: 19.553cqw; }
+.ne-stage--desktop .ne-card--2 { left: 9.218cqw;  top: 30.726cqw; }
+.ne-stage--desktop .ne-card--3 { left: 12.570cqw; top: 41.899cqw; }
+/* Coluna direita */
+.ne-stage--desktop .ne-card--4 { left: 67.877cqw; top: 19.553cqw; }
+.ne-stage--desktop .ne-card--5 { left: 71.229cqw; top: 30.726cqw; }
+.ne-stage--desktop .ne-card--6 { left: 67.877cqw; top: 41.899cqw; }
+
+/* =========================================================
+   MOBILE — medidas convertidas do Figma (base 390px → cqw)
+   ========================================================= */
+.ne-stage--mobile .ne-figure {
+  /* Imagem em tamanho nativo (663px = 170cqw), ancorada ao rodapé e levemente
+     deslocada como no Figma (node ideal 622:3786) → mulher maior, preenchendo o frame. */
+  inset: auto auto 0 50%;
+  width: 170cqw;
+  height: auto;
+  transform: translateX(-50%) translateX(-3.462cqw);
+}
+
+.ne-stage--mobile .ne-header { top: 13.846cqw; gap: 4.103cqw; }
+.ne-stage--mobile .ne-title { font-size: 10.256cqw; }
+.ne-stage--mobile .ne-subtitle { font-size: 5.128cqw; }
+
+.ne-stage--mobile .ne-card {
+  width: 42.051cqw;
+  height: auto;
+  padding: 2.199cqw;
+  gap: 2.199cqw;
+  border-radius: 3.024cqw;
+  box-shadow:
+    0 1.374cqw 2.749cqw -0.550cqw rgba(0, 0, 0, 0.10),
+    0 4.123cqw 7.696cqw -1.100cqw rgba(0, 0, 0, 0.18);
+}
+.ne-stage--mobile .ne-card__metric { gap: 0.550cqw; }
+.ne-stage--mobile .ne-card__value { font-size: 9.895cqw; }
+.ne-stage--mobile .ne-card__unit { font-size: 3.298cqw; }
+.ne-stage--mobile .ne-card__label { font-size: 3.298cqw; }
+
+/* Coluna esquerda — gap vertical maior (via --ne-m-row-step) */
+.ne-stage--mobile .ne-card--1 { left: 6.154cqw; top: var(--ne-m-row1); }
+.ne-stage--mobile .ne-card--2 { left: 6.154cqw; top: calc(var(--ne-m-row1) + var(--ne-m-row-step)); }
+.ne-stage--mobile .ne-card--3 { left: 6.154cqw; top: calc(var(--ne-m-row1) + var(--ne-m-row-step) * 2); }
+/* Coluna direita */
+.ne-stage--mobile .ne-card--4 { left: 51.795cqw; top: var(--ne-m-row1); }
+.ne-stage--mobile .ne-card--5 { left: 51.795cqw; top: calc(var(--ne-m-row1) + var(--ne-m-row-step)); }
+.ne-stage--mobile .ne-card--6 { left: 51.795cqw; top: calc(var(--ne-m-row1) + var(--ne-m-row-step) * 2); }
+
+/* =========================================================
+   ANIMAÇÃO DE ENTRADA (scroll-reveal) — reproduz o Smart Animate do Figma
+   ========================================================= */
+.ne-reveal { display: block; width: 100%; }
+.ne-figure { transform-origin: center bottom; }
+
+/* ---- PRE-STATE: só com JS ativo (reveal-ready) e antes de revelar ----
+   Sem transição aqui → os elementos saltam para a posição inicial sem flash. */
+.ne-reveal.reveal-ready .ne-header,
+.ne-reveal.reveal-ready .ne-card {
+  opacity: 0;
+}
+
+/* Desktop — deslocamentos iniciais */
+.ne-reveal.reveal-ready .ne-stage--desktop .ne-figure { transform: scale(1.06); }
+.ne-reveal.reveal-ready .ne-stage--desktop .ne-header { transform: translateX(-50%) translateY(-3.352cqw); }
+.ne-reveal.reveal-ready .ne-stage--desktop .ne-card--1,
+.ne-reveal.reveal-ready .ne-stage--desktop .ne-card--2,
+.ne-reveal.reveal-ready .ne-stage--desktop .ne-card--3 { transform: translateX(-32.122cqw); }
+.ne-reveal.reveal-ready .ne-stage--desktop .ne-card--4,
+.ne-reveal.reveal-ready .ne-stage--desktop .ne-card--5,
+.ne-reveal.reveal-ready .ne-stage--desktop .ne-card--6 { transform: translateX(32.122cqw); }
+
+/* Mobile — fan-out: linhas inferiores vêm de mais longe (igual ao Figma) */
+.ne-reveal.reveal-ready .ne-stage--mobile .ne-figure { transform: translateX(-50%) translateX(-3.462cqw) scale(1.06); }
+.ne-reveal.reveal-ready .ne-stage--mobile .ne-header { transform: translateX(-50%) translateY(-2.564cqw); }
+.ne-reveal.reveal-ready .ne-stage--mobile .ne-card--1 { transform: translateX(-51.282cqw); }
+.ne-reveal.reveal-ready .ne-stage--mobile .ne-card--2 { transform: translateX(-76.923cqw); }
+.ne-reveal.reveal-ready .ne-stage--mobile .ne-card--3 { transform: translateX(-102.564cqw); }
+.ne-reveal.reveal-ready .ne-stage--mobile .ne-card--4 { transform: translateX(51.282cqw); }
+.ne-reveal.reveal-ready .ne-stage--mobile .ne-card--5 { transform: translateX(76.923cqw); }
+.ne-reveal.reveal-ready .ne-stage--mobile .ne-card--6 { transform: translateX(102.564cqw); }
+
+/* ---- IS-VISIBLE: estado final + transições (a JS troca reveal-ready → is-visible) ---- */
+.ne-reveal.is-visible .ne-figure {
+  transform: none;
+  transition: transform var(--ne-dur-figure) var(--ne-ease);
+}
+.ne-reveal.is-visible .ne-stage--mobile .ne-figure {
+  transform: translateX(-50%) translateX(-3.462cqw);
+}
+
+.ne-reveal.is-visible .ne-header {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  transition: opacity var(--ne-dur) var(--ne-ease), transform var(--ne-dur) var(--ne-ease);
+}
+
+.ne-reveal.is-visible .ne-card {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity var(--ne-dur) var(--ne-ease), transform var(--ne-dur) var(--ne-ease);
+}
+
+/* Stagger por linha (vale para os dois layouts) */
+.ne-reveal.is-visible .ne-card--1,
+.ne-reveal.is-visible .ne-card--4 { transition-delay: 0.10s; }
+.ne-reveal.is-visible .ne-card--2,
+.ne-reveal.is-visible .ne-card--5 { transition-delay: 0.22s; }
+.ne-reveal.is-visible .ne-card--3,
+.ne-reveal.is-visible .ne-card--6 { transition-delay: 0.34s; }
+
+/* Segurança extra: sem movimento para quem prefere menos animação */
+@media (prefers-reduced-motion: reduce) {
+  .ne-reveal .ne-header,
+  .ne-reveal .ne-card,
+  .ne-reveal .ne-figure {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .ne-reveal.is-visible .ne-stage--mobile .ne-figure,
+  .ne-reveal .ne-stage--mobile .ne-figure {
+    transform: translateX(-50%) translateX(-3.462cqw) !important;
+  }
+}
+
+/* ===== Troca de layout (mobile ≤ 749px) ===== */
+@media (max-width: 749px) {
+  .ne-stage--desktop { display: none; }
+  .ne-stage--mobile { display: block; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Equiv. nutrientes",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Título"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Título (destaque)",
+      "default": "1 SQUEEZE"
+    },
+    {
+      "type": "text",
+      "id": "title_suffix",
+      "label": "Título (símbolo)",
+      "default": "="
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "25 SACHÊS TRADICIONAIS"
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    { "type": "text", "id": "card_1_value", "label": "Valor", "default": "63" },
+    { "type": "text", "id": "card_1_unit", "label": "Unidade", "default": "mg" },
+    { "type": "text", "id": "card_1_label", "label": "Rótulo", "default": "Magnésio Bisglicinato" },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    { "type": "text", "id": "card_2_value", "label": "Valor", "default": "120" },
+    { "type": "text", "id": "card_2_unit", "label": "Unidade", "default": "mg" },
+    { "type": "text", "id": "card_2_label", "label": "Rótulo", "default": "Potássio" },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    { "type": "text", "id": "card_3_value", "label": "Valor", "default": "80" },
+    { "type": "text", "id": "card_3_unit", "label": "Unidade", "default": "mg" },
+    { "type": "text", "id": "card_3_label", "label": "Rótulo", "default": "Cálcio" },
+    {
+      "type": "header",
+      "content": "Card 4"
+    },
+    { "type": "text", "id": "card_4_value", "label": "Valor", "default": "210" },
+    { "type": "text", "id": "card_4_unit", "label": "Unidade", "default": "mg" },
+    { "type": "text", "id": "card_4_label", "label": "Rótulo", "default": "Sódio" },
+    {
+      "type": "header",
+      "content": "Card 5"
+    },
+    { "type": "text", "id": "card_5_value", "label": "Valor", "default": "2,5" },
+    { "type": "text", "id": "card_5_unit", "label": "Unidade", "default": "mg" },
+    { "type": "text", "id": "card_5_label", "label": "Rótulo", "default": "Zinco" },
+    {
+      "type": "header",
+      "content": "Card 6"
+    },
+    { "type": "text", "id": "card_6_value", "label": "Valor", "default": "12" },
+    { "type": "text", "id": "card_6_unit", "label": "Unidade", "default": "kcal" },
+    { "type": "text", "id": "card_6_label", "label": "Rótulo", "default": "Por porção" },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "t:settings.direction",
+      "options": [
+        { "value": "column", "label": "t:options.vertical" },
+        { "value": "row", "label": "t:options.horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "checkbox",
+      "id": "vertical_on_mobile",
+      "label": "t:settings.vertical_on_mobile",
+      "default": true,
+      "visible_if": "{{ section.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.right" },
+        { "value": "space-between", "label": "t:options.space_between" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "t:settings.position",
+      "options": [
+        { "value": "flex-start", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.bottom" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "align_baseline",
+      "label": "t:settings.align_baseline",
+      "default": false,
+      "visible_if": "{{ section.settings.vertical_alignment == 'flex-end' }}"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment_flex_direction_column",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.right" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction != 'row' }}"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment_flex_direction_column",
+      "label": "t:settings.position",
+      "options": [
+        { "value": "flex-start", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.bottom" },
+        { "value": "space-between", "label": "t:options.space_between" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction == 'column' }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.size"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        { "value": "page-width", "label": "t:options.page" },
+        { "value": "full-width", "label": "t:options.full" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "t:settings.height",
+      "options": [
+        { "value": "", "label": "t:options.auto" },
+        { "value": "small", "label": "t:options.small" },
+        { "value": "medium", "label": "t:options.medium" },
+        { "value": "large", "label": "t:options.large" },
+        { "value": "full-screen", "label": "t:options.full_screen" },
+        { "value": "custom", "label": "t:options.custom" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "range",
+      "id": "section_height_custom",
+      "label": "t:settings.custom_height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "%",
+      "visible_if": "{{ section.settings.section_height == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "background_media",
+      "label": "t:settings.background_media",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "image", "label": "t:options.image" },
+        { "value": "video", "label": "t:options.video" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:settings.video",
+      "visible_if": "{{ section.settings.background_media == 'video' }}"
+    },
+    {
+      "type": "select",
+      "id": "video_position",
+      "label": "t:settings.video_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "contain", "label": "t:options.contain" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_media == 'video' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:settings.image",
+      "visible_if": "{{ section.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_position",
+      "label": "t:settings.image_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "fit", "label": "t:options.fit" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.borders",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "solid", "label": "t:options.solid" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "t:settings.border_width",
+      "default": 1,
+      "visible_if": "{{ section.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.border_opacity",
+      "default": 100,
+      "visible_if": "{{ section.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "t:settings.background_overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:settings.overlay_color",
+      "alpha": true,
+      "default": "#00000026",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "t:settings.overlay_style",
+      "options": [
+        { "value": "solid", "label": "t:options.solid" },
+        { "value": "gradient", "label": "t:options.gradient" }
+      ],
+      "default": "solid",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "t:settings.gradient_direction",
+      "options": [
+        { "value": "to top", "label": "t:options.up" },
+        { "value": "to bottom", "label": "t:options.down" }
+      ],
+      "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Equiv. nutrientes",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "",
+        "color_scheme": "scheme-1",
+        "border": "none",
+        "border_radius": 0,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  ]
+}
+{% endschema %}

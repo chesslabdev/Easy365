@@ -510,7 +510,7 @@
       "block_order": [
         "cinematic_slide_pFFcVz"
       ],
-      "name": "Cinematic hero",
+      "name": "Seção | Hero",
       "settings": {
         "section_width": "page-width",
         "corner_radius": 14,
@@ -875,7 +875,7 @@
       "block_order": [
         "group_D4pErB"
       ],
-      "name": "t:names.custom_section",
+      "name": "Seção | Zero açúcar",
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -1015,7 +1015,7 @@
         "text_NBwGqM",
         "text_JYiTha"
       ],
-      "name": "t:names.marquee_section",
+      "name": "Seção | Régua sabores",
       "settings": {
         "movement_direction": "normal",
         "color_scheme": "scheme-3",
@@ -1111,7 +1111,7 @@
         "text_E9LEeV",
         "text_FCR9Qx"
       ],
-      "name": "t:names.marquee_section",
+      "name": "Seção | Régua benefícios",
       "settings": {
         "movement_direction": "reverse",
         "color_scheme": "scheme-4",
@@ -1244,7 +1244,7 @@
       "block_order": [
         "group_8zAgy6"
       ],
-      "name": "t:names.custom_section",
+      "name": "Seção | Por que Eazy",
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -1278,7 +1278,7 @@
       "blocks": {
         "group_4aaKGX": {
           "type": "group",
-          "name": "t:names.group",
+          "name": "Conteúdo Global",
           "settings": {
             "content_direction": "row",
             "vertical_on_mobile": true,
@@ -1612,7 +1612,7 @@
       "block_order": [
         "group_4aaKGX"
       ],
-      "name": "t:names.custom_section",
+      "name": "Seção | Tropic Bloom",
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -1641,12 +1641,116 @@
         "padding-block-end": 0
       }
     },
+    "comparison_home": {
+      "type": "comparison",
+      "blocks": {
+        "static-header": {
+          "type": "group",
+          "name": "Conteúdo Global",
+          "static": true,
+          "settings": {
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "inherit_color_scheme": true,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "heading": {
+              "type": "blend-text",
+              "settings": {
+                "text": "Por que o <strong>Eazy</strong> é a <strong>escolha inteligente</strong>?",
+                "tag": "h2",
+                "type_preset": "h1",
+                "text_align": "center",
+                "blend_mode": "none",
+                "custom_color": "#000100",
+                "highlight_color": "#0a1a4d"
+              }
+            }
+          },
+          "block_order": [
+            "heading"
+          ]
+        },
+        "table": {
+          "type": "comparison-table",
+          "name": "Conteúdo Horizontal",
+          "settings": {},
+          "blocks": {
+            "row_1": {
+              "type": "_comparison-row",
+              "settings": {
+                "label": "Doses",
+                "value_a": "25",
+                "value_b": "1"
+              }
+            },
+            "row_2": {
+              "type": "_comparison-row",
+              "settings": {
+                "label": "Preço",
+                "value_a": "R$16,90",
+                "value_b": "R$7,12"
+              }
+            },
+            "row_3": {
+              "type": "_comparison-row",
+              "settings": {
+                "label": "Custo por dose",
+                "value_a": "~ R$ 0,82",
+                "value_b": "R$7,12",
+                "emphasize": true
+              }
+            }
+          },
+          "block_order": [
+            "row_1",
+            "row_2",
+            "row_3"
+          ]
+        },
+        "cta": {
+          "type": "cta-bar",
+          "settings": {
+            "text": "+ Performance − Custo =",
+            "pill_text": "Zero desperdício",
+            "button_label": "Quero meu Eazy",
+            "button_sublabel": "Tropic Bloom"
+          }
+        }
+      },
+      "block_order": [
+        "table",
+        "cta"
+      ],
+      "name": "Seção | Comparativo",
+      "settings": {
+        "section_width": "page-width",
+        "gap": 48,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 72,
+        "padding-block-end": 72,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "custom_mobile_padding": false,
+        "padding-block-start-mobile": 40,
+        "padding-block-end-mobile": 40,
+        "padding-inline-start-mobile": 16,
+        "padding-inline-end-mobile": 16
+      }
+    },
     "section_nRkMrz": {
       "type": "section",
       "blocks": {
         "group_nGxrKY": {
           "type": "group",
-          "name": "t:names.group",
+          "name": "Conteúdo Global",
           "settings": {
             "content_direction": "row",
             "vertical_on_mobile": true,
@@ -2202,7 +2306,7 @@
       "block_order": [
         "group_nGxrKY"
       ],
-      "name": "t:names.custom_section",
+      "name": "Seção | FAQ",
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -2238,6 +2342,7 @@
     "marquee_qzfC6t",
     "marquee_EG7D94",
     "section_ng6Jm6",
+    "comparison_home",
     "section_yfPXCy",
     "section_nRkMrz"
   ]

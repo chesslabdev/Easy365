@@ -1,0 +1,551 @@
+{%- comment -%}
+  What's Inside — "Tudo o que entra no copo".
+  Heading central + dois cards (esquerda destaque / direita secundário) ladeando a
+  garrafa central (que flutua suavemente), e um marquee de 2 linhas (frutas + efeitos)
+  como CAMADA DE FUNDO atrás da garrafa, com bordas borradas.
+
+  Marquee: reusa o ENGINE NATIVO `marquee-component` (assets/marquee.js) replicando o
+  contrato de markup do snippet sections/marquee.liquid (refs wrapper/content/
+  marqueeItems[], data-speed-factor, --marquee-direction). O CSS estrutural nativo é
+  espelhado aqui (a seção marquee pode não estar na página). Duas linhas em direções
+  opostas (normal / reverse).
+
+  Arquitetura (Decorator): conteúdo capturado em `children` e renderizado pelo MOTOR
+  BASE de seção ({% render 'section' %}). Responsivo (100%): desktop = card | garrafa |
+  card com marquee ao fundo; mobile (≤749px) = empilhado e marquee em fluxo no rodapé.
+  Respeita prefers-reduced-motion (garrafa e marquee param).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign fruits = s.fruits | split: ','
+  assign effects = s.effects | split: ','
+  assign fruit_icons = 'fruit-maracuja.png,fruit-cupuacu.png,fruit-maca.png' | split: ','
+-%}
+
+{%- capture children -%}
+  <div class="cup" style="--cup-accent: {{ s.accent_color }}; --cup-a-bg: {{ s.a_color }}; --cup-b-bg: {{ s.b_color }}; --cup-fade: {{ s.fade_color }};">
+    <div class="cup__head">
+      {%- if s.heading != blank -%}<h2 class="cup__title">{{ s.heading }}</h2>{%- endif -%}
+      {%- if s.label != blank -%}<p class="cup__label">{{ s.label }}</p>{%- endif -%}
+    </div>
+
+    <div class="cup__stage">
+      {%- comment -%} Card esquerdo (destaque) {%- endcomment -%}
+      <div class="cup__card cup__card--a">
+        <p class="cup__metric"><span class="cup__num">{{ s.a_value }}</span><span class="cup__unit">{{ s.a_unit }}</span></p>
+        <span class="cup__rule"></span>
+        {%- if s.a_title != blank -%}<p class="cup__card-title">{{ s.a_title }}</p>{%- endif -%}
+        {%- if s.a_desc != blank -%}<p class="cup__card-desc">{{ s.a_desc }}</p>{%- endif -%}
+      </div>
+
+      {%- comment -%} Garrafa central (flutua) {%- endcomment -%}
+      <div class="cup__bottle">
+        {%- if s.bottle_image != blank -%}
+          {{ s.bottle_image | image_url: width: 600 | image_tag: class: 'cup__bottle-img', loading: 'lazy', decoding: 'async', widths: '218, 436, 600', alt: '' }}
+        {%- else -%}
+          <img class="cup__bottle-img" src="{{ 'whats-inside-bottle.png' | asset_url }}" alt="" aria-hidden="true" width="928" height="1152" loading="lazy" decoding="async">
+        {%- endif -%}
+        <div class="cup__bottle-shadow" aria-hidden="true"></div>
+      </div>
+
+      {%- comment -%} Card direito (secundário) {%- endcomment -%}
+      <div class="cup__card cup__card--b">
+        <p class="cup__metric"><span class="cup__num">{{ s.b_value }}</span><span class="cup__unit">{{ s.b_unit }}</span></p>
+        <span class="cup__rule"></span>
+        {%- if s.b_title != blank -%}<p class="cup__card-title">{{ s.b_title }}</p>{%- endif -%}
+        {%- if s.b_desc != blank -%}<p class="cup__card-desc">{{ s.b_desc }}</p>{%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} Marquee de fundo (engine nativo) {%- endcomment -%}
+    <div class="cup__marquee" aria-hidden="true">
+      <marquee-component
+        class="cup__mq"
+        style="--marquee-gap: clamp(40px, 4vw, 72px); --marquee-direction: normal;"
+        data-speed-factor="{{ s.marquee_speed_factor }}"
+        data-movement-direction="normal"
+      >
+        <div class="marquee__wrapper" ref="wrapper">
+          <div class="marquee__content" ref="content">
+            <div class="marquee__repeated-items" ref="marqueeItems[]">
+              {%- for f in fruits -%}
+                {%- assign ic = forloop.index0 | modulo: 3 -%}
+                <span class="cup__chip cup__chip--fruit"><img class="cup__chip-icon" src="{{ fruit_icons[ic] | strip | asset_url }}" alt="" width="20" height="18" loading="lazy">{{ f | strip }}</span>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      </marquee-component>
+
+      <marquee-component
+        class="cup__mq"
+        style="--marquee-gap: clamp(40px, 4vw, 72px); --marquee-direction: reverse;"
+        data-speed-factor="{{ s.marquee_speed_factor }}"
+        data-movement-direction="reverse"
+      >
+        <div class="marquee__wrapper" ref="wrapper">
+          <div class="marquee__content" ref="content">
+            <div class="marquee__repeated-items" ref="marqueeItems[]">
+              {%- for e in effects -%}
+                <span class="cup__chip cup__chip--effect">{{ e | strip }}</span>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      </marquee-component>
+
+      <div class="cup__fade cup__fade--left"></div>
+      <div class="cup__fade cup__fade--right"></div>
+    </div>
+  </div>
+{%- endcapture -%}
+
+{% render 'section', section: section, children: children %}
+
+<script src="{{ 'marquee.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% stylesheet %}
+.cup {
+  --cup-on-card: #fefffc;
+  --cup-ink: #000100;
+  --cup-muted: #8a847a;
+  --cup-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --cup-mono: ui-monospace, "Courier New", monospace;
+  --cup-fade-color: var(--cup-fade, #fefffc);
+
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  font-family: var(--cup-font);
+}
+
+/* ===== Cabeçalho ===== */
+.cup__head {
+  position: relative;
+  z-index: 3;
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1vw, 16px);
+}
+.cup__title {
+  margin: 0;
+  color: var(--cup-accent, #ff4c24);
+  font-weight: 700;
+  font-size: clamp(30px, 4.4vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+.cup__label {
+  margin: 0;
+  align-self: flex-end;
+  color: var(--cup-ink);
+  font-family: var(--cup-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ===== Palco: card | garrafa | card ===== */
+.cup__stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(12px, 3vw, 56px);
+  margin-top: clamp(20px, 3vw, 36px);
+}
+
+.cup__card {
+  flex: 0 1 320px;
+  align-self: flex-start;
+  margin-top: clamp(20px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 0.8vw, 12px);
+  box-sizing: border-box;
+  padding: clamp(18px, 1.7vw, 24px);
+  border-radius: clamp(16px, 1.5vw, 22px);
+  color: var(--cup-on-card);
+  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.10), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+}
+.cup__card--a { background: var(--cup-a-bg, #ff4c24); }
+.cup__card--b { background: var(--cup-b-bg, #1a388d); }
+
+.cup__metric {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  white-space: nowrap;
+}
+.cup__num {
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(56px, 7vw, 96px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+.cup__unit {
+  font-weight: 500;
+  font-size: clamp(16px, 1.8vw, 24px);
+  line-height: 1.15;
+}
+.cup__rule {
+  width: 40px;
+  height: 1px;
+  background: var(--cup-on-card);
+  opacity: 0.25;
+}
+.cup__card-title {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.cup__card-desc {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(15px, 1.5vw, 19px);
+  line-height: 1.45;
+  opacity: 0.65;
+}
+
+/* ===== Garrafa (flutua) ===== */
+.cup__bottle {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.cup__bottle-img {
+  position: relative;
+  z-index: 1;
+  height: clamp(340px, 38vw, 520px);
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.18));
+  animation: cup-float 5.5s ease-in-out infinite;
+}
+.cup__bottle-shadow {
+  position: absolute;
+  z-index: 0;
+  bottom: clamp(-6px, 0.5vw, 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(200px, 24vw, 360px);
+  height: clamp(30px, 4vw, 56px);
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0.12) 38%, rgba(0, 0, 0, 0) 72%);
+  pointer-events: none;
+}
+
+@keyframes cup-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+/* ===== Marquee de fundo (atrás da garrafa) ===== */
+.cup__marquee {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: clamp(48px, 9vw, 120px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.6vw, 24px);
+  pointer-events: none;
+}
+
+/* Bordas borradas/esmaecidas (como no Figma) */
+.cup__fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(90px, 22vw, 280px);
+  z-index: 1;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.cup__fade--left {
+  left: 0;
+  background: linear-gradient(to right, var(--cup-fade-color) 8%, transparent);
+  -webkit-mask-image: linear-gradient(to right, #000, transparent);
+  mask-image: linear-gradient(to right, #000, transparent);
+}
+.cup__fade--right {
+  right: 0;
+  background: linear-gradient(to left, var(--cup-fade-color) 8%, transparent);
+  -webkit-mask-image: linear-gradient(to left, #000, transparent);
+  mask-image: linear-gradient(to left, #000, transparent);
+}
+
+/* ---- CSS estrutural espelhado do marquee nativo (sections/marquee.liquid) ---- */
+.cup__mq {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+.cup__mq .marquee__wrapper {
+  display: flex;
+  gap: var(--marquee-gap);
+  width: fit-content;
+  white-space: nowrap;
+}
+.cup__mq .marquee__content {
+  min-width: max-content;
+  display: flex;
+  gap: var(--marquee-gap);
+}
+.cup__mq .marquee__repeated-items {
+  min-width: max-content;
+  display: flex;
+  gap: var(--marquee-gap);
+  align-items: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cup__mq:not([data-disabled]) .marquee__wrapper {
+    animation: cup-marquee-motion var(--marquee-speed) linear infinite var(--marquee-direction);
+  }
+}
+@keyframes cup-marquee-motion {
+  to { transform: translate3d(calc(-50% - (var(--marquee-gap) / 2)), 0, 0); }
+}
+
+.cup__chip {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 0.5vw, 6px);
+  font-family: var(--cup-mono);
+  font-size: clamp(16px, 1.6vw, 24px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.cup__chip--fruit { color: var(--cup-ink); }
+.cup__chip--effect { color: var(--cup-muted); }
+.cup__chip-icon {
+  height: clamp(14px, 1.2vw, 18px);
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cup__bottle-img { animation: none; }
+}
+
+/* ===== Mobile (≤749px) — MESMO layout do desktop, só que menor =====
+   Cards permanecem nas laterais da garrafa e o marquee continua passando atrás. */
+@media (max-width: 749px) {
+  .cup__title { font-size: clamp(20px, 6.2vw, 32px); }
+
+  .cup__stage {
+    gap: clamp(6px, 1.8vw, 12px);
+    margin-top: clamp(28px, 7vw, 40px);
+  }
+
+  /* garrafa por cima; cards menores atrás, nas laterais */
+  .cup__bottle { margin-inline: auto; z-index: 2; }
+  .cup__card {
+    position: absolute;
+    top: clamp(16px, 6vw, 48px);
+    width: 38%;
+    z-index: 1;
+    margin-top: 0;
+    padding: clamp(8px, 2.6vw, 14px);
+    border-radius: clamp(10px, 2.6vw, 16px);
+    gap: clamp(4px, 1.2vw, 8px);
+  }
+  .cup__card--a { left: 0; }
+  .cup__card--b { right: 0; }
+  .cup__num { font-size: clamp(22px, 8vw, 40px); }
+  .cup__unit { font-size: clamp(10px, 2.6vw, 14px); }
+  .cup__rule { width: clamp(20px, 5vw, 32px); }
+  .cup__card-title { font-size: clamp(11px, 3.1vw, 15px); }
+  .cup__card-desc { font-size: clamp(10px, 2.7vw, 13px); }
+
+  .cup__bottle-img { height: clamp(240px, 50vw, 320px); }
+
+  /* marquee continua atrás (absoluto), só ajusta posição e densidade */
+  .cup__marquee {
+    bottom: clamp(24px, 7vw, 64px);
+    gap: clamp(8px, 2vw, 16px);
+  }
+  .cup__chip { font-size: clamp(13px, 3.4vw, 18px); }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tudo o que entra",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    { "type": "header", "content": "Cabeçalho" },
+    { "type": "text", "id": "heading", "label": "Título", "default": "Tudo o que entra no copo." },
+    { "type": "text", "id": "label", "label": "Selo", "default": "POR PORÇÃO · 2G" },
+    { "type": "color", "id": "accent_color", "label": "Cor do título", "default": "#ff4c24" },
+
+    { "type": "header", "content": "Card destaque (esquerda)" },
+    { "type": "text", "id": "a_value", "label": "Número", "default": "63" },
+    { "type": "text", "id": "a_unit", "label": "Unidade", "default": "mg" },
+    { "type": "text", "id": "a_title", "label": "Título", "default": "Magnésio Bisglicinato" },
+    { "type": "textarea", "id": "a_desc", "label": "Descrição", "default": "Recuperação muscular + sono profundo" },
+    { "type": "color", "id": "a_color", "label": "Fundo do card", "default": "#ff4c24" },
+
+    { "type": "header", "content": "Card secundário (direita)" },
+    { "type": "text", "id": "b_value", "label": "Número", "default": "5" },
+    { "type": "text", "id": "b_unit", "label": "Unidade", "default": "tipos" },
+    { "type": "text", "id": "b_title", "label": "Título", "default": "Eletrólitos" },
+    { "type": "textarea", "id": "b_desc", "label": "Descrição", "default": "Na, K, Ca, Mg, Zn em dose funcional" },
+    { "type": "color", "id": "b_color", "label": "Fundo do card", "default": "#1a388d" },
+
+    { "type": "header", "content": "Imagem" },
+    { "type": "image_picker", "id": "bottle_image", "label": "Imagem do produto", "info": "Vazio usa a imagem padrão." },
+
+    { "type": "header", "content": "Marquee" },
+    { "type": "text", "id": "fruits", "label": "Frutas (separe por vírgula)", "default": "Maracujá, Cupuaçu, Maçã" },
+    { "type": "text", "id": "effects", "label": "Efeitos (separe por vírgula)", "default": "Relaxamento, Recuperação, Intestino" },
+    { "type": "range", "id": "marquee_speed_factor", "label": "Velocidade (maior = mais lento)", "min": 10, "max": 60, "step": 1, "default": 25 },
+    { "type": "color", "id": "fade_color", "label": "Cor de esmaecimento das bordas", "default": "#fefffc" },
+
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select", "id": "content_direction", "label": "t:settings.direction",
+      "options": [
+        { "value": "column", "label": "t:options.vertical" },
+        { "value": "row", "label": "t:options.horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "select", "id": "horizontal_alignment_flex_direction_column", "label": "t:settings.alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.right" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction != 'row' }}"
+    },
+    { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "t:content.size" },
+    {
+      "type": "select", "id": "section_width", "label": "t:settings.width",
+      "options": [
+        { "value": "page-width", "label": "t:options.page" },
+        { "value": "full-width", "label": "t:options.full" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "select", "id": "section_height", "label": "t:settings.height",
+      "options": [
+        { "value": "", "label": "t:options.auto" },
+        { "value": "small", "label": "t:options.small" },
+        { "value": "medium", "label": "t:options.medium" },
+        { "value": "large", "label": "t:options.large" },
+        { "value": "full-screen", "label": "t:options.full_screen" },
+        { "value": "custom", "label": "t:options.custom" }
+      ],
+      "default": ""
+    },
+    { "type": "range", "id": "section_height_custom", "label": "t:settings.custom_height", "min": 0, "max": 100, "step": 1, "default": 50, "unit": "%", "visible_if": "{{ section.settings.section_height == 'custom' }}" },
+
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    {
+      "type": "select", "id": "background_media", "label": "t:settings.background_media",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "image", "label": "t:options.image" },
+        { "value": "video", "label": "t:options.video" }
+      ],
+      "default": "none"
+    },
+    { "type": "video", "id": "video", "label": "t:settings.video", "visible_if": "{{ section.settings.background_media == 'video' }}" },
+    {
+      "type": "select", "id": "video_position", "label": "t:settings.video_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "contain", "label": "t:options.contain" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_media == 'video' }}"
+    },
+    { "type": "image_picker", "id": "background_image", "label": "t:settings.image", "visible_if": "{{ section.settings.background_media == 'image' }}" },
+    {
+      "type": "select", "id": "background_image_position", "label": "t:settings.image_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "fit", "label": "t:options.fit" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "select", "id": "border", "label": "t:settings.borders",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "solid", "label": "t:options.solid" }
+      ],
+      "default": "none"
+    },
+    { "type": "range", "id": "border_width", "min": 0, "max": 10, "step": 0.5, "unit": "px", "label": "t:settings.border_width", "default": 1, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_opacity", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "t:settings.border_opacity", "default": 100, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_radius", "label": "t:settings.border_radius", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "checkbox", "id": "toggle_overlay", "label": "t:settings.background_overlay" },
+    { "type": "color", "id": "overlay_color", "label": "t:settings.overlay_color", "alpha": true, "default": "#00000026", "visible_if": "{{ section.settings.toggle_overlay }}" },
+    {
+      "type": "select", "id": "overlay_style", "label": "t:settings.overlay_style",
+      "options": [
+        { "value": "solid", "label": "t:options.solid" },
+        { "value": "gradient", "label": "t:options.gradient" }
+      ],
+      "default": "solid",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select", "id": "gradient_direction", "label": "t:settings.gradient_direction",
+      "options": [
+        { "value": "to top", "label": "t:options.up" },
+        { "value": "to bottom", "label": "t:options.down" }
+      ],
+      "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    },
+
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    {
+      "name": "Tudo o que entra",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "",
+        "color_scheme": "",
+        "border": "none",
+        "border_radius": 0,
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    }
+  ]
+}
+{% endschema %}

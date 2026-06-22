@@ -1,0 +1,546 @@
+{%- comment -%}
+  Dosage Meter — banner de dois painéis (fato nutricional + contador de doses).
+
+  ESQUERDA (laranja): garrafa do produto + quantidade do nutriente por porção
+  ("Magnésio Bisglicinato / 63mg / POR PORÇÃO") sobre marca d'água de luz.
+
+  DIREITA (azul): contador radial de doses (anel com gradiente terra→laranja e o
+  arco de progresso "passando") + card branco "ZERO AÇÚCAR. / Adoçado com Stevia.".
+
+  Por enquanto SÓ HTML + CSS. O contador já está montado para receber a lógica
+  depois: o elemento <dose-meter> carrega `data-target`, `data-max` e `data-duration`,
+  os refs `arc`/`value`, e a fração é calculada no servidor em `--dose-progress`
+  (estado final renderizado server-side; um web component pode resetar p/ 0 e animar).
+  Para ativar a animação basta criar assets/dose-meter.js (extends Component) e
+  descomentar a tag <script> ao final — mesmo contrato do bloco radial-counter.
+
+  Tudo editável no editor (textos, cores, raio, doses, imagem). Mobile-first:
+  painéis empilham ≤749px. Marca d'água/onda são decorativas (alt="").
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+
+  comment
+    Geometria do anel (igual ao bloco radial-counter): r, circunferência e offset.
+  endcomment
+  assign gauge_d = 130
+  assign gauge_sw = 10
+  assign gauge_c = gauge_d | divided_by: 2.0
+  assign gauge_r = gauge_d | minus: gauge_sw | divided_by: 2.0
+  assign gauge_circ = gauge_r | times: 6.28318530718
+
+  if s.doses_max > 0
+    assign gauge_fill = s.doses_value | times: 1.0 | divided_by: s.doses_max
+    if gauge_fill > 1
+      assign gauge_fill = 1
+    endif
+  else
+    assign gauge_fill = 1
+  endif
+  assign gauge_dash = gauge_circ | times: gauge_fill
+  assign gauge_offset = gauge_circ | minus: gauge_dash
+
+  assign gauge_aria = s.doses_value | append: ' ' | append: s.doses_label
+
+  assign bottle = s.bottle_image
+-%}
+
+<div
+  class="dosage-meter spacing-style{% if s.custom_mobile_padding %} mobile-spacing-{{ section.id }}{% endif %} dosage-meter--{{ s.section_width }}"
+  style="
+    {% render 'spacing-style', settings: s %}
+    --dm-left: {{ s.color_left }};
+    --dm-right: {{ s.color_right }};
+    --dm-accent: {{ s.color_accent }};
+    --dm-earth: {{ s.color_earth }};
+    --dm-card: {{ s.color_card }};
+    --dm-card-heading: {{ s.color_card_heading }};
+    --dm-card-text: {{ s.color_card_text }};
+    --dm-on-accent: {{ s.color_on_accent }};
+    --dm-radius: {{ s.border_radius }}px;
+  "
+>
+  {%- comment -%} ESQUERDA — painel laranja: garrafa + quantidade do nutriente {%- endcomment -%}
+  <div class="dosage-meter__panel dosage-meter__panel--product">
+    <img
+      class="dosage-meter__streak"
+      src="{{ 'dosage-streak.jpg' | asset_url }}"
+      alt=""
+      aria-hidden="true"
+      width="720"
+      height="900"
+      loading="lazy"
+      decoding="async"
+    >
+
+    {%- comment -%}
+      Garrafa "fundida" no laranja: duas cópias com mix-blend (difference + lighten),
+      replicando o card do Figma. A cópia visível carrega o alt; a outra é decorativa.
+    {%- endcomment -%}
+    <div class="dosage-meter__bottle">
+      {%- if bottle != blank -%}
+        {{ bottle | image_url: width: 720 | image_tag: class: 'dosage-meter__bottle-img dosage-meter__bottle-img--diff', loading: 'lazy', decoding: 'async', widths: '360, 720', alt: '' }}
+        {{ bottle | image_url: width: 720 | image_tag: class: 'dosage-meter__bottle-img dosage-meter__bottle-img--lighten', loading: 'lazy', decoding: 'async', widths: '360, 720', alt: bottle.alt | default: s.amount }}
+      {%- else -%}
+        <img class="dosage-meter__bottle-img dosage-meter__bottle-img--diff" src="{{ 'dosage-bottle.png' | asset_url }}" alt="" aria-hidden="true" width="580" height="720" loading="lazy" decoding="async">
+        <img class="dosage-meter__bottle-img dosage-meter__bottle-img--lighten" src="{{ 'dosage-bottle.png' | asset_url }}" alt="{{ s.amount | escape }}" width="580" height="720" loading="lazy" decoding="async">
+      {%- endif -%}
+    </div>
+
+    <div class="dosage-meter__amount">
+      {%- if s.nutrient_label != blank -%}
+        <span class="dosage-meter__amount-label">{{ s.nutrient_label }}</span>
+      {%- endif -%}
+      {%- if s.amount != blank -%}
+        <span class="dosage-meter__amount-value">{{ s.amount }}</span>
+      {%- endif -%}
+      {%- if s.amount_caption != blank -%}
+        <span class="dosage-meter__amount-caption">{{ s.amount_caption }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} DIREITA — painel azul: contador de doses + card "Zero açúcar" {%- endcomment -%}
+  <div class="dosage-meter__panel dosage-meter__panel--claim">
+    <img
+      class="dosage-meter__streak dosage-meter__streak--faint"
+      src="{{ 'dosage-streak.jpg' | asset_url }}"
+      alt=""
+      aria-hidden="true"
+      width="720"
+      height="900"
+      loading="lazy"
+      decoding="async"
+    >
+    <img
+      class="dosage-meter__wave"
+      src="{{ 'dosage-wave.svg' | asset_url }}"
+      alt=""
+      aria-hidden="true"
+      width="821"
+      height="248"
+      loading="lazy"
+      decoding="async"
+    >
+
+    {%- comment -%}
+      Contador de doses — pronto para a lógica. data-target/max/duration + refs
+      `arc`/`value`; estado final já renderizado via --dose-progress (server-side).
+    {%- endcomment -%}
+    <dose-meter
+      class="dosage-meter__gauge"
+      data-target="{{ s.doses_value }}"
+      {% if s.doses_max > 0 %}data-max="{{ s.doses_max }}"{% endif %}
+      data-duration="1500"
+      style="--dose-progress: {{ gauge_fill }};"
+      role="img"
+      aria-label="{{ gauge_aria | escape }}"
+    >
+      <svg class="dosage-meter__ring" viewBox="0 0 {{ gauge_d }} {{ gauge_d }}" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="dm-gauge-{{ section.id }}" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="var(--dm-earth)"></stop>
+            <stop offset="100%" stop-color="var(--dm-accent)"></stop>
+          </linearGradient>
+        </defs>
+        <circle
+          class="dosage-meter__ring-track"
+          cx="{{ gauge_c }}"
+          cy="{{ gauge_c }}"
+          r="{{ gauge_r }}"
+          fill="none"
+          stroke="url(#dm-gauge-{{ section.id }})"
+          stroke-width="{{ gauge_sw }}"
+        ></circle>
+        <circle
+          class="dosage-meter__ring-arc"
+          ref="arc"
+          cx="{{ gauge_c }}"
+          cy="{{ gauge_c }}"
+          r="{{ gauge_r }}"
+          fill="none"
+          stroke="var(--dm-accent)"
+          stroke-width="{{ gauge_sw }}"
+          stroke-linecap="round"
+          transform="rotate(-90 {{ gauge_c }} {{ gauge_c }})"
+          style="stroke-dasharray: {{ gauge_circ }}; stroke-dashoffset: {{ gauge_offset }};"
+        ></circle>
+      </svg>
+      <span class="dosage-meter__gauge-content">
+        <span class="dosage-meter__gauge-value" ref="value">{{ s.doses_value }}</span>
+        {%- if s.doses_label != blank -%}
+          <span class="dosage-meter__gauge-label">{{ s.doses_label }}</span>
+        {%- endif -%}
+      </span>
+    </dose-meter>
+
+    <div class="dosage-meter__card">
+      {%- if s.headline != blank -%}
+        <p class="dosage-meter__card-heading">{{ s.headline }}</p>
+      {%- endif -%}
+      {%- if s.subtext != blank or s.subtext_highlight != blank -%}
+        <p class="dosage-meter__card-text">
+          {{ s.subtext }}{% if s.subtext_highlight != blank %} <b>{{ s.subtext_highlight }}</b>{% endif %}.
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% render 'mobile-spacing', settings: s, id: section.id %}
+
+{%- comment -%}
+  Para ativar o contador depois, crie assets/dose-meter.js (extends Component,
+  refs ['arc','value'], anima no IntersectionObserver) e descomente:
+  <script src="{{ 'dose-meter.js' | asset_url }}" type="module" fetchpriority="low"></script>
+{%- endcomment -%}
+
+{% stylesheet %}
+  .dosage-meter {
+    --dm-gap: 4px;
+    display: flex;
+    gap: var(--dm-gap);
+    align-items: stretch;
+    box-sizing: border-box;
+    margin-inline: auto;
+  }
+
+  .dosage-meter--page-width {
+    max-width: var(--page-width, 1400px);
+    padding-inline: var(--page-margin, 16px);
+  }
+
+  .dosage-meter--full-width {
+    max-width: none;
+  }
+
+  .dosage-meter__panel {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: var(--dm-radius, 14px);
+    min-height: clamp(220px, 28vw, 400px);
+  }
+
+  /* Mobile-first: garrafa à esquerda, texto à direita */
+  .dosage-meter__panel--product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(8px, 3vw, 16px);
+    padding: clamp(12px, 2vw, 24px);
+    background: var(--dm-left, #ff4c24);
+  }
+
+  .dosage-meter__panel--claim {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(12px, 2vw, 24px);
+    padding: clamp(16px, 2vw, 24px) clamp(16px, 2.2vw, 32px);
+    background: var(--dm-right, #1a388d);
+  }
+
+  /* Marca d'água de luz (decorativa) */
+  .dosage-meter__streak {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    opacity: 0.24;
+    mix-blend-mode: screen;
+    filter: blur(1px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .dosage-meter__streak--faint {
+    opacity: 0.06;
+  }
+
+  /* Onda inferior do painel azul (decorativa) */
+  .dosage-meter__wave {
+    position: absolute;
+    right: 0;
+    bottom: -8%;
+    width: 108%;
+    height: auto;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Garrafa (wrapper de duas cópias com blend) */
+  .dosage-meter__bottle {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    height: clamp(160px, 24vw, 360px);
+    aspect-ratio: 338 / 420;
+  }
+
+  .dosage-meter__bottle-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .dosage-meter__bottle-img--diff {
+    mix-blend-mode: difference;
+  }
+
+  .dosage-meter__bottle-img--lighten {
+    mix-blend-mode: lighten;
+  }
+
+  /* Bloco de quantidade do nutriente */
+  .dosage-meter__amount {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    flex-direction: column;
+    color: var(--dm-on-accent, #ffffff);
+    mix-blend-mode: overlay;
+  }
+
+  .dosage-meter__amount-label,
+  .dosage-meter__amount-caption {
+    font-family: var(--font-heading--family, 'Bitcount Prop Single', sans-serif);
+    font-size: clamp(12px, 1.6vw, 24px);
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .dosage-meter__amount-caption {
+    text-align: right;
+    margin-top: 0.4em;
+  }
+
+  .dosage-meter__amount-value {
+    font-family: var(--font-heading--family, 'Bitcount Prop Single', sans-serif);
+    font-size: clamp(44px, 7vw, 96px);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    margin-block: 0.05em;
+  }
+
+  /* Contador radial de doses */
+  .dosage-meter__gauge {
+    position: relative;
+    z-index: 1;
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: clamp(72px, 9vw, 130px);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: var(--dm-right, #1a388d);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 6%), 0 1px 2px rgb(0 0 0 / 4%);
+  }
+
+  .dosage-meter__ring,
+  .dosage-meter__gauge-content {
+    grid-area: 1 / 1;
+  }
+
+  .dosage-meter__ring {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .dosage-meter__ring-arc {
+    transition: stroke-dashoffset 0.6s ease;
+  }
+
+  .dosage-meter__gauge-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1;
+    color: var(--dm-on-accent, #fefffc);
+    pointer-events: none;
+  }
+
+  .dosage-meter__gauge-value {
+    font-family: var(--font-heading--family, 'Bitcount Prop Single', sans-serif);
+    font-size: clamp(13px, 1.6vw, 24px);
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dosage-meter__gauge-label {
+    margin-top: 0.35em;
+    font-family: var(--font-heading--family, 'Bitcount Prop Single', sans-serif);
+    font-size: clamp(6px, 0.8vw, 11px);
+    letter-spacing: 0.12em;
+  }
+
+  /* Card "Zero açúcar" */
+  .dosage-meter__card {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(8px, 1vw, 16px);
+    box-sizing: border-box;
+    padding: clamp(13px, 1.6vw, 24px) clamp(17px, 2vw, 32px);
+    border-radius: calc(var(--dm-radius, 14px) - 2px);
+    background: var(--dm-card, #fefffc);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 6%), 0 1px 2px rgb(0 0 0 / 4%);
+  }
+
+  .dosage-meter__card-heading {
+    margin: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-size: clamp(28px, 4vw, 56px);
+    color: var(--dm-card-heading, #ff4c24);
+  }
+
+  .dosage-meter__card-text {
+    margin: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    font-size: clamp(13px, 1.6vw, 24px);
+    color: var(--dm-card-text, #1a388d);
+  }
+
+  .dosage-meter__card-text b {
+    font-weight: 700;
+  }
+
+  /* Desktop: garrafa centralizada no painel, texto sobreposto à direita (Figma) */
+  @media screen and (min-width: 750px) {
+    .dosage-meter__panel--product {
+      display: block;
+    }
+
+    .dosage-meter__bottle {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: 105%;
+      transform: translate(-50%, -50%);
+    }
+
+    .dosage-meter__amount {
+      position: absolute;
+      top: 50%;
+      right: clamp(24px, 5vw, 72px);
+      transform: translateY(-46%);
+    }
+  }
+
+  /* Mobile: empilha os painéis ≤749px */
+  @media screen and (max-width: 749px) {
+    .dosage-meter {
+      flex-direction: column;
+    }
+
+    .dosage-meter__panel {
+      flex: 0 0 auto;
+      min-height: 0;
+    }
+
+    .dosage-meter__panel--product {
+      justify-content: space-between;
+      gap: clamp(8px, 3vw, 16px);
+    }
+
+    .dosage-meter__amount {
+      flex: 0 1 auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Medidor de doses",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    { "type": "header", "content": "Esquerda — nutriente (laranja)" },
+    { "type": "image_picker", "id": "bottle_image", "label": "Imagem do produto", "info": "Vazio usa a imagem padrão." },
+    { "type": "text", "id": "nutrient_label", "label": "Nutriente", "default": "Magnésio Bisglicinato" },
+    { "type": "text", "id": "amount", "label": "Quantidade", "default": "63mg" },
+    { "type": "text", "id": "amount_caption", "label": "Legenda", "default": "POR PORÇÃO" },
+
+    { "type": "header", "content": "Direita — contador de doses (azul)" },
+    { "type": "number", "id": "doses_value", "label": "Doses (valor)", "default": 2 },
+    { "type": "number", "id": "doses_max", "label": "Meta (preenche o anel)", "info": "Deixe vazio para o anel preencher 100%." },
+    { "type": "text", "id": "doses_label", "label": "Rótulo", "default": "doses" },
+
+    { "type": "header", "content": "Direita — card de destaque" },
+    { "type": "text", "id": "headline", "label": "Título", "default": "Zero açúcar." },
+    { "type": "text", "id": "subtext", "label": "Texto", "default": "Adoçado com" },
+    { "type": "text", "id": "subtext_highlight", "label": "Palavra em destaque", "default": "Stevia" },
+
+    { "type": "header", "content": "Cores" },
+    { "type": "color", "id": "color_left", "label": "Fundo esquerda", "default": "#ff4c24" },
+    { "type": "color", "id": "color_right", "label": "Fundo direita", "default": "#1a388d" },
+    { "type": "color", "id": "color_accent", "label": "Destaque / progresso", "default": "#ff4c24" },
+    { "type": "color", "id": "color_earth", "label": "Início do anel (terra)", "default": "#66392f" },
+    { "type": "color", "id": "color_on_accent", "label": "Texto sobre cor", "default": "#fefffc" },
+    { "type": "color", "id": "color_card", "label": "Fundo do card", "default": "#fefffc" },
+    { "type": "color", "id": "color_card_heading", "label": "Título do card", "default": "#ff4c24" },
+    { "type": "color", "id": "color_card_text", "label": "Texto do card", "default": "#1a388d" },
+
+    { "type": "header", "content": "Aparência" },
+    { "type": "range", "id": "border_radius", "label": "Raio das bordas", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 14 },
+    {
+      "type": "select", "id": "section_width", "label": "Largura",
+      "options": [
+        { "value": "page-width", "label": "Largura da página" },
+        { "value": "full-width", "label": "Largura total" }
+      ],
+      "default": "page-width"
+    },
+
+    { "type": "header", "content": "Espaçamento" },
+    { "type": "range", "id": "padding-block-start", "label": "Superior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Inferior", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "custom_mobile_padding", "label": "Espaçamento separado no mobile", "default": false },
+    { "type": "range", "id": "padding-block-start-mobile", "label": "Superior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ section.settings.custom_mobile_padding }}" },
+    { "type": "range", "id": "padding-block-end-mobile", "label": "Inferior (mobile)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 0, "visible_if": "{{ section.settings.custom_mobile_padding }}" }
+  ],
+  "presets": [
+    {
+      "name": "Medidor de doses",
+      "settings": {
+        "nutrient_label": "Magnésio Bisglicinato",
+        "amount": "63mg",
+        "amount_caption": "POR PORÇÃO",
+        "doses_value": 2,
+        "doses_max": 8,
+        "doses_label": "doses",
+        "headline": "Zero açúcar.",
+        "subtext": "Adoçado com",
+        "subtext_highlight": "Stevia",
+        "section_width": "page-width",
+        "border_radius": 14
+      }
+    }
+  ]
+}
+{% endschema %}

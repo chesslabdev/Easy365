@@ -1,0 +1,212 @@
+{% doc %}
+  Snippet: RkBreadcrumb
+  Breadcrumb autoinformado pelo contexto Liquid. Detecta template e
+  monta a trilha automaticamente:
+    - index: nada (oculto)
+    - product: Início › Coleção (se houver) › Produto
+    - collection: Início › Coleção
+    - article: Início › Blog › Artigo
+    - blog: Início › Blog
+    - page: Início › Página
+    - search: Início › Resultados da busca
+    - cart: Início › Carrinho
+    - 404: Início › Página não encontrada
+    - outros: Início › {{ page_title }}
+
+  Markup semântico: <nav aria-label="Breadcrumb"><ol> com <a> para
+  itens navegáveis e <span aria-current="page"> para o item atual.
+
+  @param {string}  [home_label]        Texto do primeiro item (default: "Início")
+  @param {string}  [separator]         slash | chevron | arrow | dot | bar (default: slash)
+  @param {boolean} [show_current]      Mostrar página atual (default: true)
+  @param {string}  [custom_class]      Classes extras no <nav>
+  @param {string}  [style]             Estilo inline no <nav> (para vars de spacing)
+  @param {string}  [shopify_attributes] block.shopify_attributes
+
+  @example
+  {% render 'rk-breadcrumb', separator: 'chevron' %}
+{% enddoc %}
+
+{%- liquid
+  assign bc_home_label = home_label | default: 'Início'
+  assign bc_separator_key = separator | default: 'slash'
+
+  assign bc_show_current = true
+  if show_current == false
+    assign bc_show_current = false
+  endif
+
+  case bc_separator_key
+    when 'chevron'
+      assign bc_sep = '›'
+    when 'arrow'
+      assign bc_sep = '→'
+    when 'dot'
+      assign bc_sep = '·'
+    when 'bar'
+      assign bc_sep = '|'
+    else
+      assign bc_sep = '/'
+  endcase
+
+  assign bc_d = '|+|'
+  assign bc_e = '|@|'
+
+  assign bc_str = bc_home_label | append: bc_d | append: routes.root_url
+
+  case template.name
+    when 'index'
+      assign bc_str = ''
+
+    when 'product'
+      assign bc_col = nil
+      if collection and collection.handle != blank
+        assign bc_col = collection
+      else
+        for col in product.collections
+          if col.handle != 'all'
+            assign bc_col = col
+            break
+          endif
+        endfor
+      endif
+      if bc_col
+        assign bc_str = bc_str | append: bc_e | append: bc_col.title | append: bc_d | append: bc_col.url
+      endif
+      if bc_show_current and product
+        assign bc_str = bc_str | append: bc_e | append: product.title | append: bc_d
+      endif
+
+    when 'collection'
+      if bc_show_current and collection
+        assign bc_str = bc_str | append: bc_e | append: collection.title | append: bc_d
+      endif
+
+    when 'article'
+      if blog
+        assign bc_str = bc_str | append: bc_e | append: blog.title | append: bc_d | append: blog.url
+      endif
+      if bc_show_current and article
+        assign bc_str = bc_str | append: bc_e | append: article.title | append: bc_d
+      endif
+
+    when 'blog'
+      if bc_show_current and blog
+        assign bc_str = bc_str | append: bc_e | append: blog.title | append: bc_d
+      endif
+
+    when 'page'
+      if bc_show_current and page
+        assign bc_str = bc_str | append: bc_e | append: page.title | append: bc_d
+      endif
+
+    when 'search'
+      if bc_show_current
+        assign bc_str = bc_str | append: bc_e | append: 'Resultados da busca' | append: bc_d
+      endif
+
+    when 'cart'
+      if bc_show_current
+        assign bc_str = bc_str | append: bc_e | append: 'Carrinho' | append: bc_d
+      endif
+
+    when '404'
+      if bc_show_current
+        assign bc_str = bc_str | append: bc_e | append: 'Página não encontrada' | append: bc_d
+      endif
+
+    else
+      if bc_show_current and page_title != blank
+        assign bc_str = bc_str | append: bc_e | append: page_title | append: bc_d
+      endif
+  endcase
+
+  assign bc_trail = bc_str | split: bc_e
+  assign bc_count = bc_trail | size
+-%}
+
+{%- if bc_str != '' and bc_count > 0 -%}
+<nav
+  class="rk-breadcrumb{% if custom_class %} {{ custom_class }}{% endif %}"
+  {% if style %}style="{{ style }}"{% endif %}
+  aria-label="Breadcrumb"
+  {{ shopify_attributes }}
+>
+  <ol class="rk-breadcrumb__list">
+    {%- for entry in bc_trail -%}
+      {%- assign parts = entry | split: bc_d -%}
+      {%- assign label = parts[0] -%}
+      {%- assign url = parts[1] -%}
+      {%- if label == blank -%}{%- continue -%}{%- endif -%}
+      <li class="rk-breadcrumb__item">
+        {%- if url != blank and forloop.last == false -%}
+          <a class="rk-breadcrumb__link" href="{{ url }}">{{ label }}</a>
+        {%- else -%}
+          <span class="rk-breadcrumb__current" aria-current="page">{{ label }}</span>
+        {%- endif -%}
+        {%- unless forloop.last -%}
+          <span class="rk-breadcrumb__separator" aria-hidden="true">{{ bc_sep }}</span>
+        {%- endunless -%}
+      </li>
+    {%- endfor -%}
+  </ol>
+</nav>
+{%- endif -%}
+
+{% stylesheet %}
+  .rk-breadcrumb {
+    width: 100%;
+    color: var(--rk-color-text, inherit);
+  }
+
+  .rk-breadcrumb__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: inherit;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .rk-breadcrumb__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .rk-breadcrumb__link {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+  }
+
+  .rk-breadcrumb__link:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+  }
+
+  .rk-breadcrumb__link:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .rk-breadcrumb__current {
+    color: inherit;
+    opacity: 0.65;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 40ch;
+  }
+
+  .rk-breadcrumb__separator {
+    opacity: 0.4;
+    user-select: none;
+  }
+{% endstylesheet %}
