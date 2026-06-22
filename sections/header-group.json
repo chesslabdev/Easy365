@@ -40,6 +40,18 @@
           },
           "blocks": {}
         },
+        "icon_w3LtCH": {
+          "type": "icon",
+          "name": "t:names.icon",
+          "settings": {
+            "icon": "price_tag",
+            "image_upload": "shopify://shop_images/1.svg",
+            "width": 52,
+            "link": "",
+            "open_in_new_tab": false
+          },
+          "blocks": {}
+        },
         "text_MgwEJD": {
           "type": "text",
           "settings": {
@@ -65,11 +77,25 @@
             "padding-inline-end": 0
           },
           "blocks": {}
+        },
+        "icon_Gz6t88": {
+          "type": "icon",
+          "name": "t:names.icon",
+          "settings": {
+            "icon": "price_tag",
+            "image_upload": "shopify://shop_images/1.svg",
+            "width": 52,
+            "link": "",
+            "open_in_new_tab": false
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "text_t3K97P",
-        "text_MgwEJD"
+        "icon_w3LtCH",
+        "text_MgwEJD",
+        "icon_Gz6t88"
       ],
       "name": "Marquee strip",
       "settings": {
