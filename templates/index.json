@@ -562,7 +562,7 @@
                     "max_width": "normal",
                     "alignment": "left",
                     "type_preset": "custom",
-                    "font_size_mobile": "2rem",
+                    "font_size_mobile": "1.5rem",
                     "font": "var(--font-body--family)",
                     "font_size": "4.5rem",
                     "line_height": "tight",
