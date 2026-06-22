@@ -641,7 +641,30 @@
             },
             "buy_buttons_custom_main": {
               "type": "buy-buttons-custom",
-              "settings": {},
+              "settings": {
+                "button_background": "#ff4c24",
+                "button_text_color": "#ffffff",
+                "border_radius": 8,
+                "border_radius_hover": 14,
+                "button_padding_block": 16,
+                "button_padding_inline": 26,
+                "font_size": 19,
+                "letter_spacing": -0.5,
+                "hide_icon": true,
+                "hover_liquid": true,
+                "hover_liquid_intensity": 16,
+                "show_texture": true,
+                "texture_opacity": 18,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "custom_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
               "blocks": {
                 "buy_buttons_eYQEYi": {
                   "type": "buy-buttons",
@@ -680,7 +703,9 @@
                   "block_order": []
                 }
               },
-              "block_order": ["buy_buttons_eYQEYi"]
+              "block_order": [
+                "buy_buttons_eYQEYi"
+              ]
             },
             "video_story_HVEMQk": {
               "type": "video-story",
@@ -1519,6 +1544,7 @@
       "name": "Seção | Produto",
       "settings": {
         "content_width": "content-center-aligned",
+        "section_page_width": "normal",
         "desktop_media_position": "left",
         "equal_columns": false,
         "limit_details_width": false,
@@ -1691,6 +1717,7 @@
         "head_qty": "QTD POR DOSE",
         "head_vd": "%VD*",
         "footnote": "* Valores diários (VD) com base em uma dieta de 2.000 kcal. Seus valores podem ser diferentes.",
+        "table_max_width": 900,
         "bg_color": "#1a388d",
         "accent_color": "#ff4c24",
         "content_direction": "column",
