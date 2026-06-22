@@ -1247,218 +1247,24 @@
                     "group_JpzPGg"
                   ]
                 },
-                "tab-3": {
-                  "type": "_tab",
-                  "settings": {
-                    "label": "Como usar"
-                  },
-                  "blocks": {
-                    "heading": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>Dois gramas, um ritual de recuperação.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "h2",
-                        "font_size_mobile": "",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    },
-                    "body-1": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>Adicione 2g — uma colher dosadora rasa — em 200ml de água bem gelada e mexa por alguns segundos até dissolver por completo. Sem grumos, sem espuma. Também cai bem em sucos, smoothies ou na garrafa do pré-treino.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font_size_mobile": "",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    },
-                    "body-2": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>Uma dose por dia já entrega seus 63mg de Magnésio Bisglicinato. Cada frasco de 50g rende 25 doses — cerca de um mês de uso contínuo. É a constância que transforma o squeeze em ritual.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font_size_mobile": "",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    },
-                    "callout": {
-                      "type": "group",
-                      "settings": {
-                        "content_direction": "column",
-                        "vertical_on_mobile": true,
-                        "horizontal_alignment": "flex-start",
-                        "vertical_alignment": "center",
-                        "align_baseline": false,
-                        "horizontal_alignment_flex_direction_column": "flex-start",
-                        "vertical_alignment_flex_direction_column": "center",
-                        "gap": 12,
-                        "width": "fill",
-                        "custom_width": 100,
-                        "width_mobile": "fill",
-                        "custom_width_mobile": 100,
-                        "height": "fit",
-                        "custom_height": 100,
-                        "inherit_color_scheme": false,
-                        "color_scheme": "scheme-2",
-                        "background_media": "none",
-                        "video_position": "cover",
-                        "background_image_position": "cover",
-                        "border": "none",
-                        "border_width": 1,
-                        "border_opacity": 100,
-                        "border_radius": 14,
-                        "toggle_overlay": false,
-                        "overlay_color": "#00000026",
-                        "overlay_style": "solid",
-                        "gradient_direction": "to top",
-                        "link": "",
-                        "open_in_new_tab": false,
-                        "placeholder": "",
-                        "padding-block-start": 24,
-                        "padding-block-end": 24,
-                        "padding-inline-start": 24,
-                        "padding-inline-end": 24,
-                        "custom_mobile_padding": false,
-                        "padding-block-start-mobile": 0,
-                        "padding-block-end-mobile": 0,
-                        "padding-inline-start-mobile": 0,
-                        "padding-inline-end-mobile": 0
-                      },
-                      "blocks": {
-                        "kicker": {
-                          "type": "text",
-                          "settings": {
-                            "text": "<p>MOMENTO IDEAL</p>",
-                            "width": "100%",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "paragraph",
-                            "font_size_mobile": "",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        },
-                        "tip": {
-                          "type": "text",
-                          "settings": {
-                            "text": "<p>Após o treino, para repor o magnésio; ou 30 a 60 min antes de dormir, para apoiar o sono profundo e a recuperação noturna.</p>",
-                            "width": "100%",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "h4",
-                            "font_size_mobile": "",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        }
-                      },
-                      "block_order": [
-                        "kicker",
-                        "tip"
-                      ]
-                    }
-                  },
-                  "block_order": [
-                    "heading",
-                    "body-1",
-                    "body-2",
-                    "callout"
-                  ]
-                },
-                "tab-4": {
+                "tab_4mfApF": {
                   "type": "_tab",
                   "settings": {
                     "label": "Envio & Trocas"
                   },
                   "blocks": {
-                    "heading": {
+                    "text_JV8mfb": {
                       "type": "text",
                       "settings": {
-                        "text": "<p>Chega rápido, troca fácil e sem letra miúda.</p>",
+                        "text": "<p><strong>Chega rápido, troca fácil e sem letra miúda.</strong></p>",
                         "width": "100%",
                         "max_width": "normal",
                         "alignment": "left",
-                        "type_preset": "h2",
+                        "type_preset": "custom",
                         "font_size_mobile": "",
                         "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
+                        "font_size": "2.5rem",
+                        "line_height": "tight",
                         "letter_spacing": "normal",
                         "case": "none",
                         "wrap": "pretty",
@@ -1473,14 +1279,14 @@
                       },
                       "blocks": {}
                     },
-                    "body-1": {
+                    "text_WNqAfC": {
                       "type": "text",
                       "settings": {
                         "text": "<p>Pedidos confirmados até as 14h saem no mesmo dia útil. Enviamos para todo o Brasil com código de rastreio: capitais em 2 a 4 dias úteis e demais regiões em 5 a 9 dias úteis. Frete grátis acima de R$199.</p>",
                         "width": "100%",
                         "max_width": "normal",
                         "alignment": "left",
-                        "type_preset": "rte",
+                        "type_preset": "custom",
                         "font_size_mobile": "",
                         "font": "var(--font-body--family)",
                         "font_size": "1rem",
@@ -1499,14 +1305,14 @@
                       },
                       "blocks": {}
                     },
-                    "body-2": {
+                    "text_ib4JtB": {
                       "type": "text",
                       "settings": {
                         "text": "<p>Não curtiu? Você tem até 7 dias corridos após o recebimento para solicitar troca ou devolução, conforme o Código de Defesa do Consumidor. Produto lacrado garante reembolso integral; aberto, avaliamos caso a caso.</p>",
                         "width": "100%",
                         "max_width": "normal",
                         "alignment": "left",
-                        "type_preset": "rte",
+                        "type_preset": "custom",
                         "font_size_mobile": "",
                         "font": "var(--font-body--family)",
                         "font_size": "1rem",
@@ -1525,7 +1331,7 @@
                       },
                       "blocks": {}
                     },
-                    "callout": {
+                    "group_7zzdgG": {
                       "type": "group",
                       "settings": {
                         "content_direction": "column",
@@ -1535,7 +1341,7 @@
                         "align_baseline": false,
                         "horizontal_alignment_flex_direction_column": "flex-start",
                         "vertical_alignment_flex_direction_column": "center",
-                        "gap": 12,
+                        "gap": 5,
                         "width": "fill",
                         "custom_width": 100,
                         "width_mobile": "fill",
@@ -1543,7 +1349,7 @@
                         "height": "fit",
                         "custom_height": 100,
                         "inherit_color_scheme": false,
-                        "color_scheme": "scheme-2",
+                        "color_scheme": "scheme-25d95b1c-35af-4595-806d-07f7ca696f66",
                         "background_media": "none",
                         "video_position": "cover",
                         "background_image_position": "cover",
@@ -1569,7 +1375,7 @@
                         "padding-inline-end-mobile": 0
                       },
                       "blocks": {
-                        "kicker": {
+                        "text_4WrJQ8": {
                           "type": "text",
                           "settings": {
                             "text": "<p>NOSSA PROMESSA</p>",
@@ -1584,7 +1390,7 @@
                             "letter_spacing": "normal",
                             "case": "none",
                             "wrap": "pretty",
-                            "color": "var(--color-foreground)",
+                            "color": "var(--color-foreground-heading)",
                             "background": false,
                             "background_color": "#00000026",
                             "corner_radius": 0,
@@ -1595,17 +1401,17 @@
                           },
                           "blocks": {}
                         },
-                        "tip": {
+                        "text_aUHrAg": {
                           "type": "text",
                           "settings": {
                             "text": "<p>Se o lacre chegar violado ou o produto vier com qualquer defeito, reenviamos sem custo. É só falar com a gente em até 7 dias.</p>",
                             "width": "100%",
                             "max_width": "normal",
                             "alignment": "left",
-                            "type_preset": "h4",
+                            "type_preset": "custom",
                             "font_size_mobile": "",
                             "font": "var(--font-body--family)",
-                            "font_size": "1rem",
+                            "font_size": "1.5rem",
                             "line_height": "normal",
                             "letter_spacing": "normal",
                             "case": "none",
@@ -1623,16 +1429,16 @@
                         }
                       },
                       "block_order": [
-                        "kicker",
-                        "tip"
+                        "text_4WrJQ8",
+                        "text_aUHrAg"
                       ]
                     }
                   },
                   "block_order": [
-                    "heading",
-                    "body-1",
-                    "body-2",
-                    "callout"
+                    "text_JV8mfb",
+                    "text_WNqAfC",
+                    "text_ib4JtB",
+                    "group_7zzdgG"
                   ]
                 }
               },
@@ -1640,8 +1446,7 @@
                 "tab-1",
                 "tab_fDWz46",
                 "tab_4i3MfF",
-                "tab-3",
-                "tab-4"
+                "tab_4mfApF"
               ]
             }
           },
