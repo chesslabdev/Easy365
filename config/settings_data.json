@@ -219,7 +219,7 @@
           "secondary_button_hover_background": "#ffffff5c",
           "secondary_button_hover_text": "#000000cf",
           "secondary_button_hover_border": "#000000cf",
-          "input_background": "rgba(0,0,0,0)",
+          "input_background": "#FFFFFF7A",
           "input_text_color": "#000000cf",
           "input_border_color": "#000000cf",
           "input_hover_background": "#ffffff5c",
