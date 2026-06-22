@@ -319,7 +319,7 @@
             "text_XWFcMU": {
               "type": "text",
               "settings": {
-                "text": "<p>MARACUJÁ</p>",
+                "text": "<p>CUPUAÇU</p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -360,7 +360,7 @@
         "color_scheme": "scheme-3",
         "padding-block-start": 16,
         "padding-block-end": 16,
-        "gap_between_elements": 24
+        "gap_between_elements": 56
       }
     },
     "marquee_EG7D94": {
