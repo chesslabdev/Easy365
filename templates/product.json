@@ -862,7 +862,7 @@
                 "tab_fDWz46": {
                   "type": "_tab",
                   "settings": {
-                    "label": "Descrição"
+                    "label": "Ingredientes"
                   },
                   "blocks": {
                     "text_rUAErx": {
@@ -1053,20 +1053,46 @@
                     "group_cyrCXU"
                   ]
                 },
-                "tab-2": {
+                "tab_4i3MfF": {
                   "type": "_tab",
                   "settings": {
-                    "label": "Ingredientes"
+                    "label": "Como Usar"
                   },
                   "blocks": {
-                    "heading": {
+                    "text_6gJxk4": {
                       "type": "text",
                       "settings": {
-                        "text": "<p>Fórmula limpa, com função em cada grama.</p>",
+                        "text": "<p><strong>Dois gramas, um ritual de recuperação.</strong></p>",
                         "width": "100%",
                         "max_width": "normal",
                         "alignment": "left",
-                        "type_preset": "h2",
+                        "type_preset": "custom",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "2.5rem",
+                        "line_height": "tight",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "text_wbECYE": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Adicione 2g — uma colher dosadora rasa — em 200ml de água bem gelada e mexa por alguns segundos até dissolver por completo. Sem grumos, sem espuma. Também cai bem em sucos, smoothies ou na garrafa do pré-treino.</p>",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "custom",
                         "font_size_mobile": "",
                         "font": "var(--font-body--family)",
                         "font_size": "1rem",
@@ -1085,14 +1111,14 @@
                       },
                       "blocks": {}
                     },
-                    "body-1": {
+                    "text_emxjJr": {
                       "type": "text",
                       "settings": {
-                        "text": "<p>Composição enxuta e reconhecível: Magnésio Bisglicinato (mineral quelato de alta absorção), blend natural de frutas amarelas — maracujá, cupuaçu, maçã, banana, manga e pêssego — e um toque cítrico para equilibrar. Adoçado exclusivamente com Stevia.</p>",
+                        "text": "<p>Uma dose por dia já entrega seus 63mg de Magnésio Bisglicinato. Cada frasco de 50g rende 25 doses — cerca de um mês de uso contínuo. É a constância que transforma o squeeze em ritual.</p>",
                         "width": "100%",
                         "max_width": "normal",
                         "alignment": "left",
-                        "type_preset": "rte",
+                        "type_preset": "custom",
                         "font_size_mobile": "",
                         "font": "var(--font-body--family)",
                         "font_size": "1rem",
@@ -1111,33 +1137,7 @@
                       },
                       "blocks": {}
                     },
-                    "body-2": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>A cada dose de 2g você recebe 63mg de Magnésio Bisglicinato. Sem glúten, sem lactose, sem corante artificial e sem açúcar adicionado — nada de aromas sintéticos ou ingredientes que você não consegue pronunciar.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font_size_mobile": "",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    },
-                    "callout": {
+                    "group_JpzPGg": {
                       "type": "group",
                       "settings": {
                         "content_direction": "column",
@@ -1147,7 +1147,7 @@
                         "align_baseline": false,
                         "horizontal_alignment_flex_direction_column": "flex-start",
                         "vertical_alignment_flex_direction_column": "center",
-                        "gap": 12,
+                        "gap": 5,
                         "width": "fill",
                         "custom_width": 100,
                         "width_mobile": "fill",
@@ -1155,7 +1155,7 @@
                         "height": "fit",
                         "custom_height": 100,
                         "inherit_color_scheme": false,
-                        "color_scheme": "scheme-2",
+                        "color_scheme": "scheme-25d95b1c-35af-4595-806d-07f7ca696f66",
                         "background_media": "none",
                         "video_position": "cover",
                         "background_image_position": "cover",
@@ -1181,10 +1181,10 @@
                         "padding-inline-end-mobile": 0
                       },
                       "blocks": {
-                        "kicker": {
+                        "text_P6KipG": {
                           "type": "text",
                           "settings": {
-                            "text": "<p>LIVRE DE</p>",
+                            "text": "<p>MOMENTO IDEAL</p>",
                             "width": "100%",
                             "max_width": "normal",
                             "alignment": "left",
@@ -1196,7 +1196,7 @@
                             "letter_spacing": "normal",
                             "case": "none",
                             "wrap": "pretty",
-                            "color": "var(--color-foreground)",
+                            "color": "var(--color-foreground-heading)",
                             "background": false,
                             "background_color": "#00000026",
                             "corner_radius": 0,
@@ -1207,17 +1207,17 @@
                           },
                           "blocks": {}
                         },
-                        "tip": {
+                        "text_jd4dbG": {
                           "type": "text",
                           "settings": {
-                            "text": "<p>Glúten · Lactose · Açúcar adicionado · Corante artificial · Aroma sintético. Só o que o seu corpo reconhece.</p>",
+                            "text": "<p>Após o treino, para repor o magnésio; ou 30 a 60 min antes de dormir, para apoiar o sono profundo e a recuperação noturna.</p>",
                             "width": "100%",
                             "max_width": "normal",
                             "alignment": "left",
-                            "type_preset": "h4",
+                            "type_preset": "custom",
                             "font_size_mobile": "",
                             "font": "var(--font-body--family)",
-                            "font_size": "1rem",
+                            "font_size": "1.5rem",
                             "line_height": "normal",
                             "letter_spacing": "normal",
                             "case": "none",
@@ -1235,16 +1235,16 @@
                         }
                       },
                       "block_order": [
-                        "kicker",
-                        "tip"
+                        "text_P6KipG",
+                        "text_jd4dbG"
                       ]
                     }
                   },
                   "block_order": [
-                    "heading",
-                    "body-1",
-                    "body-2",
-                    "callout"
+                    "text_6gJxk4",
+                    "text_wbECYE",
+                    "text_emxjJr",
+                    "group_JpzPGg"
                   ]
                 },
                 "tab-3": {
@@ -1639,7 +1639,7 @@
               "block_order": [
                 "tab-1",
                 "tab_fDWz46",
-                "tab-2",
+                "tab_4i3MfF",
                 "tab-3",
                 "tab-4"
               ]
