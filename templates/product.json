@@ -625,30 +625,12 @@
               },
               "block_order": []
             },
-            "text_aEtTtq": {
-              "type": "text",
-              "name": "Product description",
+            "video_story_HVEMQk": {
+              "type": "video-story",
+              "name": "Video Stories",
               "settings": {
-                "text": "{{ closest.product.description }}",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font_size_mobile": "",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "heading": "Storys da Galera",
+                "thumb_size": "lg"
               },
               "blocks": {}
             },
@@ -1472,7 +1454,7 @@
             "group_icgrde",
             "variant_card_picker_taGJGT",
             "buy_buttons_eYQEYi",
-            "text_aEtTtq",
+            "video_story_HVEMQk",
             "tabs_pdp"
           ]
         }
