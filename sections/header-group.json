@@ -132,7 +132,7 @@
         "show_buy_button": true,
         "buy_button_label": "COMPRE AQUI",
         "buy_button_link": "",
-        "bg_color": "#1a388d",
+        "bg_color": "#1A388DE3",
         "bg_color_float": "#1a388db8",
         "blur": 6,
         "text_color": "#fefffc",
