@@ -71,6 +71,7 @@
   --nt-on-accent: #fefffc;
   --nt-font: var(--font-body--family);
   --nt-overlap: clamp(36px, 6vw, 100px);
+  --nt-font-label: var(--font-heading--family);
 
   width: 100%;
   display: flex;
@@ -129,7 +130,7 @@
 .nt__label {
   margin: 0;
   color: var(--nt-accent, #ff4c24);
-  font-family: ui-monospace, "Courier New", monospace;
+  font-family: var(--nt-font-label);
   font-size: clamp(10px, 1vw, 12px);
   letter-spacing: 0.14em;
   text-transform: uppercase;
