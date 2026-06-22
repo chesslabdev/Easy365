@@ -16,7 +16,7 @@
           "type": "rk-breadcrumb",
           "name": "Breadcrumb",
           "settings": {
-            "home_label": "Início",
+            "home_label": "INICIO",
             "separator": "chevron",
             "show_current": true,
             "padding-block-start": 0,
