@@ -1815,8 +1815,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding-block-start": 72,
+        "padding-block-end": 72
       }
     },
     "ritual_highlight_pdp": {
