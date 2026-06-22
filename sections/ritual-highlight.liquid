@@ -27,7 +27,7 @@
 
       {%- if s.heading != blank or s.heading_accent != blank -%}
         <h2 class="ritual__heading">
-          {%- if s.heading != blank -%}<span class="ritual__heading-main">{{ s.heading }}</span>{%- endif -%}
+          {%- if s.heading != blank -%}<span class="ritual__heading-main">{{ s.heading }}<br></span>{%- endif -%}
           {%- if s.heading_accent != blank -%} <span class="ritual__heading-accent">{{ s.heading_accent }}</span>{%- endif -%}
         </h2>
       {%- endif -%}
