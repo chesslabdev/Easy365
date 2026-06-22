@@ -9,6 +9,61 @@
  */
 {
   "sections": {
+    "section_d9cVmL": {
+      "type": "section",
+      "blocks": {
+        "rk_breadcrumb_ygGhQU": {
+          "type": "rk-breadcrumb",
+          "name": "Breadcrumb",
+          "settings": {
+            "home_label": "Início",
+            "separator": "chevron",
+            "show_current": true,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "custom_mobile_padding": false,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "rk_breadcrumb_ygGhQU"
+      ],
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 12,
+        "padding-block-end": 12
+      }
+    },
     "main": {
       "type": "product-information",
       "blocks": {
@@ -25,6 +80,7 @@
             "slideshow_mobile_controls_style": "dots",
             "thumbnail_position": "right",
             "thumbnail_width": 44,
+            "thumbnail_radius": 0,
             "aspect_ratio": "adapt",
             "constrain_to_viewport": true,
             "media_fit": "contain",
@@ -98,11 +154,18 @@
                 "overlay_color": "#00000026",
                 "overlay_style": "solid",
                 "gradient_direction": "to top",
+                "link": "",
                 "open_in_new_tab": false,
+                "placeholder": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "custom_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {
                 "text_xrnftG": {
@@ -114,6 +177,7 @@
                     "max_width": "normal",
                     "alignment": "left",
                     "type_preset": "h3",
+                    "font_size_mobile": "",
                     "font": "var(--font-primary--family)",
                     "font_size": "",
                     "line_height": "normal",
@@ -138,6 +202,7 @@
                     "show_installments": false,
                     "show_tax_info": false,
                     "type_preset": "paragraph",
+                    "font_size_mobile": "",
                     "width": "100%",
                     "alignment": "left",
                     "font": "var(--font-body--family)",
@@ -189,6 +254,7 @@
               "settings": {
                 "stacking": true,
                 "show_pickup_availability": false,
+                "gift_card_form": true,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -227,6 +293,7 @@
                 "max_width": "normal",
                 "alignment": "left",
                 "type_preset": "rte",
+                "font_size_mobile": "",
                 "font": "var(--font-primary--family)",
                 "font_size": "",
                 "line_height": "normal",
@@ -253,12 +320,28 @@
                 "unit_label": "doses",
                 "inherit_color_scheme": false,
                 "color_scheme": "scheme-1",
+                "track_color": "",
+                "progress_color": "",
                 "value_font_size": 24,
                 "label_font_size": 11,
                 "diameter": 130,
                 "stroke_width": 10,
                 "duration_ms": 1500,
-                "border_radius": 200
+                "border": "none",
+                "border_width": 0,
+                "border_opacity": 100,
+                "border_radius": 200,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "custom_mobile_size": false,
+                "diameter_mobile": 110,
+                "custom_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {}
             },
@@ -266,7 +349,31 @@
               "type": "tabs",
               "name": "Tabs",
               "settings": {
-                "color_scheme": "scheme-1"
+                "tablist_label": "Informações do produto",
+                "inherit_color_scheme": false,
+                "color_scheme": "scheme-1",
+                "active_color_scheme": "",
+                "tab_alignment": "flex-start",
+                "type_preset": "paragraph",
+                "label_font_size": 12,
+                "label_tracking": 12,
+                "tab_gap": 0,
+                "section_gap": 24,
+                "panel_gap": 24,
+                "border": "solid",
+                "border_width": 1,
+                "border_opacity": 100,
+                "pill_radius": 1000,
+                "tab_radius": 1000,
+                "padding-block-start": 4,
+                "padding-block-end": 4,
+                "padding-inline-start": 4,
+                "padding-inline-end": 4,
+                "custom_mobile_padding": false,
+                "padding-block-start-mobile": 4,
+                "padding-block-end-mobile": 4,
+                "padding-inline-start-mobile": 4,
+                "padding-inline-end-mobile": 4
               },
               "blocks": {
                 "tab-1": {
@@ -280,35 +387,121 @@
                       "settings": {
                         "text": "<p>Sabor Tropic Bloom, função Magnésio Bisglicinato.</p>",
                         "width": "100%",
-                        "type_preset": "h2"
-                      }
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "h2",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "body-1": {
                       "type": "text",
                       "settings": {
                         "text": "<p>Um squeeze funcional com perfil tropical de frutas amarelas (maracujá, cupuaçu, maçã, banana, manga, pêssego) e fundo cítrico. Dose padrão de 2g entrega 63mg de Magnésio Bisglicinato — forma de alta biodisponibilidade absorvida pelo intestino sem desconforto gástrico — para apoiar a recuperação muscular e a qualidade do sono profundo.</p>",
-                        "width": "100%"
-                      }
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "body-2": {
                       "type": "text",
                       "settings": {
                         "text": "<p>Adoçado naturalmente com Stevia. Sem glúten, sem corante artificial, sem açúcar adicionado. Cada frasco de 50g rende 25 doses — aproximadamente um mês de ritual diário. Embalagem reciclável feita de PET monomaterial com tampa flip-top hermética.</p>",
-                        "width": "100%"
-                      }
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "callout": {
                       "type": "group",
                       "settings": {
                         "content_direction": "column",
+                        "vertical_on_mobile": true,
+                        "horizontal_alignment": "flex-start",
+                        "vertical_alignment": "center",
+                        "align_baseline": false,
+                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "vertical_alignment_flex_direction_column": "center",
                         "gap": 12,
+                        "width": "fill",
+                        "custom_width": 100,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "custom_height": 100,
                         "inherit_color_scheme": false,
                         "color_scheme": "scheme-2",
+                        "background_media": "none",
+                        "video_position": "cover",
+                        "background_image_position": "cover",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
                         "border_radius": 14,
+                        "toggle_overlay": false,
+                        "overlay_color": "#00000026",
+                        "overlay_style": "solid",
+                        "gradient_direction": "to top",
+                        "link": "",
+                        "open_in_new_tab": false,
+                        "placeholder": "",
                         "padding-block-start": 24,
                         "padding-block-end": 24,
                         "padding-inline-start": 24,
-                        "padding-inline-end": 24
+                        "padding-inline-end": 24,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 0,
+                        "padding-block-end-mobile": 0,
+                        "padding-inline-start-mobile": 0,
+                        "padding-inline-end-mobile": 0
                       },
                       "blocks": {
                         "kicker": {
@@ -316,16 +509,52 @@
                           "settings": {
                             "text": "<p>DICA DO TIME</p>",
                             "width": "100%",
-                            "type_preset": "paragraph"
-                          }
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "paragraph",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
                         },
                         "tip": {
                           "type": "text",
                           "settings": {
                             "text": "<p>Misture 2g em 200ml de água gelada após o treino ou 30-60min antes de dormir. Dose pensada para o ritual de recuperação noturna.</p>",
                             "width": "100%",
-                            "type_preset": "h4"
-                          }
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "h4",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
                         }
                       },
                       "block_order": [
@@ -352,35 +581,121 @@
                       "settings": {
                         "text": "<p>Fórmula limpa, com função em cada grama.</p>",
                         "width": "100%",
-                        "type_preset": "h2"
-                      }
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "h2",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "body-1": {
                       "type": "text",
                       "settings": {
                         "text": "<p>Composição enxuta e reconhecível: Magnésio Bisglicinato (mineral quelato de alta absorção), blend natural de frutas amarelas — maracujá, cupuaçu, maçã, banana, manga e pêssego — e um toque cítrico para equilibrar. Adoçado exclusivamente com Stevia.</p>",
-                        "width": "100%"
-                      }
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "body-2": {
                       "type": "text",
                       "settings": {
                         "text": "<p>A cada dose de 2g você recebe 63mg de Magnésio Bisglicinato. Sem glúten, sem lactose, sem corante artificial e sem açúcar adicionado — nada de aromas sintéticos ou ingredientes que você não consegue pronunciar.</p>",
-                        "width": "100%"
-                      }
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "callout": {
                       "type": "group",
                       "settings": {
                         "content_direction": "column",
+                        "vertical_on_mobile": true,
+                        "horizontal_alignment": "flex-start",
+                        "vertical_alignment": "center",
+                        "align_baseline": false,
+                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "vertical_alignment_flex_direction_column": "center",
                         "gap": 12,
+                        "width": "fill",
+                        "custom_width": 100,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "custom_height": 100,
                         "inherit_color_scheme": false,
                         "color_scheme": "scheme-2",
+                        "background_media": "none",
+                        "video_position": "cover",
+                        "background_image_position": "cover",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
                         "border_radius": 14,
+                        "toggle_overlay": false,
+                        "overlay_color": "#00000026",
+                        "overlay_style": "solid",
+                        "gradient_direction": "to top",
+                        "link": "",
+                        "open_in_new_tab": false,
+                        "placeholder": "",
                         "padding-block-start": 24,
                         "padding-block-end": 24,
                         "padding-inline-start": 24,
-                        "padding-inline-end": 24
+                        "padding-inline-end": 24,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 0,
+                        "padding-block-end-mobile": 0,
+                        "padding-inline-start-mobile": 0,
+                        "padding-inline-end-mobile": 0
                       },
                       "blocks": {
                         "kicker": {
@@ -388,16 +703,52 @@
                           "settings": {
                             "text": "<p>LIVRE DE</p>",
                             "width": "100%",
-                            "type_preset": "paragraph"
-                          }
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "paragraph",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
                         },
                         "tip": {
                           "type": "text",
                           "settings": {
                             "text": "<p>Glúten · Lactose · Açúcar adicionado · Corante artificial · Aroma sintético. Só o que o seu corpo reconhece.</p>",
                             "width": "100%",
-                            "type_preset": "h4"
-                          }
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "h4",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
                         }
                       },
                       "block_order": [
@@ -424,35 +775,121 @@
                       "settings": {
                         "text": "<p>Dois gramas, um ritual de recuperação.</p>",
                         "width": "100%",
-                        "type_preset": "h2"
-                      }
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "h2",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "body-1": {
                       "type": "text",
                       "settings": {
                         "text": "<p>Adicione 2g — uma colher dosadora rasa — em 200ml de água bem gelada e mexa por alguns segundos até dissolver por completo. Sem grumos, sem espuma. Também cai bem em sucos, smoothies ou na garrafa do pré-treino.</p>",
-                        "width": "100%"
-                      }
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "body-2": {
                       "type": "text",
                       "settings": {
                         "text": "<p>Uma dose por dia já entrega seus 63mg de Magnésio Bisglicinato. Cada frasco de 50g rende 25 doses — cerca de um mês de uso contínuo. É a constância que transforma o squeeze em ritual.</p>",
-                        "width": "100%"
-                      }
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "callout": {
                       "type": "group",
                       "settings": {
                         "content_direction": "column",
+                        "vertical_on_mobile": true,
+                        "horizontal_alignment": "flex-start",
+                        "vertical_alignment": "center",
+                        "align_baseline": false,
+                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "vertical_alignment_flex_direction_column": "center",
                         "gap": 12,
+                        "width": "fill",
+                        "custom_width": 100,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "custom_height": 100,
                         "inherit_color_scheme": false,
                         "color_scheme": "scheme-2",
+                        "background_media": "none",
+                        "video_position": "cover",
+                        "background_image_position": "cover",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
                         "border_radius": 14,
+                        "toggle_overlay": false,
+                        "overlay_color": "#00000026",
+                        "overlay_style": "solid",
+                        "gradient_direction": "to top",
+                        "link": "",
+                        "open_in_new_tab": false,
+                        "placeholder": "",
                         "padding-block-start": 24,
                         "padding-block-end": 24,
                         "padding-inline-start": 24,
-                        "padding-inline-end": 24
+                        "padding-inline-end": 24,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 0,
+                        "padding-block-end-mobile": 0,
+                        "padding-inline-start-mobile": 0,
+                        "padding-inline-end-mobile": 0
                       },
                       "blocks": {
                         "kicker": {
@@ -460,16 +897,52 @@
                           "settings": {
                             "text": "<p>MOMENTO IDEAL</p>",
                             "width": "100%",
-                            "type_preset": "paragraph"
-                          }
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "paragraph",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
                         },
                         "tip": {
                           "type": "text",
                           "settings": {
                             "text": "<p>Após o treino, para repor o magnésio; ou 30 a 60 min antes de dormir, para apoiar o sono profundo e a recuperação noturna.</p>",
                             "width": "100%",
-                            "type_preset": "h4"
-                          }
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "h4",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
                         }
                       },
                       "block_order": [
@@ -496,35 +969,121 @@
                       "settings": {
                         "text": "<p>Chega rápido, troca fácil e sem letra miúda.</p>",
                         "width": "100%",
-                        "type_preset": "h2"
-                      }
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "h2",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "body-1": {
                       "type": "text",
                       "settings": {
                         "text": "<p>Pedidos confirmados até as 14h saem no mesmo dia útil. Enviamos para todo o Brasil com código de rastreio: capitais em 2 a 4 dias úteis e demais regiões em 5 a 9 dias úteis. Frete grátis acima de R$199.</p>",
-                        "width": "100%"
-                      }
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "body-2": {
                       "type": "text",
                       "settings": {
                         "text": "<p>Não curtiu? Você tem até 7 dias corridos após o recebimento para solicitar troca ou devolução, conforme o Código de Defesa do Consumidor. Produto lacrado garante reembolso integral; aberto, avaliamos caso a caso.</p>",
-                        "width": "100%"
-                      }
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     },
                     "callout": {
                       "type": "group",
                       "settings": {
                         "content_direction": "column",
+                        "vertical_on_mobile": true,
+                        "horizontal_alignment": "flex-start",
+                        "vertical_alignment": "center",
+                        "align_baseline": false,
+                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "vertical_alignment_flex_direction_column": "center",
                         "gap": 12,
+                        "width": "fill",
+                        "custom_width": 100,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "custom_height": 100,
                         "inherit_color_scheme": false,
                         "color_scheme": "scheme-2",
+                        "background_media": "none",
+                        "video_position": "cover",
+                        "background_image_position": "cover",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
                         "border_radius": 14,
+                        "toggle_overlay": false,
+                        "overlay_color": "#00000026",
+                        "overlay_style": "solid",
+                        "gradient_direction": "to top",
+                        "link": "",
+                        "open_in_new_tab": false,
+                        "placeholder": "",
                         "padding-block-start": 24,
                         "padding-block-end": 24,
                         "padding-inline-start": 24,
-                        "padding-inline-end": 24
+                        "padding-inline-end": 24,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 0,
+                        "padding-block-end-mobile": 0,
+                        "padding-inline-start-mobile": 0,
+                        "padding-inline-end-mobile": 0
                       },
                       "blocks": {
                         "kicker": {
@@ -532,16 +1091,52 @@
                           "settings": {
                             "text": "<p>NOSSA PROMESSA</p>",
                             "width": "100%",
-                            "type_preset": "paragraph"
-                          }
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "paragraph",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
                         },
                         "tip": {
                           "type": "text",
                           "settings": {
                             "text": "<p>Se o lacre chegar violado ou o produto vier com qualquer defeito, reenviamos sem custo. É só falar com a gente em até 7 dias.</p>",
                             "width": "100%",
-                            "type_preset": "h4"
-                          }
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "h4",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
                         }
                       },
                       "block_order": [
@@ -584,6 +1179,7 @@
         "equal_columns": false,
         "limit_details_width": false,
         "gap": 48,
+        "enable_sticky_add_to_cart": true,
         "color_scheme": "",
         "padding-block-start": 0,
         "padding-block-end": 0
@@ -593,14 +1189,41 @@
       "type": "whats-inside",
       "name": "Seção | Tudo o que entra",
       "settings": {
+        "heading": "Tudo o que entra no copo.",
+        "label": "POR PORÇÃO · 2G",
+        "accent_color": "#ff4c24",
+        "a_value": "63",
+        "a_unit": "mg",
+        "a_title": "Magnésio Bisglicinato",
+        "a_desc": "Recuperação muscular + sono profundo",
+        "a_color": "#ff4c24",
+        "b_value": "5",
+        "b_unit": "tipos",
+        "b_title": "Eletrólitos",
+        "b_desc": "Na, K, Ca, Mg, Zn em dose funcional",
+        "b_color": "#1a388d",
+        "fruits": "Maracujá, Cupuaçu, Maçã",
+        "effects": "Relaxamento, Recuperação, Intestino",
+        "marquee_speed_factor": 25,
+        "fade_color": "#fefffc",
         "content_direction": "column",
         "horizontal_alignment_flex_direction_column": "center",
         "gap": 0,
         "section_width": "page-width",
         "section_height": "",
+        "section_height_custom": 50,
         "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
         "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
         "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
         "padding-block-start": 48,
         "padding-block-end": 48
       }
@@ -614,7 +1237,8 @@
             "name": "Valor energético",
             "qty": "12 kcal",
             "vd": "0,6%"
-          }
+          },
+          "blocks": {}
         },
         "row-2": {
           "type": "_nutritional-row",
@@ -622,7 +1246,8 @@
             "name": "Carboidratos",
             "qty": "0,8 g",
             "vd": "0,3%"
-          }
+          },
+          "blocks": {}
         },
         "row-3": {
           "type": "_nutritional-row",
@@ -630,7 +1255,8 @@
             "name": "└ dos quais açúcares",
             "qty": "0 g",
             "vd": "—"
-          }
+          },
+          "blocks": {}
         },
         "row-4": {
           "type": "_nutritional-row",
@@ -638,7 +1264,8 @@
             "name": "Proteínas",
             "qty": "0 g",
             "vd": "—"
-          }
+          },
+          "blocks": {}
         },
         "row-5": {
           "type": "_nutritional-row",
@@ -646,7 +1273,8 @@
             "name": "Gorduras totais",
             "qty": "0 g",
             "vd": "—"
-          }
+          },
+          "blocks": {}
         },
         "row-6": {
           "type": "_nutritional-row",
@@ -654,7 +1282,8 @@
             "name": "Sódio",
             "qty": "210 mg",
             "vd": "9%"
-          }
+          },
+          "blocks": {}
         },
         "row-7": {
           "type": "_nutritional-row",
@@ -662,7 +1291,8 @@
             "name": "Magnésio Bisglicinato",
             "qty": "63 mg",
             "vd": "20%"
-          }
+          },
+          "blocks": {}
         },
         "row-8": {
           "type": "_nutritional-row",
@@ -670,7 +1300,8 @@
             "name": "Potássio",
             "qty": "120 mg",
             "vd": "3%"
-          }
+          },
+          "blocks": {}
         },
         "row-9": {
           "type": "_nutritional-row",
@@ -678,7 +1309,8 @@
             "name": "Cálcio",
             "qty": "80 mg",
             "vd": "8%"
-          }
+          },
+          "blocks": {}
         },
         "row-10": {
           "type": "_nutritional-row",
@@ -686,7 +1318,8 @@
             "name": "Zinco",
             "qty": "2,5 mg",
             "vd": "23%"
-          }
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -703,14 +1336,38 @@
       ],
       "name": "Seção | Tabela nutricional",
       "settings": {
+        "banner_alt": "Pessoa preparando o Eazy",
+        "label": "TABELA NUTRICIONAL",
+        "heading": "Sem rodeios.\nSem letra miúda.",
+        "description": "Os valores abaixo correspondem a uma porção de 2g (1 squeeze) em 200ml de água. Cada frasco rende 25 doses.",
+        "kcal_value": "12",
+        "kcal_unit": "kcal",
+        "kcal_caption": "Valor energético por porção · ~0,6% VD",
+        "head_name": "NUTRIENTE",
+        "head_qty": "QTD POR DOSE",
+        "head_vd": "%VD*",
+        "footnote": "* Valores diários (VD) com base em uma dieta de 2.000 kcal. Seus valores podem ser diferentes.",
+        "bg_color": "#1a388d",
+        "accent_color": "#ff4c24",
         "content_direction": "column",
         "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
         "gap": 0,
         "section_width": "page-width",
         "section_height": "",
+        "section_height_custom": 50,
         "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
         "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
         "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
         "padding-block-start": 48,
         "padding-block-end": 48
       }
@@ -719,14 +1376,30 @@
       "type": "ritual-highlight",
       "name": "Seção | Bora dormir melhor",
       "settings": {
+        "eyebrow": "Pronto pro Ritual",
+        "heading": "Bora dormir melhor",
+        "heading_accent": "hoje à noite?",
+        "description": "Um squeeze, 25 doses, um mês inteiro de recuperação no piloto automático. Sem caixa, sem sachê, sem desperdício.",
+        "bg_color": "#1a388d",
+        "accent_color": "#ff4c24",
         "content_direction": "column",
         "horizontal_alignment_flex_direction_column": "center",
         "gap": 0,
         "section_width": "page-width",
         "section_height": "",
+        "section_height_custom": 50,
         "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
         "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
         "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
         "padding-block-start": 48,
         "padding-block-end": 48
       }
@@ -734,47 +1407,37 @@
     "faq_pdp": {
       "type": "faq",
       "blocks": {
-        "static-header": {
-          "type": "group",
-          "name": "Conteúdo Global",
-          "static": true,
-          "settings": {
-            "content_direction": "column",
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 8,
-            "width": "fill",
-            "inherit_color_scheme": true,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "heading": {
-              "type": "text",
-              "settings": {
-                "text": "<h2>Perguntas frequentes</h2>",
-                "width": "100%",
-                "alignment": "center",
-                "type_preset": "h2"
-              }
-            }
-          },
-          "block_order": [
-            "heading"
-          ]
-        },
         "faq": {
           "type": "faq",
           "name": "Conteúdo Global",
           "settings": {
             "show_numbers": true,
             "type_preset": "h5",
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "color_accent": "",
+            "color_card_border": "",
+            "color_card_bg": "",
+            "color_question": "",
+            "color_answer": "",
+            "color_toggle_bg": "",
+            "color_toggle_icon": "",
+            "color_toggle_icon_open": "",
+            "color_toggle_border_open": "",
             "gap": 20,
             "border_radius": 22,
+            "card_border_width": 1,
             "card_padding_inline": 24,
-            "card_padding_block": 16
+            "card_padding_block": 16,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "custom_mobile_padding": false,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {
             "row-1": {
@@ -788,8 +1451,27 @@
                   "type": "text",
                   "settings": {
                     "text": "<p>Misture 2g (um aperto firme) em 200ml de água ou na sua bebida favorita após o treino ou antes de dormir. Um squeeze rende 25 doses — mais ou menos um mês de ritual diário.</p>",
-                    "width": "100%"
-                  }
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font_size_mobile": "",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -799,15 +1481,35 @@
             "row-2": {
               "type": "_faq-row",
               "settings": {
-                "heading": "Qual a melhor hora para tomar?"
+                "heading": "Qual a melhor hora para tomar?",
+                "open_by_default": false
               },
               "blocks": {
                 "text-1": {
                   "type": "text",
                   "settings": {
                     "text": "<p>Recomendamos 30 a 60 minutos antes de dormir, ou imediatamente após o treino noturno. O Magnésio Bisglicinato age na recuperação muscular e na qualidade do sono profundo.</p>",
-                    "width": "100%"
-                  }
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font_size_mobile": "",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -817,15 +1519,35 @@
             "row-3": {
               "type": "_faq-row",
               "settings": {
-                "heading": "Posso tomar todos os dias?"
+                "heading": "Posso tomar todos os dias?",
+                "open_by_default": false
               },
               "blocks": {
                 "text-1": {
                   "type": "text",
                   "settings": {
                     "text": "<p>Sim — é exatamente para isso. A fórmula foi pensada para uso diário, todos os 365 dias do ano. A dose padrão (2g/dia) está dentro da recomendação para adultos saudáveis.</p>",
-                    "width": "100%"
-                  }
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font_size_mobile": "",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -835,15 +1557,35 @@
             "row-4": {
               "type": "_faq-row",
               "settings": {
-                "heading": "Qual é o sabor?"
+                "heading": "Qual é o sabor?",
+                "open_by_default": false
               },
               "blocks": {
                 "text-1": {
                   "type": "text",
                   "settings": {
                     "text": "<p>Tropic Bloom — um mix de frutas amarelas (maracujá, cupuaçu, maçã, banana, manga, pêssego) com perfume cítrico e fundo doce. Adoçado naturalmente com Stevia.</p>",
-                    "width": "100%"
-                  }
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font_size_mobile": "",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -853,15 +1595,35 @@
             "row-5": {
               "type": "_faq-row",
               "settings": {
-                "heading": "Quanto tempo dura a entrega?"
+                "heading": "Quanto tempo dura a entrega?",
+                "open_by_default": false
               },
               "blocks": {
                 "text-1": {
                   "type": "text",
                   "settings": {
                     "text": "<p>Envio em 24h úteis a partir de São Paulo. Capital: 1-2 dias. Demais regiões: 3-7 dias úteis. Frete grátis para pedidos acima de R$ 120.</p>",
-                    "width": "100%"
-                  }
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font_size_mobile": "",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -876,6 +1638,83 @@
             "row-4",
             "row-5"
           ]
+        },
+        "static-header": {
+          "type": "group",
+          "name": "Conteúdo Global",
+          "static": true,
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "custom_mobile_padding": false,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Perguntas frequentes</h2>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "h2",
+                "font_size_mobile": "",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "heading"
+          ]
         }
       },
       "block_order": [
@@ -884,13 +1723,32 @@
       "name": "Seção | FAQ",
       "settings": {
         "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 40,
         "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
         "color_scheme": "scheme-1",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
         "padding-block-start": 64,
-        "padding-block-end": 64
+        "padding-block-end": 64,
+        "custom_mobile_padding": false,
+        "padding-block-start-mobile": 40,
+        "padding-block-end-mobile": 40
       }
     },
     "product_recommendations_qggXJq": {
@@ -905,6 +1763,7 @@
             "max_width": "normal",
             "alignment": "left",
             "type_preset": "h4",
+            "font_size_mobile": "",
             "font": "var(--font-primary--family)",
             "font_size": "",
             "line_height": "normal",
@@ -964,6 +1823,7 @@
                 "max_width": "normal",
                 "alignment": "left",
                 "type_preset": "rte",
+                "font_size_mobile": "",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -988,6 +1848,7 @@
                 "show_installments": false,
                 "show_tax_info": false,
                 "type_preset": "h6",
+                "font_size_mobile": "",
                 "width": "100%",
                 "alignment": "left",
                 "font": "var(--font-body--family)",
@@ -1036,6 +1897,7 @@
     }
   },
   "order": [
+    "section_d9cVmL",
     "main",
     "whats_inside_pdp",
     "nutritional_table_pdp",
