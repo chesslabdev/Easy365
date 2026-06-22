@@ -375,7 +375,7 @@
             "alignment": "left",
             "type_preset": "custom",
             "font_size_mobile": "",
-            "font": "var(--font-body--family)",
+            "font": "var(--font-heading--family)",
             "font_size": "1.5rem",
             "line_height": "tight",
             "letter_spacing": "tight",
@@ -401,7 +401,7 @@
             "alignment": "left",
             "type_preset": "custom",
             "font_size_mobile": "",
-            "font": "var(--font-body--family)",
+            "font": "var(--font-heading--family)",
             "font_size": "1.5rem",
             "line_height": "tight",
             "letter_spacing": "tight",
@@ -427,7 +427,7 @@
             "alignment": "left",
             "type_preset": "custom",
             "font_size_mobile": "",
-            "font": "var(--font-body--family)",
+            "font": "var(--font-heading--family)",
             "font_size": "1.5rem",
             "line_height": "tight",
             "letter_spacing": "tight",
@@ -456,7 +456,7 @@
         "color_scheme": "scheme-4",
         "padding-block-start": 16,
         "padding-block-end": 16,
-        "gap_between_elements": 24
+        "gap_between_elements": 56
       }
     },
     "section_ng6Jm6": {
