@@ -830,8 +830,8 @@
                       "name": "t:names.text",
                       "settings": {
                         "text": "<p>Copyright Eazy 365 - 00.000.000/0001-00 - 2026. Todos os direitos reservados.</p>",
-                        "width": "fit-content",
-                        "max_width": "normal",
+                        "width": "100%",
+                        "max_width": "none",
                         "alignment": "left",
                         "type_preset": "rte",
                         "font_size_mobile": "",
