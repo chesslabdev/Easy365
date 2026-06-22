@@ -505,18 +505,45 @@
                   },
                   "blocks": {}
                 },
+                "text_hKdgFD": {
+                  "type": "text",
+                  "name": "t:names.text",
+                  "settings": {
+                    "text": "<p>Hidratação funcional pensada para a rotina real.<br/>25 squeezes, um mês de ritual diário.</p>",
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "custom",
+                    "font_size_mobile": "",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1.25rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
                 "price_tVjtKg": {
                   "type": "price",
                   "settings": {
                     "show_sale_price_first": true,
                     "show_installments": false,
                     "show_tax_info": false,
-                    "type_preset": "paragraph",
-                    "font_size_mobile": "",
+                    "type_preset": "custom",
+                    "font_size_mobile": "1.25rem",
                     "width": "100%",
                     "alignment": "left",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
+                    "font": "var(--font-accent--family)",
+                    "font_size": "2.5rem",
                     "line_height": "normal",
                     "letter_spacing": "normal",
                     "case": "none",
@@ -533,6 +560,7 @@
                 "group_jhrzGU",
                 "text_MBbjtb",
                 "text_xrnftG",
+                "text_hKdgFD",
                 "price_tVjtKg"
               ]
             },
