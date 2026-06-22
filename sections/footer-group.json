@@ -74,7 +74,7 @@
             "open_in_new_tab": false,
             "placeholder": "",
             "padding-block-start": 80,
-            "padding-block-end": 80,
+            "padding-block-end": 24,
             "padding-inline-start": 100,
             "padding-inline-end": 100,
             "custom_mobile_padding": true,
@@ -824,7 +824,38 @@
                     "padding-inline-start-mobile": 0,
                     "padding-inline-end-mobile": 0
                   },
-                  "blocks": {}
+                  "blocks": {
+                    "text_FfQ6Xm": {
+                      "type": "text",
+                      "name": "t:names.text",
+                      "settings": {
+                        "text": "<p>Copyright Eazy 365 - 00.000.000/0001-00 - 2026. Todos os direitos reservados.</p>",
+                        "width": "fit-content",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_FfQ6Xm"
+                  ]
                 }
               },
               "block_order": [
