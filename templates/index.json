@@ -55,16 +55,17 @@
         "nutrient_label": "Magnésio Bisglicinato",
         "amount": "63mg",
         "amount_caption": "POR PORÇÃO",
-        "doses_value": 2,
-        "doses_max": 8,
+        "doses_value": 25,
+        "doses_max": 0,
         "doses_label": "doses",
+        "doses_duration": 2800,
         "headline": "Zero açúcar.",
         "subtext": "Adoçado com",
         "subtext_highlight": "Stevia",
         "color_left": "#ff4c24",
         "color_right": "#1a388d",
         "color_accent": "#ff4c24",
-        "color_earth": "#66392f",
+        "color_earth": "#FFFFFF",
         "color_on_accent": "#fefffc",
         "color_card": "#fefffc",
         "color_card_heading": "#ff4c24",
@@ -1033,9 +1034,9 @@
                         "max_width": "normal",
                         "alignment": "left",
                         "type_preset": "custom",
-                        "font_size_mobile": "",
+                        "font_size_mobile": "1rem",
                         "font": "var(--font-body--family)",
-                        "font_size": "1rem",
+                        "font_size": "1.5rem",
                         "line_height": "normal",
                         "letter_spacing": "normal",
                         "case": "none",
@@ -1056,11 +1057,177 @@
                     "text_wwdPX8",
                     "text_WyCmAV"
                   ]
+                },
+                "group_hpCfPB": {
+                  "type": "group",
+                  "name": "t:names.group",
+                  "settings": {
+                    "content_direction": "column",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "align_baseline": false,
+                    "horizontal_alignment_flex_direction_column": "flex-start",
+                    "vertical_alignment_flex_direction_column": "center",
+                    "gap": 12,
+                    "width": "fit-content",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "toggle_overlay": false,
+                    "overlay_color": "#00000026",
+                    "overlay_style": "solid",
+                    "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "placeholder": "",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0,
+                    "custom_mobile_padding": false,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
+                  },
+                  "blocks": {
+                    "buy_box_nR8eYx": {
+                      "type": "buy-box",
+                      "name": "Buy Box",
+                      "settings": {
+                        "product": "tropic-bloom",
+                        "gap": 16,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 0,
+                        "padding-block-end-mobile": 0,
+                        "padding-inline-start-mobile": 0,
+                        "padding-inline-end-mobile": 0
+                      },
+                      "blocks": {
+                        "variant_card_picker_9bVMYR": {
+                          "type": "variant-card-picker",
+                          "settings": {
+                            "unit_label": "",
+                            "sublabel_namespace": "custom",
+                            "sublabel_key": "pack_subtitle",
+                            "card_color": "#ffffff",
+                            "card_color_selected": "#f7f7f7",
+                            "text_color": "#000100",
+                            "muted_color": "#8a847a",
+                            "border_color": "#d9d4cb",
+                            "accent_color": "#ff4c24",
+                            "title_color": "",
+                            "border_radius": 14,
+                            "variant_style": "buttons",
+                            "show_swatches": false,
+                            "alignment": "left",
+                            "padding-block-start": 0,
+                            "padding-block-end": 8,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        },
+                        "buy_buttons_custom_8Lnd6f": {
+                          "type": "buy-buttons-custom",
+                          "settings": {
+                            "button_background": "#ff4c24",
+                            "button_text_color": "#ffffff",
+                            "border_radius": 8,
+                            "border_radius_hover": 14,
+                            "button_padding_block": 16,
+                            "button_padding_inline": 26,
+                            "font_size": 19,
+                            "letter_spacing": -0.5,
+                            "hide_icon": true,
+                            "hover_liquid": true,
+                            "hover_liquid_intensity": 16,
+                            "show_texture": true,
+                            "texture_opacity": 18,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0,
+                            "custom_mobile_padding": false,
+                            "padding-block-start-mobile": 0,
+                            "padding-block-end-mobile": 0,
+                            "padding-inline-start-mobile": 0,
+                            "padding-inline-end-mobile": 0
+                          },
+                          "blocks": {
+                            "buy_buttons_UXYrDX": {
+                              "type": "buy-buttons",
+                              "settings": {
+                                "stacking": true,
+                                "show_pickup_availability": false,
+                                "gift_card_form": true,
+                                "padding-block-start": 0,
+                                "padding-block-end": 0,
+                                "padding-inline-start": 0,
+                                "padding-inline-end": 0
+                              },
+                              "blocks": {
+                                "quantity": {
+                                  "type": "quantity",
+                                  "static": true,
+                                  "settings": {},
+                                  "blocks": {}
+                                },
+                                "add-to-cart": {
+                                  "type": "add-to-cart",
+                                  "static": true,
+                                  "settings": {
+                                    "style_class": "button"
+                                  },
+                                  "blocks": {}
+                                },
+                                "accelerated-checkout": {
+                                  "type": "accelerated-checkout",
+                                  "disabled": true,
+                                  "static": true,
+                                  "settings": {},
+                                  "blocks": {}
+                                }
+                              },
+                              "block_order": []
+                            }
+                          },
+                          "block_order": [
+                            "buy_buttons_UXYrDX"
+                          ]
+                        }
+                      },
+                      "block_order": [
+                        "variant_card_picker_9bVMYR",
+                        "buy_buttons_custom_8Lnd6f"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "buy_box_nR8eYx"
+                  ]
                 }
               },
               "block_order": [
                 "group_iByaF3",
-                "group_CmpMVn"
+                "group_CmpMVn",
+                "group_hpCfPB"
               ]
             }
           },
