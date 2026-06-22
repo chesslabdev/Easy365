@@ -822,7 +822,7 @@
                         "tip": {
                           "type": "text",
                           "settings": {
-                            "text": "<p>Misture 2g em 200ml de água gelada após o treino ou 30-60min antes de dormir. Dose pensada para o ritual de recuperação noturna.</p>",
+                            "text": "<p>Glúten · Lactose · Açúcar adicionado · Corante artificial · Aroma sintético. Só o que o seu corpo reconhece.</p>",
                             "width": "100%",
                             "max_width": "normal",
                             "alignment": "left",
@@ -857,6 +857,200 @@
                     "body-1",
                     "body-2",
                     "callout"
+                  ]
+                },
+                "tab_fDWz46": {
+                  "type": "_tab",
+                  "settings": {
+                    "label": "Descrição"
+                  },
+                  "blocks": {
+                    "text_rUAErx": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p><strong>Fórmula limpa, com função em cada grama.</strong></p>",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "2.5rem",
+                        "line_height": "tight",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "text_8ggT8X": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Composição enxuta e reconhecível: Magnésio Bisglicinato (mineral quelato de alta absorção), blend natural de frutas amarelas — maracujá, cupuaçu, maçã, banana, manga e pêssego — e um toque cítrico para equilibrar. Adoçado exclusivamente com Stevia.</p>",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "text_aN9NAW": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>A cada dose de 2g você recebe 63mg de Magnésio Bisglicinato. Sem glúten, sem lactose, sem corante artificial e sem açúcar adicionado — nada de aromas sintéticos ou ingredientes que você não consegue pronunciar.</p>",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font_size_mobile": "",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "group_cyrCXU": {
+                      "type": "group",
+                      "settings": {
+                        "content_direction": "column",
+                        "vertical_on_mobile": true,
+                        "horizontal_alignment": "flex-start",
+                        "vertical_alignment": "center",
+                        "align_baseline": false,
+                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "vertical_alignment_flex_direction_column": "center",
+                        "gap": 5,
+                        "width": "fill",
+                        "custom_width": 100,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "custom_height": 100,
+                        "inherit_color_scheme": false,
+                        "color_scheme": "scheme-25d95b1c-35af-4595-806d-07f7ca696f66",
+                        "background_media": "none",
+                        "video_position": "cover",
+                        "background_image_position": "cover",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 14,
+                        "toggle_overlay": false,
+                        "overlay_color": "#00000026",
+                        "overlay_style": "solid",
+                        "gradient_direction": "to top",
+                        "link": "",
+                        "open_in_new_tab": false,
+                        "placeholder": "",
+                        "padding-block-start": 24,
+                        "padding-block-end": 24,
+                        "padding-inline-start": 24,
+                        "padding-inline-end": 24,
+                        "custom_mobile_padding": false,
+                        "padding-block-start-mobile": 0,
+                        "padding-block-end-mobile": 0,
+                        "padding-inline-start-mobile": 0,
+                        "padding-inline-end-mobile": 0
+                      },
+                      "blocks": {
+                        "text_MVra6c": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>LIVRE DE</p>",
+                            "width": "100%",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "paragraph",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground-heading)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        },
+                        "text_MUjbeg": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Misture 2g em 200ml de água gelada após o treino ou 30-60min antes de dormir. Dose pensada para o ritual de recuperação noturna.</p>",
+                            "width": "100%",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "custom",
+                            "font_size_mobile": "",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1.5rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_MVra6c",
+                        "text_MUjbeg"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "text_rUAErx",
+                    "text_8ggT8X",
+                    "text_aN9NAW",
+                    "group_cyrCXU"
                   ]
                 },
                 "tab-2": {
@@ -1444,6 +1638,7 @@
               },
               "block_order": [
                 "tab-1",
+                "tab_fDWz46",
                 "tab-2",
                 "tab-3",
                 "tab-4"
