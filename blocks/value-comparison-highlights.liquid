@@ -61,6 +61,58 @@
 .vc-highlights__m { display: none; }
 
 /* =========================================================
+   CTA — duas camadas com crossfade
+   • Normal (::before): pílula reta.
+   • Hover/foco (::after): forma orgânica do Figma — máscara SVG
+     (viewBox 308×100) com topo/base curvando ~5px no centro +
+     cantos bezier generosos. A cor segue editável (--c-orange) e o
+     drop-shadow acompanha a camada visível.
+   ========================================================= */
+.vchd__cta,
+.vchm__cta {
+  position: relative;
+  isolation: isolate;
+  text-decoration: none;
+}
+.vchd__cta::before,
+.vchm__cta::before,
+.vchd__cta::after,
+.vchm__cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--c-orange);
+  transition: opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+/* camada normal — pílula reta */
+.vchd__cta::before,
+.vchm__cta::before { border-radius: 999px; }
+/* camada hover — forma orgânica ondulada (oculta por padrão) */
+.vchd__cta::after,
+.vchm__cta::after {
+  opacity: 0;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 308 100' preserveAspectRatio='none'%3E%3Cpath d='M66 0C110 0 110 5 154 5C198 5 198 0 242 0C286 0 308 0 308 50C308 100 286 100 242 100C198 100 198 95 154 95C110 95 110 100 66 100C22 100 0 100 0 50C0 0 22 0 66 0Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 308 100' preserveAspectRatio='none'%3E%3Cpath d='M66 0C110 0 110 5 154 5C198 5 198 0 242 0C286 0 308 0 308 50C308 100 286 100 242 100C198 100 198 95 154 95C110 95 110 100 66 100C22 100 0 100 0 50C0 0 22 0 66 0Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+/* troca de estado */
+.vchd__cta:hover::before,
+.vchd__cta:focus-visible::before,
+.vchm__cta:hover::before,
+.vchm__cta:focus-visible::before { opacity: 0; }
+.vchd__cta:hover::after,
+.vchd__cta:focus-visible::after,
+.vchm__cta:hover::after,
+.vchm__cta:focus-visible::after { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .vchd__cta::before,
+  .vchm__cta::before,
+  .vchd__cta::after,
+  .vchm__cta::after { transition: none; }
+}
+
+/* =========================================================
    DESKTOP — base 1248px → cqw (px / 12.48)
    ========================================================= */
 .vchd {
@@ -107,17 +159,14 @@
 
 .vchd__cta {
   flex: none;
-  width: 25.64cqw;
+  width: 24.679cqw;            /* 308px */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.2cqw;
-  padding: 1.923cqw 2.083cqw;
-  background: var(--c-orange);
-  border-radius: 999px;
-  text-decoration: none;
-  box-shadow: 0 0.16cqw 0.48cqw rgba(0, 0, 0, 0.12);
+  gap: 0.641cqw;               /* 8px (--sp-xs) */
+  padding: 1.603cqw 2.083cqw;  /* ~20px / 26px → altura ≈ 100px como no Figma */
+  filter: drop-shadow(0 0.16cqw 0.48cqw rgba(0, 0, 0, 0.12));
 }
 .vchd__cta-title {
   color: #fff;
@@ -198,13 +247,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5cqw;
+  gap: 2.073cqw;               /* 8px */
   padding: 4.145cqw;
   box-sizing: border-box;
-  background: var(--c-orange);
-  border-radius: 999px;
-  text-decoration: none;
-  box-shadow: 0 0.52cqw 1.55cqw rgba(0, 0, 0, 0.12);
+  filter: drop-shadow(0 0.52cqw 1.55cqw rgba(0, 0, 0, 0.12));
 }
 .vchm__cta-title {
   color: #fff;

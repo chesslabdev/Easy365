@@ -1,0 +1,220 @@
+{%- doc -%}
+  Buy box — a product-context provider that unites the variant cards
+  (`variant-card-picker`) and the styled add-to-cart (`buy-buttons-custom`) into
+  one stacked group, optionally bound to a specific product.
+
+  Mirrors the native `product-card` pattern: a `product` setting drives the
+  context, and children are rendered via `content_for 'blocks'`. When a product
+  is bound, it is injected as `closest.product` for the whole subtree (so the
+  native variant engine and buy-buttons resolve to it); when left empty, the
+  children inherit the page's product (`closest.product`), so the same block
+  works on a product page or on a home/landing page.
+
+  Children keep their own appearance settings — this block only owns the product
+  binding and the vertical layout (gap + padding).
+{%- enddoc -%}
+
+{%- liquid
+  assign s = block.settings
+
+  # Bound product wins; otherwise inherit the page product (closest.product).
+  # A single content_for 'blocks' is required — Shopify rejects duplicates — so
+  # we resolve the product first and always pass it through (re-asserting
+  # closest.product when unbound is a no-op, as in native product-information).
+  assign resolved_product = s.product
+  if resolved_product == blank
+    assign resolved_product = closest.product
+  endif
+
+  assign box_class = 'buy-box spacing-style'
+  if s.custom_mobile_padding
+    assign box_class = box_class | append: ' mobile-spacing-' | append: block.id
+  endif
+-%}
+
+<div
+  class="{{ box_class }}"
+  style="--bb-gap: {{ s.gap }}px; {% render 'spacing-style', settings: s %}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks', closest.product: resolved_product %}
+</div>
+
+{% render 'mobile-spacing', settings: s, id: block.id %}
+
+{% stylesheet %}
+  .buy-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--bb-gap, 16px);
+    width: 100%;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Buy Box",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Produto vinculado",
+      "info": "Deixe vazio para usar o produto da página (closest.product). Preencha para vincular um produto específico (ex.: em home/landing)."
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espaço entre os itens",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Espaçamento (padding)"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Superior",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Inferior",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Esquerda",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Direita",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_mobile_padding",
+      "label": "Espaçamento separado no mobile",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "Superior (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "Inferior (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Esquerda (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Direita (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Buy Box",
+      "category": "t:categories.product",
+      "blocks": {
+        "variants": {
+          "type": "variant-card-picker"
+        },
+        "buy": {
+          "type": "buy-buttons-custom",
+          "blocks": {
+            "buy-buttons": {
+              "type": "buy-buttons",
+              "settings": {
+                "stacking": true,
+                "show_pickup_availability": false,
+                "gift_card_form": true
+              },
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "static": true
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {
+                    "style_class": "button"
+                  }
+                },
+                "accelerated-checkout": {
+                  "type": "accelerated-checkout",
+                  "static": true
+                }
+              },
+              "block_order": []
+            }
+          },
+          "block_order": ["buy-buttons"]
+        }
+      },
+      "block_order": ["variants", "buy"]
+    }
+  ]
+}
+{% endschema %}

@@ -18,7 +18,7 @@
 -%}
 
 {%- capture children -%}
-  <div class="nt" style="--nt-bg: {{ s.bg_color }}; --nt-accent: {{ s.accent_color }};">
+  <div class="nt" style="--nt-bg: {{ s.bg_color }}; --nt-accent: {{ s.accent_color }}; --nt-table-max: {{ s.table_max_width | default: 900 }}px;">
     {%- comment -%} ===== Banner ===== {%- endcomment -%}
     <div class="nt__banner">
       {%- if s.banner_image != blank -%}
@@ -180,6 +180,11 @@
   --col-vd: clamp(48px, 6vw, 120px);
   --col-gap: clamp(8px, 1.5vw, 16px);
 
+  /* Limita a largura só da tabela e a encosta à direita da sua coluna. */
+  width: 100%;
+  max-width: var(--nt-table-max, 900px);
+  justify-self: end;
+
   background: linear-gradient(180deg, var(--nt-accent, #ff4c24) 0%, #fd927a 100%);
   border-radius: clamp(12px, 1.4vw, 14px);
   padding: clamp(20px, 2.5vw, 32px);
@@ -265,6 +270,7 @@
     { "type": "text", "id": "head_qty", "label": "Cabeçalho 2", "default": "QTD POR DOSE" },
     { "type": "text", "id": "head_vd", "label": "Cabeçalho 3", "default": "%VD*" },
     { "type": "textarea", "id": "footnote", "label": "Nota de rodapé", "default": "* Valores diários (VD) com base em uma dieta de 2.000 kcal. Seus valores podem ser diferentes." },
+    { "type": "range", "id": "table_max_width", "label": "Largura máx. da tabela", "info": "Limita só a tabela (alinhada à direita); o resto da seção não muda.", "min": 320, "max": 1200, "step": 10, "unit": "px", "default": 900 },
 
     { "type": "header", "content": "Cores do card" },
     { "type": "color", "id": "bg_color", "label": "Fundo do card", "default": "#1a388d" },
@@ -399,6 +405,7 @@
       "settings": {
         "content_direction": "column",
         "horizontal_alignment_flex_direction_column": "center",
+        "table_max_width": 900,
         "gap": 0,
         "section_width": "page-width",
         "section_height": "",

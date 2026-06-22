@@ -1,0 +1,124 @@
+{% doc %}
+  Installments (Parcelamento)
+
+  Calculates and renders the best installment plan from a price (in cents),
+  reading the global "Parcelamento" theme settings. Interest is compounded
+  monthly; the best plan is the largest number of installments whose value is
+  still ≥ the configured minimum.
+
+  @param {number} price - Price in cents to calculate installments from
+  @param {string} [custom_class] - Extra CSS classes appended to the wrapper
+  @param {boolean} [show_with_interest] - Show plans with interest (default: false → only interest-free)
+  @param {string} [interest_label_format] - "full" (sem juros / com juros) or "short" (s/ juros / c/ juros)
+
+  @example
+  {% render 'installments', price: product.selected_or_first_available_variant.price %}
+{% enddoc %}
+
+{%- if settings.installments_enabled -%}
+  {%- liquid
+    assign inst_max = settings.installments_max | default: 12
+    assign inst_no_interest = settings.installments_without_interest | default: 3
+    assign inst_min_value = settings.installments_min_value | default: '500' | plus: 0
+    assign interest_rate_raw = settings.installments_interest_rate | default: '2.99'
+    assign rate_decimal = interest_rate_raw | times: 0.01
+    assign rate_plus_one = 1.0 | plus: rate_decimal
+
+    if show_with_interest == true
+      assign with_interest = true
+    else
+      assign with_interest = false
+    endif
+
+    assign label_format = interest_label_format | default: 'full'
+
+    if with_interest
+      assign max_to_check = inst_max
+    else
+      assign max_to_check = inst_no_interest
+    endif
+
+    assign best_installments = 1
+    assign best_value = price
+    assign best_has_interest = false
+
+    for i in (1..max_to_check)
+      if i <= inst_no_interest
+        assign value = price | divided_by: i
+      else
+        assign compound = 1.0
+        for j in (1..i)
+          assign compound = compound | times: rate_plus_one
+        endfor
+        assign numerator = price | times: rate_decimal | times: compound
+        assign denominator = compound | minus: 1.0
+        assign value = numerator | divided_by: denominator | round: 0
+      endif
+
+      if value >= inst_min_value
+        assign best_installments = i
+        assign best_value = value
+        if i > inst_no_interest
+          assign best_has_interest = true
+        else
+          assign best_has_interest = false
+        endif
+      else
+        break
+      endif
+    endfor
+
+    assign formatted_value = best_value | money
+
+    if label_format == 'short'
+      if best_has_interest
+        assign interest_text = 'c/ juros'
+      else
+        assign interest_text = 's/ juros'
+      endif
+    else
+      if best_has_interest
+        assign interest_text = 'com juros'
+      else
+        assign interest_text = 'sem juros'
+      endif
+    endif
+  -%}
+
+  {%- if best_installments > 1 -%}
+    <span class="installments{% if custom_class %} {{ custom_class }}{% endif %}">
+      <span class="installments__value">{{ best_installments }}x</span>
+      de
+      <span class="installments__value">{{ formatted_value }}</span>
+      <span class="installments__interest">{{ interest_text }}</span>
+    </span>
+  {%- endif -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .installments {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25em;
+    font-size: var(--installments-size, var(--font-size--sm));
+    color: var(--installments-color, var(--color-foreground));
+    line-height: 1.3;
+  }
+
+  .installments__value {
+    font-weight: var(--installments-value-weight, 600);
+    color: var(--installments-value-color, inherit);
+  }
+
+  .installments__interest {
+    font-size: var(--installments-interest-size, var(--font-size--2xs));
+    color: var(--installments-interest-color, rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text, 0.6)));
+  }
+
+  @media screen and (max-width: 749px) {
+    .installments {
+      font-size: var(--installments-size-mobile, var(--installments-size, var(--font-size--sm)));
+    }
+  }
+{% endstylesheet %}

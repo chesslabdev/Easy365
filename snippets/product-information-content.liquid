@@ -74,7 +74,44 @@
     when 'content-full-width'
       assign content_width = 'full-width'
   endcase
+
+  # Per-section page width override — overrides the global page_width for this section only.
+  # Blank ('') means "inherit theme default" and emits no CSS (mirrors base.css width tokens).
+  case settings.section_page_width
+    when 'narrow'
+      assign section_page_content_width = 'var(--narrow-page-width)'
+      assign section_page_margin = '16px'
+      assign section_page_margin_desktop = '40px'
+    when 'normal'
+      assign section_page_content_width = 'var(--normal-page-width)'
+      assign section_page_margin = '16px'
+      assign section_page_margin_desktop = '40px'
+    when 'wide'
+      assign section_page_content_width = 'var(--wide-page-width)'
+      assign section_page_margin = '16px'
+      assign section_page_margin_desktop = '40px'
+    when 'extra-wide'
+      assign section_page_content_width = 'var(--extra-wide-page-width)'
+      assign section_page_margin = '2px'
+      assign section_page_margin_desktop = '4px'
+  endcase
 %}
+
+{%- if settings.section_page_width != blank -%}
+  {% style %}
+    #shopify-section-{{ section_id }} .product-information.section {
+      --page-margin: {{ section_page_margin }};
+      --page-content-width: {{ section_page_content_width }};
+      --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+    }
+
+    @media screen and (min-width: 750px) {
+      #shopify-section-{{ section_id }} .product-information.section {
+        --page-margin: {{ section_page_margin_desktop }};
+      }
+    }
+  {% endstyle %}
+{%- endif -%}
 
 <div class="section-background color-{{ settings.color_scheme }}"></div>
 <div

@@ -1,0 +1,170 @@
+{% comment %}
+  Shipping Calculator (Calculadora de Frete)
+  CEP-based shipping rate lookup powered by the <shipping-calculator> web component.
+  On a product page it uses the closest product's selected variant; on cart it
+  queries the existing cart. The module is loaded block-scoped (only where placed).
+{% endcomment %}
+
+{%- liquid
+  assign target_product = closest.product
+  assign target_variant = target_product.selected_or_first_available_variant
+  if target_variant
+    assign ctx = 'product'
+  else
+    assign ctx = 'cart'
+  endif
+-%}
+
+<div
+  id="block-{{ block.id }}"
+  {{ block.shopify_attributes }}
+  class="shipping-calculator-block spacing-style{% if block.settings.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}"
+  style="{% render 'spacing-style', settings: block.settings %}"
+>
+  {% render 'shipping-calculator',
+    title: block.settings.title,
+    button_text: block.settings.button_text,
+    placeholder: block.settings.placeholder,
+    variant_id: target_variant.id,
+    context: ctx
+  %}
+</div>
+
+{% render 'mobile-spacing', settings: block.settings, id: block.id %}
+
+<script src="{{ 'shipping-calculator.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% schema %}
+{
+  "name": "Calculadora de Frete",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Busca de frete por CEP (ViaCEP + /cart/shipping_rates.json). Em página de produto usa a variante selecionada; no carrinho usa o carrinho atual."
+    },
+    {
+      "type": "header",
+      "content": "Textos"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Calcule o frete e prazo de entrega"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto do botão",
+      "default": "Calcular"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder do campo CEP",
+      "default": "Digite seu CEP"
+    },
+    {
+      "type": "header",
+      "content": "Espaçamento"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Topo",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Base",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Esquerda",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Direita",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_mobile_padding",
+      "label": "Espaçamento mobile personalizado",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "Topo (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "Base (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Esquerda (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Direita (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Calculadora de Frete",
+      "category": "Produto"
+    }
+  ]
+}
+{% endschema %}

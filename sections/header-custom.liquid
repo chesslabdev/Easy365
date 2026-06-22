@@ -193,6 +193,25 @@
 .hc__icons .svg-wrapper { width: var(--hc-icon-size) !important; height: var(--hc-icon-size) !important; }
 .hc__icons .svg-wrapper > svg { width: var(--hc-icon-size) !important; height: var(--hc-icon-size) !important; }
 
+/* Badge do carrinho: com o ícone maior, reposiciona no canto sup-direito (sem cobrir) */
+.hc__icons .header-actions__cart-icon {
+  --cart-bubble-size: 16px;
+  --cart-bubble-top: -4px;
+  --cart-bubble-right: -4px;
+}
+/* o badge fica no canto (offset negativo) → libera overflow para não ser cortado */
+.hc__icons,
+.hc__icons header-actions,
+.hc__icons .header-actions__action,
+.hc__icons cart-icon,
+.hc__icons .header-actions__cart-icon,
+.hc__icons .svg-wrapper { overflow: visible; }
+.hc__icons cart-icon:has(.cart-bubble__text-count:empty) {
+  --cart-bubble-size: 9px;
+  --cart-bubble-top: -1px;
+  --cart-bubble-right: -1px;
+}
+
 /* CTA "COMPRE AQUI" (outline) */
 .hc__cta {
   display: inline-flex;

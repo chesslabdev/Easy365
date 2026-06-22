@@ -7,12 +7,12 @@
   DIREITA (azul): contador radial de doses (anel com gradiente terra→laranja e o
   arco de progresso "passando") + card branco "ZERO AÇÚCAR. / Adoçado com Stevia.".
 
-  Por enquanto SÓ HTML + CSS. O contador já está montado para receber a lógica
-  depois: o elemento <dose-meter> carrega `data-target`, `data-max` e `data-duration`,
-  os refs `arc`/`value`, e a fração é calculada no servidor em `--dose-progress`
-  (estado final renderizado server-side; um web component pode resetar p/ 0 e animar).
-  Para ativar a animação basta criar assets/dose-meter.js (extends Component) e
-  descomentar a tag <script> ao final — mesmo contrato do bloco radial-counter.
+  O contador é animado por assets/dose-meter.js: o elemento <dose-meter> carrega
+  `data-target`, `data-max` e `data-duration` + os refs `arc`/`value`, e reutiliza
+  a classe RadialCounter (mesmo contrato do bloco radial-counter). Um único rAF
+  conta o número e preenche o arco juntos — sincronizados. O estado FINAL é
+  renderizado server-side (via `--dose-progress`), então no-JS e
+  prefers-reduced-motion veem o valor correto sem animação.
 
   Tudo editável no editor (textos, cores, raio, doses, imagem). Mobile-first:
   painéis empilham ≤749px. Marca d'água/onda são decorativas (alt="").
@@ -132,7 +132,7 @@
       class="dosage-meter__gauge"
       data-target="{{ s.doses_value }}"
       {% if s.doses_max > 0 %}data-max="{{ s.doses_max }}"{% endif %}
-      data-duration="1500"
+      data-duration="{{ s.doses_duration | default: 2800 }}"
       style="--dose-progress: {{ gauge_fill }};"
       role="img"
       aria-label="{{ gauge_aria | escape }}"
@@ -191,10 +191,12 @@
 {% render 'mobile-spacing', settings: s, id: section.id %}
 
 {%- comment -%}
-  Para ativar o contador depois, crie assets/dose-meter.js (extends Component,
-  refs ['arc','value'], anima no IntersectionObserver) e descomente:
-  <script src="{{ 'dose-meter.js' | asset_url }}" type="module" fetchpriority="low"></script>
+  Lógica do contador: assets/dose-meter.js reutiliza a classe RadialCounter
+  (mesmo contrato refs arc/value + data-target/max/duration). Um único rAF anima
+  o número e o arco juntos (sincronizados); estado final já vem do servidor para
+  no-JS / prefers-reduced-motion. Carregado escopo-de-seção (só baixa aqui).
 {%- endcomment -%}
+<script src="{{ 'dose-meter.js' | asset_url }}" type="module" fetchpriority="low"></script>
 
 {% stylesheet %}
   .dosage-meter {
@@ -488,6 +490,7 @@
     { "type": "number", "id": "doses_value", "label": "Doses (valor)", "default": 2 },
     { "type": "number", "id": "doses_max", "label": "Meta (preenche o anel)", "info": "Deixe vazio para o anel preencher 100%." },
     { "type": "text", "id": "doses_label", "label": "Rótulo", "default": "doses" },
+    { "type": "range", "id": "doses_duration", "label": "Duração da animação", "info": "Quanto maior, mais devagar o anel preenche e o número conta.", "min": 400, "max": 5000, "step": 100, "unit": "ms", "default": 2800 },
 
     { "type": "header", "content": "Direita — card de destaque" },
     { "type": "text", "id": "headline", "label": "Título", "default": "Zero açúcar." },
@@ -534,6 +537,7 @@
         "doses_value": 2,
         "doses_max": 8,
         "doses_label": "doses",
+        "doses_duration": 2800,
         "headline": "Zero açúcar.",
         "subtext": "Adoçado com",
         "subtext_highlight": "Stevia",

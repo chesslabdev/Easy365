@@ -1,0 +1,154 @@
+{% doc %}
+  Shipping calculator (Calculadora de Frete)
+
+  CEP-based lookup that fetches live rates from `/cart/shipping_rates.json`,
+  rendered by the <shipping-calculator> web component (shipping-calculator.js).
+  Styling reuses the theme's native input/button tokens.
+
+  @param {string} [title] - Heading shown above the form
+  @param {string} [button_text] - Submit button label (default: "Calcular")
+  @param {string} [placeholder] - CEP input placeholder (default: "Digite seu CEP")
+  @param {number} [variant_id] - Current variant id (product context); omit on cart
+  @param {string} [context] - "product" (default) or "cart"
+
+  @example
+  {% render 'shipping-calculator', title: 'Calcule o frete', variant_id: variant.id %}
+{% enddoc %}
+
+{%- liquid
+  assign heading = title | default: ''
+  assign button_label = button_text | default: 'Calcular'
+  assign placeholder_text = placeholder | default: 'Digite seu CEP'
+  assign context_value = context | default: 'product'
+-%}
+
+<shipping-calculator
+  class="shipping-calculator"
+  data-context="{{ context_value }}"
+  {% if variant_id %}data-variant-id="{{ variant_id }}"{% endif %}
+>
+  {%- if heading != blank -%}
+    <p class="shipping-calculator__title">{{ heading }}</p>
+  {%- endif -%}
+
+  <form class="shipping-calculator__form" ref="form" novalidate>
+    <input
+      ref="zip"
+      class="shipping-calculator__input"
+      type="text"
+      inputmode="numeric"
+      autocomplete="postal-code"
+      name="zip"
+      maxlength="9"
+      placeholder="{{ placeholder_text | escape }}"
+      aria-label="{{ placeholder_text | escape }}"
+    >
+    <button
+      ref="button"
+      type="submit"
+      class="shipping-calculator__button button"
+    >
+      {{ button_label }}
+    </button>
+  </form>
+
+  <p class="shipping-calculator__error" ref="error" role="alert" hidden></p>
+  <div class="shipping-calculator__results" ref="results" hidden></div>
+</shipping-calculator>
+
+{% stylesheet %}
+  .shipping-calculator {
+    display: block;
+  }
+
+  .shipping-calculator__title {
+    font-size: var(--font-size--sm);
+    font-weight: 500;
+    color: var(--color-foreground);
+    margin: 0 0 var(--margin-sm, 8px);
+  }
+
+  .shipping-calculator__form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-sm, 8px);
+  }
+
+  .shipping-calculator__input {
+    flex: 1;
+    min-width: 0;
+    height: var(--height-buy-buttons, 48px);
+    padding: 0 var(--padding-md, 12px);
+    background-color: var(--color-input-background);
+    color: var(--color-input-text);
+    border: var(--style-border-width-inputs, 1px) solid var(--color-input-border);
+    border-radius: var(--style-border-radius-inputs, 8px);
+    font-size: var(--font-size--sm);
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+  }
+
+  .shipping-calculator__input:focus {
+    outline: none;
+    border-color: var(--color-foreground);
+  }
+
+  .shipping-calculator__button {
+    flex-shrink: 0;
+    min-width: 120px;
+    height: var(--height-buy-buttons, 48px);
+  }
+
+  .shipping-calculator[aria-busy='true'] .shipping-calculator__button {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .shipping-calculator__error {
+    color: var(--color-error, #c00);
+    font-size: var(--font-size--2xs);
+    margin: var(--margin-2xs, 4px) 0 0;
+  }
+
+  .shipping-calculator__results {
+    margin-block-start: var(--margin-sm, 8px);
+  }
+
+  .shipping-calculator__item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--gap-sm, 8px);
+    align-items: center;
+    padding: var(--padding-sm, 8px) 0;
+  }
+
+  .shipping-calculator__item + .shipping-calculator__item {
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .shipping-calculator__name {
+    font-size: var(--font-size--sm);
+    font-weight: 500;
+    color: var(--color-foreground);
+  }
+
+  .shipping-calculator__eta {
+    display: block;
+    font-size: var(--font-size--2xs);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text, 0.6));
+    margin-block-start: 2px;
+  }
+
+  .shipping-calculator__price {
+    font-size: var(--font-size--sm);
+    white-space: nowrap;
+    text-align: end;
+  }
+
+  .shipping-calculator__loading {
+    font-size: var(--font-size--sm);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text, 0.6));
+    padding: var(--padding-sm, 8px) 0;
+    margin: 0;
+  }
+{% endstylesheet %}

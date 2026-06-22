@@ -58,7 +58,7 @@
 
   position: relative;
   width: 100%;
-  overflow: visible;     /* garrafa aparece inteira, pode sangrar para fora do card */
+  overflow: hidden;      /* recorta a garrafa na borda do card (como no Figma) — também elimina o scroll horizontal */
   background: var(--rt-bg, #1a388d);
   padding: clamp(36px, 4.5vw, 64px) clamp(24px, 8.8vw, 132px);
   min-height: clamp(280px, 26vw, 380px);
@@ -124,17 +124,16 @@
 .ritual__media {
   position: absolute;
   top: 50%;
-  right: clamp(8px, 3vw, 56px);
-  width: clamp(200px, 30vw, 400px);
+  right: clamp(-40px, -1.5vw, -8px);   /* encosta/sangra na borda direita; o card recorta */
+  width: clamp(280px, 38vw, 540px);
   transform: translateY(-50%);
-  overflow: visible;
   pointer-events: none;
 }
 .ritual__bottle {
   display: block;
   width: var(--rt-bottle-w, 100%);
   height: auto;
-  transform: rotate(-40deg);
+  transform: rotate(-47deg);
   transform-origin: center;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.18));
 }
@@ -145,6 +144,7 @@
     flex-direction: column;
     align-items: stretch;
     padding: clamp(28px, 7vw, 40px);
+    overflow: visible;   /* empilhado: garrafa aparece inteira, sem recorte (sem scroll porque ela fica centrada e dentro da largura) */
   }
   .ritual__content {
     width: 100%;

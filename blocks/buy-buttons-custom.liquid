@@ -1,0 +1,479 @@
+{%- doc -%}
+  Decorator for the native `buy-buttons` block.
+
+  Captures the native buy-buttons output via `content_for 'blocks'` and wraps it,
+  restyling ONLY the add-to-cart button to match the Figma design (textured orange
+  pill, white uppercase label) — without editing the native block in place.
+
+  All Figma values are exposed as merchant settings and applied via inline CSS
+  custom properties, so color, corner radius, padding and texture stay editable
+  from the Theme Editor.
+{%- enddoc -%}
+
+{%- liquid
+  assign s = block.settings
+
+  capture children
+    content_for 'blocks'
+  endcapture
+
+  assign wrapper_class = 'buy-buttons-custom spacing-style'
+  if s.show_texture
+    assign wrapper_class = wrapper_class | append: ' buy-buttons-custom--textured'
+  endif
+  if s.hide_icon
+    assign wrapper_class = wrapper_class | append: ' buy-buttons-custom--no-icon'
+  endif
+  if s.custom_mobile_padding
+    assign wrapper_class = wrapper_class | append: ' mobile-spacing-' | append: block.id
+  endif
+-%}
+
+{%- assign liquid_filter_id = 'bbc-liquid-' | append: block.id -%}
+
+<div
+  id="bbc-{{ block.id }}"
+  class="{{ wrapper_class }}"
+  style="
+    --bbc-bg: {{ s.button_background }};
+    --bbc-text: {{ s.button_text_color }};
+    --bbc-radius: {{ s.border_radius }}px;
+    --bbc-radius-hover: {{ s.border_radius_hover }}px;
+    --bbc-pad-block: {{ s.button_padding_block }}px;
+    --bbc-pad-inline: {{ s.button_padding_inline }}px;
+    --bbc-font-size: {{ s.font_size }}px;
+    --bbc-letter-spacing: {{ s.letter_spacing }}px;
+    --bbc-texture-opacity: {{ s.texture_opacity | divided_by: 100.0 }};
+    {% if s.hover_liquid %}--bbc-liquid: url('#{{ liquid_filter_id }}');{% endif %}
+    {% render 'spacing-style', settings: s %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {{ children }}
+</div>
+
+{%- comment -%}
+  Liquid-edge hover effect (Figma "Variant2"): an SVG turbulence + displacement
+  filter applied to the orange background layer only. The displacement `scale`
+  is 0 at rest (clean rounded rect) and ramps up on hover via SMIL keyed to the
+  wrapper's hover events, so the bottom edge "melts" into a flowing wave. The
+  label is a separate layer and is never distorted.
+{%- endcomment -%}
+{%- if s.hover_liquid -%}
+  <svg class="buy-buttons-custom__defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <filter
+        id="{{ liquid_filter_id }}"
+        x="-20%"
+        y="-20%"
+        width="140%"
+        height="140%"
+        color-interpolation-filters="sRGB"
+      >
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" seed="11" result="noise">
+          <animate
+            attributeName="baseFrequency"
+            begin="bbc-{{ block.id }}.mouseenter"
+            end="bbc-{{ block.id }}.mouseleave"
+            dur="7s"
+            values="0.012 0.03;0.014 0.038;0.012 0.03"
+            repeatCount="indefinite"
+          />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="noise" xChannelSelector="R" yChannelSelector="G" scale="0">
+          <animate
+            attributeName="scale"
+            begin="bbc-{{ block.id }}.mouseenter"
+            to="{{ s.hover_liquid_intensity }}"
+            dur="0.4s"
+            fill="freeze"
+          />
+          <animate
+            attributeName="scale"
+            begin="bbc-{{ block.id }}.mouseleave"
+            to="0"
+            dur="0.4s"
+            fill="freeze"
+          />
+        </feDisplacementMap>
+      </filter>
+    </defs>
+  </svg>
+{%- endif -%}
+
+{% render 'mobile-spacing', settings: s, id: block.id %}
+
+{% stylesheet %}
+  .buy-buttons-custom {
+    width: 100%;
+  }
+
+  .buy-buttons-custom__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* Restyle only the add-to-cart button to the Figma design. The doubled
+     `.add-to-cart-button.button` selector raises specificity above the native
+     `.product-form-buttons button` and `.button` rules. The label lives on the
+     button element; the orange fill + texture live on ::before/::after so the
+     liquid hover distortion never warps the text. */
+  .buy-buttons-custom .add-to-cart-button.button {
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
+    width: 100%;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+    color: var(--bbc-text, #ffffff);
+    padding-block: var(--bbc-pad-block, 16px);
+    padding-inline: var(--bbc-pad-inline, 26px);
+    font-size: var(--bbc-font-size, 19px);
+    letter-spacing: var(--bbc-letter-spacing, -0.5px);
+    line-height: 1.45;
+    text-transform: uppercase;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* Orange "blob" fill — the liquid filter (when enabled) is applied here only. */
+  .buy-buttons-custom .add-to-cart-button.button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--bbc-bg, #ff4c24);
+    border-radius: var(--bbc-radius, 8px);
+    filter: var(--bbc-liquid, none);
+    transition: border-radius 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* Grain texture (Figma "shape"), layered onto the same blob so it warps with it. */
+  .buy-buttons-custom--textured .add-to-cart-button.button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: var(--bbc-radius, 8px);
+    opacity: var(--bbc-texture-opacity, 0.18);
+    mix-blend-mode: overlay;
+    filter: var(--bbc-liquid, none);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    transition: border-radius 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* Hover: corners round (8px → 14px, Figma Variant2) + slight lift. The liquid
+     wave itself is driven by the SMIL-animated displacement filter. */
+  .buy-buttons-custom .add-to-cart-button.button:hover:not([disabled]) {
+    transform: translateY(-2px);
+  }
+
+  .buy-buttons-custom .add-to-cart-button.button:hover:not([disabled])::before,
+  .buy-buttons-custom .add-to-cart-button.button:hover:not([disabled])::after {
+    border-radius: var(--bbc-radius-hover, 14px);
+  }
+
+  /* The native focus ring uses the button background colour, which we made
+     transparent — restore a visible accent-coloured ring for keyboard users. */
+  .buy-buttons-custom .add-to-cart-button.button:focus-visible {
+    outline: 2px solid var(--bbc-bg, #ff4c24);
+    outline-offset: 2px;
+  }
+
+  .buy-buttons-custom .add-to-cart-button.button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Figma label has no leading cart icon. */
+  .buy-buttons-custom--no-icon .add-to-cart-icon {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .buy-buttons-custom .add-to-cart-button.button,
+    .buy-buttons-custom .add-to-cart-button.button::before,
+    .buy-buttons-custom .add-to-cart-button.button::after {
+      transition: none;
+    }
+
+    .buy-buttons-custom .add-to-cart-button.button:hover:not([disabled]) {
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Botão de compra (custom)",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "buy-buttons"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Aparência do botão"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Cor de fundo",
+      "default": "#ff4c24"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Cor do texto",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Raio da borda",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "border_radius_hover",
+      "label": "Raio da borda (hover)",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_block",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_inline",
+      "label": "Padding horizontal",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "header",
+      "content": "Tipografia"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Tamanho da fonte",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 19
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Espaçamento entre letras",
+      "min": -2,
+      "max": 2,
+      "step": 0.1,
+      "unit": "px",
+      "default": -0.5
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_icon",
+      "label": "Ocultar ícone do carrinho",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Animação (hover)"
+    },
+    {
+      "type": "checkbox",
+      "id": "hover_liquid",
+      "label": "Onda líquida no hover",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hover_liquid_intensity",
+      "label": "Intensidade da onda",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 16,
+      "visible_if": "{{ block.settings.hover_liquid }}"
+    },
+    {
+      "type": "header",
+      "content": "Textura"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_texture",
+      "label": "Aplicar textura (grão)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "texture_opacity",
+      "label": "Opacidade da textura",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 18,
+      "visible_if": "{{ block.settings.show_texture }}"
+    },
+    {
+      "type": "header",
+      "content": "Espaçamento (padding)"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Superior",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Inferior",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Esquerda",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Direita",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_mobile_padding",
+      "label": "Espaçamento separado no mobile",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "Superior (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "Inferior (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Esquerda (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Direita (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Botão de compra (custom)",
+      "category": "t:categories.product",
+      "blocks": {
+        "buy-buttons": {
+          "type": "buy-buttons",
+          "settings": {
+            "stacking": true,
+            "show_pickup_availability": false,
+            "gift_card_form": true
+          },
+          "blocks": {
+            "quantity": {
+              "type": "quantity",
+              "static": true
+            },
+            "add-to-cart": {
+              "type": "add-to-cart",
+              "static": true,
+              "settings": {
+                "style_class": "button"
+              }
+            },
+            "accelerated-checkout": {
+              "type": "accelerated-checkout",
+              "static": true
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": ["buy-buttons"]
+    }
+  ]
+}
+{% endschema %}

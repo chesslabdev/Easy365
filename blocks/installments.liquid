@@ -1,0 +1,244 @@
+{% comment %}
+  Installments (Parcelamento)
+  Renders the best installment plan for the closest product's selected/first variant.
+  Calculation values live in Theme settings → "Parcelamento".
+{% endcomment %}
+
+{%- liquid
+  assign target_product = closest.product
+  assign target_variant = target_product.selected_or_first_available_variant
+-%}
+
+<div
+  id="block-{{ block.id }}"
+  {{ block.shopify_attributes }}
+  class="installments-block spacing-style{% if block.settings.custom_mobile_padding %} mobile-spacing-{{ block.id }}{% endif %}"
+  style="
+    {% render 'spacing-style', settings: block.settings %}
+    --installments-size: {{ block.settings.font_size }};
+    {% if block.settings.font_size_mobile != blank %}--installments-size-mobile: {{ block.settings.font_size_mobile }};{% endif %}
+    --installments-value-weight: {{ block.settings.value_weight }};
+    --installments-interest-size: {{ block.settings.interest_font_size }};
+    {% if block.settings.color != blank %}--installments-color: {{ block.settings.color }};{% endif %}
+    {% if block.settings.value_color != blank %}--installments-value-color: {{ block.settings.value_color }};{% endif %}
+    {% if block.settings.interest_color != blank %}--installments-interest-color: {{ block.settings.interest_color }};{% endif %}
+    text-align: {{ block.settings.alignment }};
+  "
+>
+  {% if target_variant %}
+    {% render 'installments',
+      price: target_variant.price,
+      show_with_interest: block.settings.show_with_interest,
+      interest_label_format: block.settings.interest_label_format
+    %}
+  {% endif %}
+</div>
+
+{% render 'mobile-spacing', settings: block.settings, id: block.id %}
+
+{% schema %}
+{
+  "name": "Parcelamento",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Usa o produto do contexto (card de produto, página de produto). As regras de cálculo (máximo, sem juros, valor mínimo, taxa) ficam em Configurações do tema → \"Parcelamento\"."
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "Alinhamento",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Exibição de juros"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_with_interest",
+      "label": "Exibir parcelamento com juros",
+      "info": "Desativado: exibe apenas parcelas sem juros. Ativado: exibe a melhor parcela (pode ter juros).",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "interest_label_format",
+      "label": "Formato do texto de juros",
+      "options": [
+        { "value": "full", "label": "Completo (sem juros / com juros)" },
+        { "value": "short", "label": "Abreviado (s/ juros / c/ juros)" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "header",
+      "content": "Aparência"
+    },
+    {
+      "type": "select",
+      "id": "font_size",
+      "label": "Tamanho da fonte",
+      "options": [
+        { "value": "var(--font-size--2xs)", "label": "XS (12px)" },
+        { "value": "var(--font-size--sm)", "label": "Pequeno (14px)" },
+        { "value": "var(--font-size--md)", "label": "Médio (16px)" },
+        { "value": "var(--font-size--lg)", "label": "Grande (18px)" }
+      ],
+      "default": "var(--font-size--sm)"
+    },
+    {
+      "type": "select",
+      "id": "font_size_mobile",
+      "label": "Tamanho da fonte (mobile)",
+      "options": [
+        { "value": "", "label": "Padrão" },
+        { "value": "var(--font-size--2xs)", "label": "XS (12px)" },
+        { "value": "var(--font-size--sm)", "label": "Pequeno (14px)" },
+        { "value": "var(--font-size--md)", "label": "Médio (16px)" },
+        { "value": "var(--font-size--lg)", "label": "Grande (18px)" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
+      "id": "value_weight",
+      "label": "Peso dos valores",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Cor do texto"
+    },
+    {
+      "type": "color",
+      "id": "value_color",
+      "label": "Cor dos valores"
+    },
+    {
+      "type": "color",
+      "id": "interest_color",
+      "label": "Cor do texto de juros"
+    },
+    {
+      "type": "select",
+      "id": "interest_font_size",
+      "label": "Tamanho do texto de juros",
+      "options": [
+        { "value": "var(--font-size--2xs)", "label": "XS (12px)" },
+        { "value": "var(--font-size--sm)", "label": "Pequeno (14px)" },
+        { "value": "var(--font-size--md)", "label": "Médio (16px)" }
+      ],
+      "default": "var(--font-size--2xs)"
+    },
+    {
+      "type": "header",
+      "content": "Espaçamento"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Topo",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Base",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Esquerda",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Direita",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_mobile_padding",
+      "label": "Espaçamento mobile personalizado",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "Topo (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "Base (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Esquerda (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Direita (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.custom_mobile_padding }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Parcelamento",
+      "category": "Produto"
+    }
+  ]
+}
+{% endschema %}

@@ -9,9 +9,15 @@ import { prefersReducedMotion } from '@theme/utilities';
  * into view. The block server-renders the FINAL state, so no-JS and
  * reduced-motion users see the correct value with no animation.
  *
+ * Exported so other hosts with the same contract (refs `value`/`arc`,
+ * `data-target`/`data-max`/`data-duration`) can reuse the exact same animation
+ * by registering it under a different tag — e.g. `<dose-meter>` (see
+ * `assets/dose-meter.js`). Keeps a single source of truth for the count-up/arc
+ * sync logic instead of forking it.
+ *
  * @extends Component<{ value: HTMLElement; arc: SVGCircleElement }>
  */
-class RadialCounter extends Component {
+export class RadialCounter extends Component {
   requiredRefs = ['value', 'arc'];
 
   /** @type {IntersectionObserver | undefined} */

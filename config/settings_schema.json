@@ -2288,5 +2288,46 @@
         "default": "equal-width-buttons"
       }
     ]
+  },
+  {
+    "name": "Parcelamento",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Configurações de cálculo de parcelamento usadas pelo bloco \"Parcelamento\"."
+      },
+      {
+        "type": "checkbox",
+        "id": "installments_enabled",
+        "label": "Ativar parcelamento",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "installments_max",
+        "label": "Quantidade máxima de parcelas",
+        "default": 12
+      },
+      {
+        "type": "number",
+        "id": "installments_without_interest",
+        "label": "Quantidade de parcelas sem juros",
+        "default": 3
+      },
+      {
+        "type": "text",
+        "id": "installments_min_value",
+        "label": "Valor mínimo da parcela (em centavos)",
+        "info": "Ex: 500 representa R$ 5,00",
+        "default": "500"
+      },
+      {
+        "type": "text",
+        "id": "installments_interest_rate",
+        "label": "Taxa de juros ao mês (%)",
+        "info": "Ex: 2.99",
+        "default": "2.99"
+      }
+    ]
   }
 ]
