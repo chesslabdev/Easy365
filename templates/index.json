@@ -220,7 +220,7 @@
               "name": "t:names.icon",
               "settings": {
                 "icon": "price_tag",
-                "image_upload": "shopify://shop_images/fruit-maracuja.png",
+                "image_upload": "shopify://shop_images/fruit-maca.png",
                 "width": 24,
                 "link": "",
                 "open_in_new_tab": false
@@ -230,7 +230,7 @@
             "text_A6Y98J": {
               "type": "text",
               "settings": {
-                "text": "<p>MARACUJÁ</p>",
+                "text": "<p>MAÇÃ</p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -309,7 +309,7 @@
               "name": "t:names.icon",
               "settings": {
                 "icon": "price_tag",
-                "image_upload": "shopify://shop_images/fruit-maracuja.png",
+                "image_upload": "shopify://shop_images/fruit-cupuacu.png",
                 "width": 24,
                 "link": "",
                 "open_in_new_tab": false
