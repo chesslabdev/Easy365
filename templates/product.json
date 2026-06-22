@@ -568,7 +568,7 @@
               "type": "variant-card-picker",
               "name": "Variante (cards)",
               "settings": {
-                "unit_label": "doses",
+                "unit_label": "",
                 "sublabel_namespace": "custom",
                 "sublabel_key": "pack_subtitle",
                 "card_color": "#ffffff",
