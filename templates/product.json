@@ -1345,8 +1345,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 4,
+        "padding-block-end": 4
       }
     },
     "ritual_highlight_pdp": {
@@ -1377,8 +1377,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 0,
+        "padding-block-end": 4
       }
     },
     "faq_pdp": {
