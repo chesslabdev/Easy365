@@ -641,7 +641,7 @@
                 "tablist_label": "Informações do produto",
                 "inherit_color_scheme": false,
                 "color_scheme": "scheme-9099ea44-2b15-4cc6-a478-bae95ab4a79a",
-                "active_color_scheme": "",
+                "active_color_scheme": "scheme-4",
                 "tab_alignment": "flex-start",
                 "type_preset": "paragraph",
                 "label_font_size": 12,
@@ -1511,8 +1511,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 100,
+        "padding-block-end": 100
       }
     },
     "nutritional_table_pdp": {
