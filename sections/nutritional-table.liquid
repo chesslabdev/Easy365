@@ -24,7 +24,7 @@
       {%- if s.banner_image != blank -%}
         {{ s.banner_image | image_url: width: 1600 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 750px) 84vw, 100vw', widths: '480, 768, 1100, 1440, 1600', alt: s.banner_alt }}
       {%- else -%}
-        <img src="{{ 'nutritional-banner.jpg' | asset_url }}" alt="{{ s.banner_alt | escape }}" width="1546" height="720" loading="lazy" decoding="async">
+        <img src="{{ 'nutritional-banner.jpg' | asset_url }}" alt="{{ s.banner_alt | escape }}" width="1280" height="720" loading="lazy" decoding="async">
       {%- endif -%}
     </div>
 
