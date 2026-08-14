@@ -1976,11 +1976,11 @@
             "padding-block-end": 0,
             "padding-inline-start": 100,
             "padding-inline-end": 100,
-            "custom_mobile_padding": false,
+            "custom_mobile_padding": true,
             "padding-block-start-mobile": 0,
             "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 0,
-            "padding-inline-end-mobile": 0
+            "padding-inline-start-mobile": 20,
+            "padding-inline-end-mobile": 20
           },
           "blocks": {
             "group_EdgDTh": {
